@@ -13,6 +13,7 @@ import EnhancedAppCard from '../components/ui/EnhancedAppCard';
 import ApplicationFilters from '../components/ui/ApplicationFilters';
 import ApplicationMetricsDashboard from '../components/ui/ApplicationMetricsDashboard';
 import ApplicationLogsViewer from '../components/ui/ApplicationLogsViewer';
+import StatusCard from '../components/ui/StatusCard';
 
 import type { Application, ApplicationFilter } from '../types/application';
 import { mockApplications } from '../data/mockApplications';
@@ -91,13 +92,10 @@ const ApplicationsPage = () => {
             </Box>
 
             {/* Status Overview */}
-            <Grid container spacing={2} mb={3}>
+            <Grid container spacing={3} mb={5}>
                 {Object.entries(statusCounts).map(([status, count]) => (
                     <Grid item xs={12} sm={6} md={4} lg={2} key={status}>
-                        <Card sx={{ p: 2, textAlign: 'center' }}>
-                            <Typography variant="h4">{count}</Typography>
-                            <Typography variant="body2" color="text.secondary">{status}</Typography>
-                        </Card>
+                        <StatusCard status={status} count={count} />
                     </Grid>
                 ))}
             </Grid>

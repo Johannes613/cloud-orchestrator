@@ -1,6 +1,5 @@
-// File: src/components/ui/AppCard.tsx
-
-import { Paper, Box, Typography, Button,  } from '@mui/material';
+import React from 'react';
+import { Paper, Box, Typography, Button } from '@mui/material';
 import { Link } from 'react-router-dom';
 import SeverityBadge from '../application/SeverityPage';
 
@@ -12,6 +11,10 @@ interface AppCardProps {
     created: string;
 }
 
+/**
+ * A simple card component to display application status in a list format.
+ * @param {AppCardProps} props - The component props.
+ */
 const AppCard: React.FC<AppCardProps> = ({ id, name, status, replicas, created }) => {
     // Map status to severity for the badge color
     const getStatusSeverity = (s: string) => {

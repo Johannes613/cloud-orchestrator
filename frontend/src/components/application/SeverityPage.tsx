@@ -1,45 +1,41 @@
-import { Box, Typography, Chip } from '@mui/material';
-import { AlertTriangle, AlertCircle, Info } from 'lucide-react';
+import React from 'react';
+import { Chip } from '@mui/material';
 
+// Define the type for the severity prop
+type Severity = 'Low' | 'Medium' | 'High';
+
+// Define the props for the SeverityBadge component
 interface SeverityBadgeProps {
-    severity: 'Low' | 'Medium' | 'High' | 'Critical';
+    severity: Severity;
 }
 
+/**
+ * A component to display a colored badge based on a severity level.
+ * @param {SeverityBadgeProps} props - The component props.
+ * @param {Severity} props.severity - The severity level ('Low', 'Medium', 'High').
+ */
 const SeverityBadge: React.FC<SeverityBadgeProps> = ({ severity }) => {
-    const getSeverityColor = (severity: string) => {
-        const colorMap: Record<string, 'default' | 'error' | 'primary' | 'secondary' | 'info' | 'success' | 'warning'> = {
-            'Low': 'success',
-            'Medium': 'warning',
-            'High': 'error',
-            'Critical': 'error'
-        };
-        return colorMap[severity] || 'default';
-    };
-
-    const getSeverityIcon = (severity: string) => {
-        switch (severity) {
-            case 'Critical':
-                return <AlertTriangle size={16} />;
-            case 'High':
-                return <AlertCircle size={16} />;
-            case 'Medium':
-                return <AlertCircle size={16} />;
+    // Map severity string to a Material-UI color prop
+    const getColor = (s: Severity) => {
+        switch (s) {
             case 'Low':
-                return <Info size={16} />;
+                return 'success';
+            case 'Medium':
+                return 'warning';
+            case 'High':
+                return 'error';
             default:
-                return <Info size={16} />;
+                return 'default';
         }
     };
 
     return (
-        <Box display="flex" alignItems="center" gap={1}>
-            {getSeverityIcon(severity)}
-            <Chip 
-                label={severity} 
-                color={getSeverityColor(severity)} 
-                size="small" 
-            />
-        </Box>
+        <Chip
+            label={severity}
+            size="small"
+            color={getColor(severity)}
+            sx={{ textTransform: 'capitalize', fontWeight: 'bold' }}
+        />
     );
 };
 
