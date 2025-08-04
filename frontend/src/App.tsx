@@ -1,12 +1,30 @@
+// File: src/App.tsx
+import { Routes, Route } from 'react-router-dom';
+import Sidebar from './components/shared/Sidebar.tsx';
+import DashboardPage from './pages/DashboardPage.tsx';
+import ApplicationsPage from './pages/ApplicationsPage.tsx';
+import ApplicationDetailsPage from './pages/ApplicationDetailsPage.tsx'; // New component for app details
+import DeploymentsPage from './pages/DeploymentsPage.tsx';
+import ClustersPage from './pages/ClustersPage.tsx';
+import GitOpsPage from './pages/GitOpsPage.tsx';
+import LogsPage from './pages/LogsPage.tsx';
+import SettingsPage from './pages/SettingsPage.tsx';
 
+const App = () => {
+    return (
+        <Sidebar>
+            <Routes>
+                <Route path="/" element={<DashboardPage />} />
+                <Route path="/applications" element={<ApplicationsPage />} />
+                <Route path="/applications/:id" element={<ApplicationDetailsPage />} /> {/* New route for a specific application */}
+                <Route path="/deployments" element={<DeploymentsPage />} />
+                <Route path="/clusters" element={<ClustersPage />} />
+                <Route path="/gitops" element={<GitOpsPage />} />
+                <Route path="/logs" element={<LogsPage />} />
+                <Route path="/settings" element={<SettingsPage />} />
+            </Routes>
+        </Sidebar>
+    );
+};
 
-function App() {
-
-  return (
-    <>
-      
-    </>
-  )
-}
-
-export default App
+export default App;
