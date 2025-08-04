@@ -1,90 +1,60 @@
 // File: src/pages/LogsPage.tsx
-import React, { useState } from 'react';
-import {
-    Container,
-    Typography,
-    Box,
-    Paper,
-    InputBase,
-    Select,
-    MenuItem,
-    FormControl,
-    InputLabel
-} from '@mui/material';
-import { Search as SearchIcon } from 'lucide-react';
-import LogsTable from '../components/logs/LogsTable.tsx';
+import { useState } from 'react';
+import { Container, Typography, Box, Paper, TextField, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { Search, Filter, Download } from 'lucide-react';
+import LogsTable from '../components/logs/LogsTable';
 
-// Mock data for the log entries
-const logEntries = [
-    { timestamp: '2024-02-12T10:00:00Z', level: 'INFO', source: 'webapp-api', message: 'User "john.doe" logged in successfully.' },
-    { timestamp: '2024-02-12T10:00:05Z', level: 'WARN', source: 'db-service', message: 'High latency detected in database query.' },
-    { timestamp: '2024-02-12T10:00:10Z', level: 'ERROR', source: 'auth-service', message: 'Failed login attempt for user "admin".' },
-    { timestamp: '2024-02-12T10:00:15Z', level: 'INFO', source: 'webapp-api', message: 'Data record created by "jane.smith".' },
-    { timestamp: '2024-02-12T10:00:20Z', level: 'WARN', source: 'file-watcher', message: 'File system limit approaching 80%.' },
-    { timestamp: '2024-02-12T10:00:25Z', level: 'ERROR', source: 'scheduler', message: 'Job "cleanup-task" failed to complete.' },
-];
-
-const LogsPage = () => {
-    const [searchTerm, setSearchTerm] = useState('');
-    const [logLevel, setLogLevel] = useState('ALL');
-
-    const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSearchTerm(event.target.value);
-    };
-
-    const handleLogLevelChange = (event: any) => {
-        setLogLevel(event.target.value);
-    };
-
-    const filteredLogs = logEntries.filter(log => {
-        const matchesSearch = log.message.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            log.source.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesLevel = logLevel === 'ALL' || log.level === logLevel;
-        return matchesSearch && matchesLevel;
-    });
+const LogsPage: React.FC = () => {
+    const [logs] = useState([
+        {
+            timestamp: '2024-01-15T10:30:00Z',
+            level: 'INFO' as const,
+            message: 'Application started successfully',
+            source: 'app'
+        },
+        {
+            timestamp: '2024-01-15T10:29:00Z',
+            level: 'WARN' as const,
+            message: 'High memory usage detected',
+            source: 'monitoring'
+        },
+        {
+            timestamp: '2024-01-15T10:28:00Z',
+            level: 'ERROR' as const,
+            message: 'Database connection failed',
+            source: 'database'
+        }
+    ]);
 
     return (
         <Container maxWidth="xl" sx={{ mt: 4 }}>
-            <Box mb={4}>
+            <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
                 <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 'bold' }}>
-                    Logs
+                    Application Logs
                 </Typography>
-                <Typography variant="body1" color="text.secondary">
-                    View and filter real-time application and system logs.
-                </Typography>
-            </Box>
-
-            <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
-                <Paper
-                    component="form"
-                    sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 400, borderRadius: 2 }}
-                >
-                    <InputBase
-                        sx={{ ml: 1, flex: 1 }}
+                <Box display="flex" gap={1}>
+                    <TextField
+                        size="small"
                         placeholder="Search logs..."
-                        value={searchTerm}
-                        onChange={handleSearchChange}
+                        InputProps={{
+                            startAdornment: <Search size={16} style={{ marginRight: 8 }} />,
+                        }}
                     />
-                    <SearchIcon size={20} style={{ margin: '0 8px' }} />
-                </Paper>
-                <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }}>
-                    <InputLabel id="log-level-label">Level</InputLabel>
-                    <Select
-                        labelId="log-level-label"
-                        id="log-level-select"
-                        value={logLevel}
-                        onChange={handleLogLevelChange}
-                        label="Level"
-                    >
-                        <MenuItem value="ALL">All</MenuItem>
-                        <MenuItem value="INFO">INFO</MenuItem>
-                        <MenuItem value="WARN">WARN</MenuItem>
-                        <MenuItem value="ERROR">ERROR</MenuItem>
-                    </Select>
-                </FormControl>
+                    <FormControl size="small" sx={{ minWidth: 120 }}>
+                        <InputLabel>Level</InputLabel>
+                        <Select label="Level" defaultValue="all">
+                            <MenuItem value="all">All Levels</MenuItem>
+                            <MenuItem value="ERROR">Error</MenuItem>
+                            <MenuItem value="WARN">Warning</MenuItem>
+                            <MenuItem value="INFO">Info</MenuItem>
+                        </Select>
+                    </FormControl>
+                </Box>
             </Box>
 
-            <LogsTable data={filteredLogs} />
+            <Paper sx={{ p: 2 }}>
+                <LogsTable data={logs} />
+            </Paper>
         </Container>
     );
 };

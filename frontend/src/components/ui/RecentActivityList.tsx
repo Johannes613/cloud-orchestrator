@@ -1,5 +1,5 @@
 // File: src/components/ui/RecentActivityList.tsx
-import React from 'react';
+
 import { Paper, Typography, List, ListItem, ListItemText, Box } from '@mui/material';
 import { Zap, UserPlus, Database, Shield } from 'lucide-react';
 

@@ -1,5 +1,4 @@
 // File: src/components/deployment/StatusBadge.tsx
-import React from 'react';
 import { Chip } from '@mui/material';
 
 interface StatusBadgeProps {
@@ -7,18 +6,20 @@ interface StatusBadgeProps {
 }
 
 const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
-    const colorMap = {
-        'Success': 'success',
-        'Failed': 'error',
-        'Pending': 'info',
+    const getStatusColor = (status: string) => {
+        const colorMap: Record<string, 'default' | 'error' | 'primary' | 'secondary' | 'info' | 'success' | 'warning'> = {
+            'Success': 'success',
+            'Failed': 'error',
+            'Pending': 'warning'
+        };
+        return colorMap[status] || 'default';
     };
 
     return (
-        <Chip
-            label={status === 'Success' ? 'Active' : status === 'Failed' ? 'Inactive' : status}
-            color={colorMap[status]}
-            size="small"
-            sx={{ fontWeight: 'bold' }}
+        <Chip 
+            label={status} 
+            color={getStatusColor(status)} 
+            size="small" 
         />
     );
 };

@@ -1,5 +1,5 @@
 // File: src/components/cluster/ClusterCard.tsx
-import React from 'react';
+
 import {
     Paper,
     Box,

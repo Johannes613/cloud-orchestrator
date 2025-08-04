@@ -30,13 +30,13 @@ const salesChartData = [
 ];
 
 const cpuData = [
-    { name: 'Used', value: 75, fill: '#5E6AD2' },
-    { name: 'Available', value: 25, fill: '#E0E0E0' },
+    { name: 'Used', value: 75, color: '#5E6AD2' },
+    { name: 'Available', value: 25, color: '#E0E0E0' },
 ];
 
 const memoryData = [
-    { name: 'Used', value: 60, fill: '#F5A623' },
-    { name: 'Available', value: 40, fill: '#E0E0E0' },
+    { name: 'Used', value: 60, color: '#F5A623' },
+    { name: 'Available', value: 40, color: '#E0E0E0' },
 ];
 
 const recentActivities = [

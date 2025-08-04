@@ -1,33 +1,53 @@
 // File: src/pages/GitOpsPage.tsx
-import {
-    Container,
-    Typography,
-    Box,
-} from '@mui/material';
-import RepositoryTable from '../components/gitops/RepositoryTable.tsx';
+import { useState } from 'react';
+import { Container, Typography, Box, Paper, Button } from '@mui/material';
+import { Plus, RefreshCw } from 'lucide-react';
+import RepositoryTable from '../components/gitops/RepositoryTable';
 
-// Mock data for the linked repositories table
-const repositories = [
-    { name: 'repo-1', branch: 'main', autoDeploy: true, status: 'Active', lastDeployed: '2024-01-15 10:00 AM' },
-    { name: 'repo-2', branch: 'develop', autoDeploy: false, status: 'Inactive', lastDeployed: '2023-12-20 02:30 PM' },
-    { name: 'repo-3', branch: 'feature/new-feature', autoDeploy: true, status: 'Active', lastDeployed: '2024-02-01 09:15 AM' },
-    { name: 'repo-4', branch: 'release/1.0', autoDeploy: false, status: 'Inactive', lastDeployed: '2023-11-10 04:45 PM' },
-    { name: 'repo-5', branch: 'hotfix/urgent-fix', autoDeploy: true, status: 'Active', lastDeployed: '2024-02-10 11:30 AM' },
-];
+const GitOpsPage: React.FC = () => {
+    const [repositories] = useState([
+        {
+            name: 'webapp-repo',
+            branch: 'main',
+            autoDeploy: true,
+            status: 'Active' as const,
+            lastDeployed: '2024-01-15T10:30:00Z'
+        },
+        {
+            name: 'api-repo',
+            branch: 'develop',
+            autoDeploy: true,
+            status: 'Active' as const,
+            lastDeployed: '2024-01-15T09:15:00Z'
+        },
+        {
+            name: 'config-repo',
+            branch: 'main',
+            autoDeploy: false,
+            status: 'Inactive' as const,
+            lastDeployed: '2024-01-14T16:45:00Z'
+        }
+    ]);
 
-const GitOpsPage = () => {
     return (
         <Container maxWidth="xl" sx={{ mt: 4 }}>
-            <Box mb={4}>
+            <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
                 <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 'bold' }}>
-                    Linked Repositories
+                    GitOps
                 </Typography>
-                <Typography variant="body1" color="text.secondary">
-                    Manage your connected repositories and their deployment settings.
-                </Typography>
+                <Box display="flex" gap={1}>
+                    <Button variant="outlined" startIcon={<RefreshCw size={16} />}>
+                        Sync All
+                    </Button>
+                    <Button variant="contained" startIcon={<Plus size={16} />}>
+                        Add Repository
+                    </Button>
+                </Box>
             </Box>
 
-            <RepositoryTable data={repositories} />
+            <Paper sx={{ p: 2 }}>
+                <RepositoryTable data={repositories} />
+            </Paper>
         </Container>
     );
 };

@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App.tsx';
 import AppThemeProvider from './utils/theme.tsx';
-import "./style.css"; // This file now contains all necessary styling
+import './style.css';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
@@ -13,5 +13,5 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
                 <App />
             </AppThemeProvider>
         </BrowserRouter>
-    </React.StrictMode>
+    </React.StrictMode>,
 );

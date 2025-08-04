@@ -1,5 +1,5 @@
 // File: src/components/ui/StatCard.tsx
-import React from 'react';
+
 import { Box, Paper, Typography } from '@mui/material';
 
 // Defining props interface for the StatCard component.

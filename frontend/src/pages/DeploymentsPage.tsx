@@ -1,29 +1,47 @@
 // File: src/pages/DeploymentsPage.tsx
-import { Container, Typography, Box } from '@mui/material';
+import { useState } from 'react';
+import { Container, Typography, Box, Paper, IconButton } from '@mui/material';
+import { Download, RefreshCw } from 'lucide-react';
 import DeploymentTable from '../components/deployment/DeploymentTable';
 
-// Mock data for the deployments table
-const deployments = [
-    { version: 'v1.2.3', status: 'Success', deployedAt: '2024-01-15 10:30 AM' },
-    { version: 'v1.2.2', status: 'Success', deployedAt: '2024-01-14 09:45 AM' },
-    { version: 'v1.2.1', status: 'Failed', deployedAt: '2024-01-13 02:15 PM' },
-    { version: 'v1.2.0', status: 'Success', deployedAt: '2024-01-12 11:00 AM' },
-    { version: 'v1.1.9', status: 'Success', deployedAt: '2024-01-11 08:30 AM' },
-];
+const DeploymentsPage: React.FC = () => {
+    const [deployments] = useState([
+        {
+            version: 'v1.2.0',
+            status: 'Success' as const,
+            deployedAt: '2024-01-15T10:30:00Z'
+        },
+        {
+            version: 'v1.1.5',
+            status: 'Pending' as const,
+            deployedAt: '2024-01-15T09:15:00Z'
+        },
+        {
+            version: 'v1.0.0',
+            status: 'Failed' as const,
+            deployedAt: '2024-01-15T08:00:00Z'
+        }
+    ]);
 
-const DeploymentsPage = () => {
     return (
         <Container maxWidth="xl" sx={{ mt: 4 }}>
-            <Box mb={4}>
+            <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
                 <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 'bold' }}>
                     Deployments
                 </Typography>
-                <Typography variant="body1" color="text.secondary">
-                    Manage and monitor your application deployments
-                </Typography>
+                <Box display="flex" gap={1}>
+                    <IconButton size="small">
+                        <RefreshCw size={16} />
+                    </IconButton>
+                    <IconButton size="small">
+                        <Download size={16} />
+                    </IconButton>
+                </Box>
             </Box>
 
-            <DeploymentTable data={deployments} />
+            <Paper sx={{ p: 2 }}>
+                <DeploymentTable data={deployments} />
+            </Paper>
         </Container>
     );
 };

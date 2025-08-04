@@ -1,5 +1,5 @@
 // File: src/components/deployment/DeploymentTable.tsx
-import React from 'react';
+
 import {
     Table,
     TableBody,

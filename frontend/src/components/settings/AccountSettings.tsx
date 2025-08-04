@@ -1,53 +1,108 @@
 // File: src/components/settings/AccountSettings.tsx
-import React, { useState } from 'react';
-import { Box, Typography, TextField, Button, Paper } from '@mui/material';
+import { useState } from 'react';
+import { Container, Typography, Box, Paper, TextField, Button, Avatar, IconButton } from '@mui/material';
+import { Camera, Save } from 'lucide-react';
 
-/**
- * Component for the Account Settings section.
- * It provides input fields for username, email, and password, with an update button.
- */
-const AccountSettings = () => {
-    const [username, setUsername] = useState('user123');
-    const [email, setEmail] = useState('user@example.com');
-    const [password, setPassword] = useState('');
+const AccountSettings: React.FC = () => {
+    const [formData, setFormData] = useState({
+        firstName: 'John',
+        lastName: 'Doe',
+        email: 'john.doe@company.com',
+        phone: '+1 (555) 123-4567',
+        company: 'Tech Corp',
+        position: 'Senior Developer'
+    });
 
-    const handleUpdate = () => {
-        // Handle account update logic here
-        console.log('Updating account:', { username, email, password });
+    const handleInputChange = (field: string, value: string) => {
+        setFormData(prev => ({
+            ...prev,
+            [field]: value
+        }));
+    };
+
+    const handleSave = () => {
+        console.log('Saving account settings:', formData);
     };
 
     return (
-        <Paper elevation={1} sx={{ p: 3, mb: 4, borderRadius: 2 }}>
-            <Typography variant="h6" component="h2" mb={2} sx={{ fontWeight: 'bold' }}>
-                Account
+        <div className="container mt-4">
+            <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 'bold' }}>
+                Account Settings
             </Typography>
-            <Box component="form" noValidate autoComplete="off" sx={{ '& > :not(style)': { mb: 2, width: '100%' } }}>
-                <TextField
-                    label="Username"
-                    variant="outlined"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                />
-                <TextField
-                    label="Email"
-                    variant="outlined"
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                />
-                <TextField
-                    label="Password"
-                    variant="outlined"
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Enter new password"
-                />
-            </Box>
-            <Button variant="contained" onClick={handleUpdate}>
-                Update Account
-            </Button>
-        </Paper>
+
+            <Paper className="p-4 mt-3">
+                <Box display="flex" alignItems="center" gap={3} mb={3}>
+                    <Avatar sx={{ width: 80, height: 80, fontSize: '2rem' }}>
+                        {formData.firstName.charAt(0)}{formData.lastName.charAt(0)}
+                    </Avatar>
+                    <Box>
+                        <Typography variant="h6">{formData.firstName} {formData.lastName}</Typography>
+                        <Typography variant="body2" color="text.secondary">{formData.email}</Typography>
+                        <IconButton size="small" sx={{ mt: 1 }}>
+                            <Camera size={16} />
+                        </IconButton>
+                    </Box>
+                </Box>
+
+                <div className="row">
+                    <div className="col-md-6 mb-3">
+                        <TextField
+                            fullWidth
+                            label="First Name"
+                            value={formData.firstName}
+                            onChange={(e) => handleInputChange('firstName', e.target.value)}
+                        />
+                    </div>
+                    <div className="col-md-6 mb-3">
+                        <TextField
+                            fullWidth
+                            label="Last Name"
+                            value={formData.lastName}
+                            onChange={(e) => handleInputChange('lastName', e.target.value)}
+                        />
+                    </div>
+                    <div className="col-md-6 mb-3">
+                        <TextField
+                            fullWidth
+                            label="Email"
+                            type="email"
+                            value={formData.email}
+                            onChange={(e) => handleInputChange('email', e.target.value)}
+                        />
+                    </div>
+                    <div className="col-md-6 mb-3">
+                        <TextField
+                            fullWidth
+                            label="Phone"
+                            value={formData.phone}
+                            onChange={(e) => handleInputChange('phone', e.target.value)}
+                        />
+                    </div>
+                    <div className="col-md-6 mb-3">
+                        <TextField
+                            fullWidth
+                            label="Company"
+                            value={formData.company}
+                            onChange={(e) => handleInputChange('company', e.target.value)}
+                        />
+                    </div>
+                    <div className="col-md-6 mb-3">
+                        <TextField
+                            fullWidth
+                            label="Position"
+                            value={formData.position}
+                            onChange={(e) => handleInputChange('position', e.target.value)}
+                        />
+                    </div>
+                </div>
+
+                <Box display="flex" justifyContent="flex-end" mt={3}>
+                    <Button variant="contained" startIcon={<Save size={16} />} onClick={handleSave}>
+                        Save Changes
+                    </Button>
+                </Box>
+            </Paper>
+        </div>
     );
 };
 

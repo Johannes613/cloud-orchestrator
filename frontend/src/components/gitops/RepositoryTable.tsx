@@ -1,5 +1,5 @@
 // File: src/components/gitops/RepositoryTable.tsx
-import React from 'react';
+
 import {
     Table,
     TableBody,

@@ -1,5 +1,5 @@
 // File: src/components/ui/AppCard.tsx
-import React from 'react';
+
 import { Paper, Box, Typography, Button,  } from '@mui/material';
 import { Link } from 'react-router-dom';
 import SeverityBadge from '../application/SeverityPage';
