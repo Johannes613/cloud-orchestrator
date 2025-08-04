@@ -1,5 +1,5 @@
 // File: src/components/shared/Sidebar.tsx
-import  { useState, useContext,} from 'react';
+import { useState, useContext } from 'react';
 import type { ReactNode } from 'react';
 import {
     Box,
@@ -14,29 +14,46 @@ import {
     Typography,
     IconButton,
     useTheme,
-    useMediaQuery
+    useMediaQuery,
+    Divider
 } from '@mui/material';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import { ColorModeContext } from '../../utils/theme';
 
-// Lucide-react icons
+// Lucide-react icons for a more professional look
 import {
-    LayoutDashboard,
-    Car,
-    GitCompare,
-    BarChart3,
-    ListTree,
-    ChevronLeft,
-    ChevronRight,
-    Menu,
-    BookText,
+  LayoutDashboard,
+  Rocket,
+  CloudUpload,
+  Package, // ✅ use this instead of Cube
+  GitFork,
+  ScrollText,
+  Settings,
+  ChevronLeft,
+  ChevronRight,
+  Menu,
+  LogOut,
 } from 'lucide-react';
+
 
 import LightModeIcon from '@mui/icons-material/LightMode';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 
 const expandedDrawerWidth = 260;
 const collapsedDrawerWidth = 88;
+
+/**
+ * Custom SVG for the app logo, providing a more unique and professional branding.
+ * @param props SVG properties
+ * @returns React.ReactNode
+ */
+const AppLogo = (props: React.SVGProps<SVGSVGElement>) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+        <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+        <path d="M2 17l10 5 10-5"></path>
+        <path d="M2 12l10 5 10-5"></path>
+    </svg>
+);
 
 const Sidebar = ({ children }: { children: ReactNode }) => {
     const theme = useTheme();
@@ -57,12 +74,11 @@ const Sidebar = ({ children }: { children: ReactNode }) => {
 
     const navItems = [
         { id: "", text: "Dashboard", icon: <LayoutDashboard />, path: "/" },
-        { id: "applications", text: "Applications", icon: <Car />, path: "/applications" },
-        { id: "deployments", text: "Deployments", icon: <ListTree />, path: "/deployments" },
-        { id: "clusters", text: "Clusters", icon: <GitCompare />, path: "/clusters" },
-        { id: "gitops", text: "GitOps", icon: <BookText />, path: "/gitops" },
-        { id: "logs", text: "Logs", icon: <BookText />, path: "/logs" },
-        { id: "settings", text: "Settings", icon: <BookText />, path: "/settings" },
+        { id: "applications", text: "Applications", icon: <Rocket />, path: "/applications" },
+        { id: "deployments", text: "Deployments", icon: <CloudUpload />, path: "/deployments" },
+{ id: "clusters", text: "Clusters", icon: <Package />, path: "/clusters" },
+        { id: "gitops", text: "GitOps", icon: <GitFork />, path: "/gitops" },
+        { id: "logs", text: "Logs", icon: <ScrollText />, path: "/logs" },
     ];
 
     const activePageId = location.pathname.split('/')[1] || '';
@@ -70,7 +86,7 @@ const Sidebar = ({ children }: { children: ReactNode }) => {
     const drawerContent = (
         <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
             <Toolbar sx={{ display: 'flex', alignItems: 'center', p: 2, gap: 1, pl: 3 }}>
-                <BarChart3 size={32} color={theme.palette.primary.main} />
+                <AppLogo color={theme.palette.primary.main} />
                 {(!isCollapsed || !isLargeScreen) && (
                     <Typography variant="h5" component="div" sx={{ fontWeight: "bold", whiteSpace: "nowrap" }}>
                         Orchestrator
@@ -85,7 +101,16 @@ const Sidebar = ({ children }: { children: ReactNode }) => {
                             to={item.path}
                             selected={activePageId === item.id}
                             onClick={() => !isLargeScreen && setMobileOpen(false)}
-                            sx={{ borderRadius: 2, mb: 1 }}
+                            sx={{
+                                borderRadius: 2,
+                                mb: 1,
+                                '&.Mui-selected': {
+                                    backgroundColor: theme.palette.action.selected,
+                                    '&:hover': {
+                                        backgroundColor: theme.palette.action.hover,
+                                    },
+                                },
+                            }}
                         >
                             <ListItemIcon sx={{ minWidth: 0, mr: (isCollapsed && isLargeScreen) ? 0 : 3, justifyContent: 'center' }}>
                                 {item.icon}
@@ -95,6 +120,41 @@ const Sidebar = ({ children }: { children: ReactNode }) => {
                     </ListItem>
                 ))}
             </List>
+            <Box sx={{ mt: 'auto', p: 2 }}>
+                <Divider />
+                <List>
+                    <ListItem disablePadding>
+                        <ListItemButton
+                            component={RouterLink}
+                            to="/settings"
+                            selected={activePageId === 'settings'}
+                            onClick={() => !isLargeScreen && setMobileOpen(false)}
+                            sx={{ borderRadius: 2, mb: 1 }}
+                        >
+                            <ListItemIcon sx={{ minWidth: 0, mr: (isCollapsed && isLargeScreen) ? 0 : 3, justifyContent: 'center' }}>
+                                <Settings />
+                            </ListItemIcon>
+                            {(!isCollapsed || !isLargeScreen) && <ListItemText primary="Settings" />}
+                        </ListItemButton>
+                    </ListItem>
+                    <ListItem disablePadding>
+                        <ListItemButton sx={{ borderRadius: 2, mb: 1 }}>
+                            <ListItemIcon sx={{ minWidth: 0, mr: (isCollapsed && isLargeScreen) ? 0 : 3, justifyContent: 'center' }}>
+                                <LogOut />
+                            </ListItemIcon>
+                            {(!isCollapsed || !isLargeScreen) && <ListItemText primary="Logout" />}
+                        </ListItemButton>
+                    </ListItem>
+                    <ListItem disablePadding>
+                        <ListItemButton onClick={colorMode?.toggleTheme} sx={{ borderRadius: 2 }}>
+                            <ListItemIcon sx={{ minWidth: 0, mr: (isCollapsed && isLargeScreen) ? 0 : 3, justifyContent: 'center' }}>
+                                {theme.palette.mode === "dark" ? <LightModeIcon /> : <DarkModeIcon />}
+                            </ListItemIcon>
+                            {(!isCollapsed || !isLargeScreen) && <ListItemText primary={theme.palette.mode === "dark" ? "Light Mode" : "Dark Mode"} />}
+                        </ListItemButton>
+                    </ListItem>
+                </List>
+            </Box>
         </Box>
     );
 
@@ -125,12 +185,9 @@ const Sidebar = ({ children }: { children: ReactNode }) => {
                         sx={{ mr: 2, color: theme.palette.text.primary }}
                     >
                         {isLargeScreen
-                            ? (isCollapsed ? <ChevronRight /> : <ChevronLeft />): <Menu />}
+                            ? (isCollapsed ? <ChevronRight /> : <ChevronLeft />) : <Menu />}
                     </IconButton>
                     <Box sx={{ flexGrow: 1 }} />
-                    <IconButton sx={{ mr: 1 }} color="inherit" onClick={colorMode?.toggleTheme}>
-                        {theme.palette.mode === "dark" ? <LightModeIcon /> : <DarkModeIcon />}
-                    </IconButton>
                 </Toolbar>
             </AppBar>
 
@@ -155,6 +212,7 @@ const Sidebar = ({ children }: { children: ReactNode }) => {
                                 easing: theme.transitions.easing.sharp,
                                 duration: theme.transitions.duration.enteringScreen,
                             }),
+                            bgcolor: theme.palette.background.paper,
                         },
                     }}
                 >
@@ -169,7 +227,7 @@ const Sidebar = ({ children }: { children: ReactNode }) => {
                     p: 3,
                     width: { lg: `calc(100% - ${currentDrawerWidth}px)` },
                     minHeight: '100vh',
-                    bgcolor: 'background.default'
+                    bgcolor: theme.palette.background.default
                 }}
             >
                 <Toolbar />
