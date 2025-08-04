@@ -1,9 +1,22 @@
-// File: src/components/settings/AccountSettings.tsx
-import { useState } from 'react';
-import { Container, Typography, Box, Paper, TextField, Button, Avatar, IconButton } from '@mui/material';
+import React, { useState } from 'react';
+import {
+    Container,
+    Typography,
+    Box,
+    Paper,
+    TextField,
+    Button,
+    Avatar,
+    IconButton,
+    Grid,
+    Stack
+} from '@mui/material';
 import { Camera, Save } from 'lucide-react';
 
-const AccountSettings: React.FC = () => {
+/**
+ * Account settings component for managing user profile information.
+ */
+const AccountSettings = () => {
     const [formData, setFormData] = useState({
         firstName: 'John',
         lastName: 'Doe',
@@ -25,84 +38,99 @@ const AccountSettings: React.FC = () => {
     };
 
     return (
-        <div className="container mt-4">
-            <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 'bold' }}>
-                Account Settings
-            </Typography>
-
-            <Paper className="p-4 mt-3">
-                <Box display="flex" alignItems="center" gap={3} mb={3}>
-                    <Avatar sx={{ width: 80, height: 80, fontSize: '2rem' }}>
+        <Paper elevation={3} sx={{ p: { xs: 2, md: 4 }, borderRadius: 2 }}>
+            <Stack direction="row" alignItems="center" spacing={3} mb={4}>
+                <Box sx={{ position: 'relative' }}>
+                    <Avatar sx={{ width: 100, height: 100, fontSize: '2.5rem' }}>
                         {formData.firstName.charAt(0)}{formData.lastName.charAt(0)}
                     </Avatar>
-                    <Box>
-                        <Typography variant="h6">{formData.firstName} {formData.lastName}</Typography>
-                        <Typography variant="body2" color="text.secondary">{formData.email}</Typography>
-                        <IconButton size="small" sx={{ mt: 1 }}>
-                            <Camera size={16} />
-                        </IconButton>
-                    </Box>
+                    <IconButton
+                        size="small"
+                        sx={{
+                            position: 'absolute',
+                            bottom: 0,
+                            right: 0,
+                            bgcolor: 'background.paper',
+                            '&:hover': {
+                                bgcolor: 'primary.main',
+                                color: 'white',
+                            },
+                        }}
+                    >
+                        <Camera size={18} />
+                    </IconButton>
                 </Box>
-
-                <div className="row">
-                    <div className="col-md-6 mb-3">
-                        <TextField
-                            fullWidth
-                            label="First Name"
-                            value={formData.firstName}
-                            onChange={(e) => handleInputChange('firstName', e.target.value)}
-                        />
-                    </div>
-                    <div className="col-md-6 mb-3">
-                        <TextField
-                            fullWidth
-                            label="Last Name"
-                            value={formData.lastName}
-                            onChange={(e) => handleInputChange('lastName', e.target.value)}
-                        />
-                    </div>
-                    <div className="col-md-6 mb-3">
-                        <TextField
-                            fullWidth
-                            label="Email"
-                            type="email"
-                            value={formData.email}
-                            onChange={(e) => handleInputChange('email', e.target.value)}
-                        />
-                    </div>
-                    <div className="col-md-6 mb-3">
-                        <TextField
-                            fullWidth
-                            label="Phone"
-                            value={formData.phone}
-                            onChange={(e) => handleInputChange('phone', e.target.value)}
-                        />
-                    </div>
-                    <div className="col-md-6 mb-3">
-                        <TextField
-                            fullWidth
-                            label="Company"
-                            value={formData.company}
-                            onChange={(e) => handleInputChange('company', e.target.value)}
-                        />
-                    </div>
-                    <div className="col-md-6 mb-3">
-                        <TextField
-                            fullWidth
-                            label="Position"
-                            value={formData.position}
-                            onChange={(e) => handleInputChange('position', e.target.value)}
-                        />
-                    </div>
-                </div>
-
-                <Box display="flex" justifyContent="flex-end" mt={3}>
-                    <Button variant="contained" startIcon={<Save size={16} />} onClick={handleSave}>
-                        Save Changes
-                    </Button>
+                <Box>
+                    <Typography variant="h5" sx={{ fontWeight: 'bold' }}>{formData.firstName} {formData.lastName}</Typography>
+                    <Typography variant="body1" color="text.secondary">{formData.email}</Typography>
                 </Box>
-            </Paper>
-        </div>
+            </Stack>
+
+            <Grid container spacing={3}>
+                <Grid item xs={12} md={6}>
+                    <TextField
+                        fullWidth
+                        label="First Name"
+                        value={formData.firstName}
+                        onChange={(e) => handleInputChange('firstName', e.target.value)}
+                        variant="outlined"
+                    />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                    <TextField
+                        fullWidth
+                        label="Last Name"
+                        value={formData.lastName}
+                        onChange={(e) => handleInputChange('lastName', e.target.value)}
+                        variant="outlined"
+                    />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                    <TextField
+                        fullWidth
+                        label="Email"
+                        type="email"
+                        value={formData.email}
+                        onChange={(e) => handleInputChange('email', e.target.value)}
+                        variant="outlined"
+                        disabled // Assuming email is not editable
+                    />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                    <TextField
+                        fullWidth
+                        label="Phone"
+                        value={formData.phone}
+                        onChange={(e) => handleInputChange('phone', e.target.value)}
+                        variant="outlined"
+                    />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                    <TextField
+                        fullWidth
+                        label="Company"
+                        value={formData.company}
+                        onChange={(e) => handleInputChange('company', e.target.value)}
+                        variant="outlined"
+                    />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                    <TextField
+                        fullWidth
+                        label="Position"
+                        value={formData.position}
+                        onChange={(e) => handleInputChange('position', e.target.value)}
+                        variant="outlined"
+                    />
+                </Grid>
+            </Grid>
+
+            <Box mt={4} textAlign="right">
+                <Button variant="contained" startIcon={<Save size={16} />} onClick={handleSave}>
+                    Save Changes
+                </Button>
+            </Box>
+        </Paper>
     );
 };
 

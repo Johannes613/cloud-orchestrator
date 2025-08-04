@@ -1,9 +1,20 @@
-// File: src/components/settings/NotificationSettings.tsx
-import { useState } from 'react';
-import { Container, Typography, Box, Paper, Switch, FormControlLabel, Divider, Button } from '@mui/material';
+import React, { useState } from 'react';
+import {
+    Typography,
+    Box,
+    Paper,
+    Switch,
+    FormControlLabel,
+    Divider,
+    Button,
+    Stack
+} from '@mui/material';
 import { Save } from 'lucide-react';
 
-const NotificationSettings: React.FC = () => {
+/**
+ * Notification settings component for managing user notification preferences.
+ */
+const NotificationSettings = () => {
     const [settings, setSettings] = useState({
         emailNotifications: true,
         pushNotifications: false,
@@ -26,108 +37,70 @@ const NotificationSettings: React.FC = () => {
         console.log('Saving notification settings:', settings);
     };
 
+    const sections = [
+        {
+            title: 'General Notifications',
+            items: [
+                { id: 'emailNotifications', label: 'Email Notifications' },
+                { id: 'pushNotifications', label: 'Push Notifications' },
+            ]
+        },
+        {
+            title: 'Application Alerts',
+            items: [
+                { id: 'applicationAlerts', label: 'Application Status Changes' },
+                { id: 'deploymentUpdates', label: 'Deployment Updates' },
+                { id: 'securityAlerts', label: 'Security Alerts' },
+                { id: 'performanceAlerts', label: 'Performance Alerts' },
+            ]
+        },
+        {
+            title: 'Reports',
+            items: [
+                { id: 'weeklyReports', label: 'Weekly Reports' },
+                { id: 'monthlyReports', label: 'Monthly Reports' },
+            ]
+        }
+    ];
+
     return (
-        <Container maxWidth="md" sx={{ mt: 4 }}>
-            <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 'bold' }}>
-                Notification Settings
-            </Typography>
-            
-            <Paper sx={{ p: 3, mt: 3 }}>
-                <Typography variant="h6" gutterBottom>General Notifications</Typography>
-                <Box display="flex" flexDirection="column" gap={2} mb={3}>
-                    <FormControlLabel
-                        control={
-                            <Switch
-                                checked={settings.emailNotifications}
-                                onChange={() => handleToggle('emailNotifications')}
-                            />
-                        }
-                        label="Email Notifications"
-                    />
-                    <FormControlLabel
-                        control={
-                            <Switch
-                                checked={settings.pushNotifications}
-                                onChange={() => handleToggle('pushNotifications')}
-                            />
-                        }
-                        label="Push Notifications"
-                    />
-                </Box>
+        <Paper elevation={3} sx={{ p: { xs: 2, md: 4 }, borderRadius: 2 }}>
+            <Stack spacing={4}>
+                {sections.map((section, index) => (
+                    <React.Fragment key={section.title}>
+                        <Box>
+                            <Typography variant="h6" gutterBottom sx={{ fontWeight: 'medium' }}>
+                                {section.title}
+                            </Typography>
+                            <Stack spacing={2} mt={1}>
+                                {section.items.map(item => (
+                                    <FormControlLabel
+                                        key={item.id}
+                                        control={
+                                            <Switch
+                                                checked={settings[item.id as keyof typeof settings]}
+                                                onChange={() => handleToggle(item.id)}
+                                                color="primary"
+                                            />
+                                        }
+                                        label={item.label}
+                                        sx={{ justifyContent: 'space-between', m: 0 }}
+                                        labelPlacement="start"
+                                    />
+                                ))}
+                            </Stack>
+                        </Box>
+                        {index < sections.length - 1 && <Divider />}
+                    </React.Fragment>
+                ))}
+            </Stack>
 
-                <Divider sx={{ my: 3 }} />
-
-                <Typography variant="h6" gutterBottom>Application Alerts</Typography>
-                <Box display="flex" flexDirection="column" gap={2} mb={3}>
-                    <FormControlLabel
-                        control={
-                            <Switch
-                                checked={settings.applicationAlerts}
-                                onChange={() => handleToggle('applicationAlerts')}
-                            />
-                        }
-                        label="Application Status Changes"
-                    />
-                    <FormControlLabel
-                        control={
-                            <Switch
-                                checked={settings.deploymentUpdates}
-                                onChange={() => handleToggle('deploymentUpdates')}
-                            />
-                        }
-                        label="Deployment Updates"
-                    />
-                    <FormControlLabel
-                        control={
-                            <Switch
-                                checked={settings.securityAlerts}
-                                onChange={() => handleToggle('securityAlerts')}
-                            />
-                        }
-                        label="Security Alerts"
-                    />
-                    <FormControlLabel
-                        control={
-                            <Switch
-                                checked={settings.performanceAlerts}
-                                onChange={() => handleToggle('performanceAlerts')}
-                            />
-                        }
-                        label="Performance Alerts"
-                    />
-                </Box>
-
-                <Divider sx={{ my: 3 }} />
-
-                <Typography variant="h6" gutterBottom>Reports</Typography>
-                <Box display="flex" flexDirection="column" gap={2} mb={3}>
-                    <FormControlLabel
-                        control={
-                            <Switch
-                                checked={settings.weeklyReports}
-                                onChange={() => handleToggle('weeklyReports')}
-                            />
-                        }
-                        label="Weekly Reports"
-                    />
-                    <FormControlLabel
-                        control={
-                            <Switch
-                                checked={settings.monthlyReports}
-                                onChange={() => handleToggle('monthlyReports')}
-                            />
-                        }
-                        label="Monthly Reports"
-                    />
-                </Box>
-
-                <Box display="flex" justifyContent="flex-end" mt={3}>
-                    <Button variant="contained" startIcon={<Save size={16} />} onClick={handleSave}>
-                        Save Settings
-                    </Button>
-                </Box>
-            </Paper>
-        </Container>
+            <Box mt={4} textAlign="right">
+                <Button variant="contained" startIcon={<Save size={16} />} onClick={handleSave}>
+                    Save Settings
+                </Button>
+            </Box>
+        </Paper>
     );
 };
 
