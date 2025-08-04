@@ -78,159 +78,160 @@ const ApplicationsPage = () => {
     const statusCounts = getStatusCounts();
 
     return (
-        <Container maxWidth="xl" sx={{ mt: 4 }}>
-            {/* Header */}
-            <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-                <Typography variant="h4" fontWeight="bold">Applications</Typography>
-                <Button
-                    variant="contained"
-                    startIcon={<PlusCircle />}
-                    onClick={() => setShowCreateDialog(true)}
-                >
-                    New Application
-                </Button>
-            </Box>
+        <></>
+        // <Container maxWidth="xl" sx={{ mt: 4 }}>
+        //     {/* Header */}
+        //     <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
+        //         <Typography variant="h4" fontWeight="bold">Applications</Typography>
+        //         <Button
+        //             variant="contained"
+        //             startIcon={<PlusCircle />}
+        //             onClick={() => setShowCreateDialog(true)}
+        //         >
+        //             New Application
+        //         </Button>
+        //     </Box>
 
-            {/* Status Overview */}
-            <Grid container spacing={3} mb={5}>
-                {Object.entries(statusCounts).map(([status, count]) => (
-                    <Grid item xs={12} sm={6} md={4} lg={2} key={status}>
-                        <StatusCard status={status} count={count} />
-                    </Grid>
-                ))}
-            </Grid>
+        //     {/* Status Overview */}
+        //     <Grid container spacing={3} mb={5}>
+        //         {Object.entries(statusCounts).map(([status, count]) => (
+        //             <Grid item xs={12} sm={6} md={4} lg={2} key={status}>
+        //                 <StatusCard status={status} count={count} />
+        //             </Grid>
+        //         ))}
+        //     </Grid>
 
-            {/* Filters */}
-            <ApplicationFilters
-                filters={filters}
-                onFiltersChange={setFilters}
-                onClearFilters={handleClearFilters}
-            />
+        //     {/* Filters */}
+        //     <ApplicationFilters
+        //         filters={filters}
+        //         onFiltersChange={setFilters}
+        //         onClearFilters={handleClearFilters}
+        //     />
 
-            {/* Search & Controls */}
-            <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-                <Paper sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 400 }}>
-                    <SearchIcon size={20} style={{ marginLeft: 8, marginRight: 8 }} />
-                    <InputBase
-                        placeholder="Search applications..."
-                        sx={{ flex: 1 }}
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                </Paper>
-                <Box display="flex" gap={1}>
-                    <ButtonGroup size="small">
-                        <Button
-                            variant={viewMode === 'grid' ? 'contained' : 'outlined'}
-                            onClick={() => setViewMode('grid')}
-                            startIcon={<Grid3X3 size={16} />}
-                        >
-                            Grid
-                        </Button>
-                        <Button
-                            variant={viewMode === 'list' ? 'contained' : 'outlined'}
-                            onClick={() => setViewMode('list')}
-                            startIcon={<List size={16} />}
-                        >
-                            List
-                        </Button>
-                    </ButtonGroup>
-                    <Button variant="outlined" startIcon={<Download size={16} />}>Export</Button>
-                    <Button variant="outlined" startIcon={<Upload size={16} />}>Import</Button>
-                </Box>
-            </Box>
+        //     {/* Search & Controls */}
+        //     <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
+        //         <Paper sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 400 }}>
+        //             <SearchIcon size={20} style={{ marginLeft: 8, marginRight: 8 }} />
+        //             <InputBase
+        //                 placeholder="Search applications..."
+        //                 sx={{ flex: 1 }}
+        //                 value={searchTerm}
+        //                 onChange={(e) => setSearchTerm(e.target.value)}
+        //             />
+        //         </Paper>
+        //         <Box display="flex" gap={1}>
+        //             <ButtonGroup size="small">
+        //                 <Button
+        //                     variant={viewMode === 'grid' ? 'contained' : 'outlined'}
+        //                     onClick={() => setViewMode('grid')}
+        //                     startIcon={<Grid3X3 size={16} />}
+        //                 >
+        //                     Grid
+        //                 </Button>
+        //                 <Button
+        //                     variant={viewMode === 'list' ? 'contained' : 'outlined'}
+        //                     onClick={() => setViewMode('list')}
+        //                     startIcon={<List size={16} />}
+        //                 >
+        //                     List
+        //                 </Button>
+        //             </ButtonGroup>
+        //             <Button variant="outlined" startIcon={<Download size={16} />}>Export</Button>
+        //             <Button variant="outlined" startIcon={<Upload size={16} />}>Import</Button>
+        //         </Box>
+        //     </Box>
 
-            {/* Application List */}
-            {filteredApplications.length === 0 ? (
-                <Paper sx={{ p: 4, textAlign: 'center' }}>
-                    <Typography>No applications found</Typography>
-                </Paper>
-            ) : viewMode === 'grid' ? (
-                <Grid container spacing={3}>
-                    {filteredApplications.map(app => (
-                        <Grid item xs={12} sm={6} md={4} key={app.id}>
-                            <EnhancedAppCard application={app} onAction={handleApplicationAction} />
-                        </Grid>
-                    ))}
-                </Grid>
-            ) : (
-                <Box>
-                    {filteredApplications.map(app => (
-                        <EnhancedAppCard key={app.id} application={app} onAction={handleApplicationAction} />
-                    ))}
-                </Box>
-            )}
+        //     {/* Application List */}
+        //     {filteredApplications.length === 0 ? (
+        //         <Paper sx={{ p: 4, textAlign: 'center' }}>
+        //             <Typography>No applications found</Typography>
+        //         </Paper>
+        //     ) : viewMode === 'grid' ? (
+        //         <Grid container spacing={3}>
+        //             {filteredApplications.map(app => (
+        //                 <Grid item xs={12} sm={6} md={4} key={app.id}>
+        //                     <EnhancedAppCard application={app} onAction={handleApplicationAction} />
+        //                 </Grid>
+        //             ))}
+        //         </Grid>
+        //     ) : (
+        //         <Box>
+        //             {filteredApplications.map(app => (
+        //                 <EnhancedAppCard key={app.id} application={app} onAction={handleApplicationAction} />
+        //             ))}
+        //         </Box>
+        //     )}
 
-            {/* Create Dialog */}
-            <Dialog open={showCreateDialog} onClose={() => setShowCreateDialog(false)} maxWidth="md" fullWidth>
-                <DialogTitle>Create New Application</DialogTitle>
-                <DialogContent>
-                    <Grid container spacing={2} mt={1}>
-                        <Grid item xs={12} md={6}>
-                            <TextField fullWidth label="Application Name" />
-                        </Grid>
-                        <Grid item xs={12} md={6}>
-                            <TextField fullWidth label="Namespace" />
-                        </Grid>
-                        <Grid item xs={12} md={6}>
-                            <TextField fullWidth label="Image" />
-                        </Grid>
-                        <Grid item xs={12} md={6}>
-                            <TextField fullWidth label="Version" />
-                        </Grid>
-                        <Grid item xs={12} md={6}>
-                            <FormControl fullWidth>
-                                <InputLabel>Environment</InputLabel>
-                                <Select label="Environment">
-                                    <MenuItem value="development">Development</MenuItem>
-                                    <MenuItem value="staging">Staging</MenuItem>
-                                    <MenuItem value="production">Production</MenuItem>
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={12} md={6}>
-                            <TextField fullWidth label="Replicas" type="number" />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField fullWidth label="Description" multiline rows={3} />
-                        </Grid>
-                    </Grid>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setShowCreateDialog(false)}>Cancel</Button>
-                    <Button variant="contained">Create</Button>
-                </DialogActions>
-            </Dialog>
+        //     {/* Create Dialog */}
+        //     <Dialog open={showCreateDialog} onClose={() => setShowCreateDialog(false)} maxWidth="md" fullWidth>
+        //         <DialogTitle>Create New Application</DialogTitle>
+        //         <DialogContent>
+        //             <Grid container spacing={2} mt={1}>
+        //                 <Grid item xs={12} md={6}>
+        //                     <TextField fullWidth label="Application Name" />
+        //                 </Grid>
+        //                 <Grid item xs={12} md={6}>
+        //                     <TextField fullWidth label="Namespace" />
+        //                 </Grid>
+        //                 <Grid item xs={12} md={6}>
+        //                     <TextField fullWidth label="Image" />
+        //                 </Grid>
+        //                 <Grid item xs={12} md={6}>
+        //                     <TextField fullWidth label="Version" />
+        //                 </Grid>
+        //                 <Grid item xs={12} md={6}>
+        //                     <FormControl fullWidth>
+        //                         <InputLabel>Environment</InputLabel>
+        //                         <Select label="Environment">
+        //                             <MenuItem value="development">Development</MenuItem>
+        //                             <MenuItem value="staging">Staging</MenuItem>
+        //                             <MenuItem value="production">Production</MenuItem>
+        //                         </Select>
+        //                     </FormControl>
+        //                 </Grid>
+        //                 <Grid item xs={12} md={6}>
+        //                     <TextField fullWidth label="Replicas" type="number" />
+        //                 </Grid>
+        //                 <Grid item xs={12}>
+        //                     <TextField fullWidth label="Description" multiline rows={3} />
+        //                 </Grid>
+        //             </Grid>
+        //         </DialogContent>
+        //         <DialogActions>
+        //             <Button onClick={() => setShowCreateDialog(false)}>Cancel</Button>
+        //             <Button variant="contained">Create</Button>
+        //         </DialogActions>
+        //     </Dialog>
 
-            {/* Metrics Dialog */}
-            <Dialog open={showMetricsDialog} onClose={() => setShowMetricsDialog(false)} maxWidth="lg" fullWidth>
-                <DialogTitle>{selectedApplication?.name} - Metrics Dashboard</DialogTitle>
-                <DialogContent>
-                    {selectedApplication && (
-                        <ApplicationMetricsDashboard application={selectedApplication} />
-                    )}
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setShowMetricsDialog(false)}>Close</Button>
-                </DialogActions>
-            </Dialog>
+        //     {/* Metrics Dialog */}
+        //     <Dialog open={showMetricsDialog} onClose={() => setShowMetricsDialog(false)} maxWidth="lg" fullWidth>
+        //         <DialogTitle>{selectedApplication?.name} - Metrics Dashboard</DialogTitle>
+        //         <DialogContent>
+        //             {selectedApplication && (
+        //                 <ApplicationMetricsDashboard application={selectedApplication} />
+        //             )}
+        //         </DialogContent>
+        //         <DialogActions>
+        //             <Button onClick={() => setShowMetricsDialog(false)}>Close</Button>
+        //         </DialogActions>
+        //     </Dialog>
 
-            {/* Logs Dialog */}
-            <Dialog open={showLogsDialog} onClose={() => setShowLogsDialog(false)} maxWidth="lg" fullWidth>
-                <DialogTitle>{selectedApplication?.name} - Application Logs</DialogTitle>
-                <DialogContent>
-                    {selectedApplication && (
-                        <ApplicationLogsViewer
-                            logs={selectedApplication.logs}
-                            onRefresh={() => console.log('Refreshing logs')}
-                        />
-                    )}
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setShowLogsDialog(false)}>Close</Button>
-                </DialogActions>
-            </Dialog>
-        </Container>
+        //     {/* Logs Dialog */}
+        //     <Dialog open={showLogsDialog} onClose={() => setShowLogsDialog(false)} maxWidth="lg" fullWidth>
+        //         <DialogTitle>{selectedApplication?.name} - Application Logs</DialogTitle>
+        //         <DialogContent>
+        //             {selectedApplication && (
+        //                 <ApplicationLogsViewer
+        //                     logs={selectedApplication.logs}
+        //                     onRefresh={() => console.log('Refreshing logs')}
+        //                 />
+        //             )}
+        //         </DialogContent>
+        //         <DialogActions>
+        //             <Button onClick={() => setShowLogsDialog(false)}>Close</Button>
+        //         </DialogActions>
+        //     </Dialog>
+        // </Container>
     );
 };
 

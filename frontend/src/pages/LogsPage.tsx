@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { Container, Typography, Box, Paper, TextField, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { Search, Filter, Download } from 'lucide-react';
-import LogsTable from '../components/logs/LogsTable';
+import LogsTable from '../components/logs/LogTable';
 
 const LogsPage: React.FC = () => {
     const [logs] = useState([
