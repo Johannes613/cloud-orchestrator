@@ -1,6 +1,6 @@
 // File: src/pages/DeploymentsPage.tsx
 import { Container, Typography, Box } from '@mui/material';
-import DeploymentTable from '../components/deployment/DeploymentTable.tsx';
+import DeploymentTable from '../components/deployment/DeploymentTable';
 
 // Mock data for the deployments table
 const deployments = [

@@ -11,7 +11,7 @@ import {
     Tab,
 } from '@mui/material';
 import { Search as SearchIcon, PlusCircle } from 'lucide-react';
-import AppCard from '../components/ui/AppCard.tsx';
+import AppCard from '../components/ui/AppCard';
 
 // Mock data for the applications list
 const applications = [

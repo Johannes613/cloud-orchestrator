@@ -15,7 +15,7 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
 
     return (
         <Chip
-            label={status}
+            label={status === 'Success' ? 'Active' : status === 'Failed' ? 'Inactive' : status}
             color={colorMap[status]}
             size="small"
             sx={{ fontWeight: 'bold' }}
