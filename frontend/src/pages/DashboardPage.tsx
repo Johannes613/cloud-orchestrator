@@ -1,111 +1,275 @@
-// File: src/pages/DashboardPage.tsx
+import React from 'react';
 import {
-    Container,
-    Paper,
-    Typography,
-    Box,
+  Typography,
+  Box,
+  Card,
+  CardContent,
+  Chip,
+  LinearProgress,
+  Avatar,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemAvatar,
+  Divider,
+  Alert,
+  AlertTitle,
 } from '@mui/material';
 import {
-    LineChart,
-    Line,
-    XAxis,
-    YAxis,
-    CartesianGrid,
-    Tooltip,
-    ResponsiveContainer
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
 } from 'recharts';
-import StatCard from '../components/ui/StatCard.tsx';
-import ResourcePieChart from '../components/ui/ResourcePieChart.tsx';
-import RecentActivityList from '../components/ui/RecentActivityList.tsx';
-import { DollarSign, Users, Activity, Cloud } from 'lucide-react';
-
-const salesChartData = [
-    { name: 'Jan', value: 4000 },
-    { name: 'Feb', value: 3000 },
-    { name: 'Mar', value: 2000 },
-    { name: 'Apr', value: 2780 },
-    { name: 'May', value: 1890 },
-    { name: 'Jun', value: 2390 },
-    { name: 'Jul', value: 3490 },
-];
-
-const cpuData = [
-    { name: 'Used', value: 75, color: '#5E6AD2' },
-    { name: 'Available', value: 25, color: '#E0E0E0' },
-];
-
-const memoryData = [
-    { name: 'Used', value: 60, color: '#F5A623' },
-    { name: 'Available', value: 40, color: '#E0E0E0' },
-];
-
-const recentActivities = [
-    { id: 1, text: "Deployment to production cluster", time: "2 minutes ago" },
-    { id: 2, text: "New user 'Jane Doe' registered", time: "1 hour ago" },
-    { id: 3, text: "Database migration completed", time: "3 hours ago" },
-    { id: 4, text: "Security patch applied to API-Gateway", time: "1 day ago" },
-];
+import {
+  AttachMoney,
+  People,
+  Speed,
+  Cloud,
+  CheckCircle,
+  Warning,
+  Schedule,
+} from '@mui/icons-material';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Container as BootstrapContainer, Row as BootstrapRow, Col as BootstrapCol } from 'react-bootstrap';
+import DashboardHeader from '../components/dashboard/DashboardHeader'; 
+import StatCard from '../components/dashboard/StatCard'; 
 
 const DashboardPage = () => {
+    // Mock data for charts
+    const salesData = [
+        { name: 'Jan', value: 4000 }, { name: 'Feb', value: 3000 },
+        { name: 'Mar', value: 5000 }, { name: 'Apr', value: 2780 },
+        { name: 'May', value: 4890 }, { name: 'Jun', value: 6390 },
+        { name: 'Jul', value: 7490 },
+    ];
+
+    const performanceData = [
+        { name: 'CPU', value: 75, color: '#5E6AD2' },
+        { name: 'Memory', value: 60, color: '#F5A623' },
+        { name: 'Storage', value: 45, color: '#7ED321' },
+        { name: 'Network', value: 85, color: '#FF6B6B' },
+    ];
+
+    const resourceUsageData = [
+        { name: 'Used', value: 75, color: '#5E6AD2' },
+        { name: 'Available', value: 25, color: '#E0E0E0' },
+    ];
+
+    const memoryUsageData = [
+        { name: 'Used', value: 60, color: '#F5A623' },
+        { name: 'Available', value: 40, color: '#E0E0E0' },
+    ];
+
+    const recentActivities = [
+        { id: 1, text: "Deployment to production cluster", time: "2 minutes ago", type: "deployment", status: "success" },
+        { id: 2, text: "New user 'Jane Doe' registered", time: "1 hour ago", type: "user", status: "info" },
+        { id: 3, text: "Database migration completed", time: "3 hours ago", type: "database", status: "success" },
+        { id: 4, text: "Security patch applied to API-Gateway", time: "1 day ago", type: "security", status: "warning" },
+    ];
+
+    const alerts = [
+        { id: 1, message: "High CPU usage", severity: "warning", time: "5 min ago", status: "warning" },
+        { id: 2, message: "DB connection OK", severity: "success", time: "10 min ago", status: "success" },
+        { id: 3, message: "New security update", severity: "info", time: "1 hour ago", status: "info" },
+    ];
+
+    const systemStatusData = [
+        { name: "API Gateway", status: "online", uptime: "99.9%", responseTime: 45 },
+        { name: "Database Cluster", status: "online", uptime: "99.8%", responseTime: 120 },
+        { name: "Load Balancer", status: "warning", uptime: "99.5%", responseTime: 280 },
+        { name: "Cache Server", status: "online", uptime: "99.9%", responseTime: 15 },
+    ];
+
+    const getStatusIcon = (status) => {
+        switch (status) {
+            case 'success': return <CheckCircle sx={{ color: 'success.main' }} />;
+            case 'warning': return <Warning sx={{ color: 'warning.main' }} />;
+            case 'info': return <Schedule sx={{ color: 'info.main' }} />;
+            default: return <Speed sx={{ color: 'grey.500' }} />;
+        }
+    };
+
+    const getStatusColor = (status) => {
+        switch (status) {
+            case 'online': return 'success.main';
+            case 'warning': return 'warning.main';
+            case 'offline': return 'error.main';
+            default: return 'grey.500';
+        }
+    };
+
     return (
-        <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
-            {/* Page Header */}
-            <Box mb={4}>
-                <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 'bold' }}>
-                    Dashboard
-                </Typography>
-                <Typography variant="body1" color="text.secondary">
-                    Welcome to your professional dashboard overview.
-                </Typography>
-            </Box>
+        <BootstrapContainer fluid className="mt-2 mb-4 ">
+            <DashboardHeader />
 
-            {/* Stats Cards Grid */}
-            <div className="row g-3 mb-4">
-                <div className="col-12 col-sm-6 col-md-3">
-                    <StatCard title="Total Sales" value="$24,895" icon={<DollarSign size={24} />} />
-                </div>
-                <div className="col-12 col-sm-6 col-md-3">
-                    <StatCard title="New Users" value="1,245" icon={<Users size={24} />} />
-                </div>
-                <div className="col-12 col-sm-6 col-md-3">
-                    <StatCard title="Active Services" value="12" icon={<Cloud size={24} />} />
-                </div>
-                <div className="col-12 col-sm-6 col-md-3">
-                    <StatCard title="Uptime" value="99.9%" icon={<Activity size={24} />} />
-                </div>
-            </div>
+            {/* Stats Cards */}
+            <BootstrapRow className="g-4 mb-4">
+                <BootstrapCol xs={12} sm={6} lg={3}>
+                    <StatCard title="Total Revenue" value="$24,895" Icon={AttachMoney} color="primary" />
+                </BootstrapCol>
+                <BootstrapCol xs={12} sm={6} lg={3}>
+                    <StatCard title="Active Users" value="1,245" Icon={People} color="secondary" />
+                </BootstrapCol>
+                <BootstrapCol xs={12} sm={6} lg={3}>
+                    <StatCard title="Active Services" value="12" Icon={Cloud} color="success" />
+                </BootstrapCol>
+                <BootstrapCol xs={12} sm={6} lg={3}>
+                    <StatCard title="System Uptime" value="99.9%" Icon={Speed} color="warning" />
+                </BootstrapCol>
+            </BootstrapRow>
 
-            {/* Charts and Recent Activity */}
-            <div className="row g-3">
-                <div className="col-12 col-lg-6">
-                    <Paper elevation={1} sx={{ p: 3, height: '100%' }}>
-                        <Typography variant="h6" mb={2}>Sales Over Time</Typography>
-                        <ResponsiveContainer width="100%" height={300}>
-                            <LineChart data={salesChartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-                                <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis dataKey="name" />
-                                <YAxis />
-                                <Tooltip />
-                                <Line type="monotone" dataKey="value" stroke="#5E6AD2" strokeWidth={2} activeDot={{ r: 8 }} />
-                            </LineChart>
-                        </ResponsiveContainer>
-                    </Paper>
-                </div>
-                <div className="col-12 col-lg-6">
-                    <Paper elevation={1} sx={{ p: 3, height: '100%' }}>
-                        <Typography variant="h6" mb={2}>Resource Usage</Typography>
-                        <Box display="flex" justifyContent="space-around" alignItems="center" height={300}>
-                            <ResourcePieChart title="CPU" data={cpuData} />
-                            <ResourcePieChart title="Memory" data={memoryData} />
-                        </Box>
-                    </Paper>
-                </div>
-            </div>
+            {/* Charts Section */}
+            <BootstrapRow className="g-4 mb-4">
+                <BootstrapCol xs={12} lg={7}>
+                    <Card sx={{ height: '100%', borderRadius: 4 }}>
+                        <CardContent>
+                            <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 3 }}>Revenue Overview</Typography>
+                            <ResponsiveContainer width="100%" height={350}>
+                                <AreaChart data={salesData}>
+                                    <defs>
+                                        <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
+                                            <stop offset="5%" stopColor="#5E6AD2" stopOpacity={0.3} />
+                                            <stop offset="95%" stopColor="#5E6AD2" stopOpacity={0} />
+                                        </linearGradient>
+                                    </defs>
+                                    <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                                    <XAxis dataKey="name" stroke="#6b7280" />
+                                    <YAxis stroke="#6b7280" />
+                                    <Tooltip contentStyle={{ backgroundColor: 'rgba(255, 255, 255, 0.8)', borderRadius: '8px', border: '1px solid #e5e7eb' }} />
+                                    <Area type="monotone" dataKey="value" stroke="#5E6AD2" strokeWidth={2} fill="url(#colorValue)" />
+                                </AreaChart>
+                            </ResponsiveContainer>
+                        </CardContent>
+                    </Card>
+                </BootstrapCol>
+                <BootstrapCol xs={12} lg={5}>
+                    <Card sx={{ height: '100%', borderRadius: 4 }}>
+                        <CardContent>
+                            <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 3 }}>Resource Usage</Typography>
+                             <BootstrapRow className="g-4 align-items-center">
+                                <BootstrapCol xs={12} sm={6} className="text-center">
+                                    <ResponsiveContainer width="100%" height={150}>
+                                        <PieChart>
+                                            <Pie data={resourceUsageData} cx="50%" cy="50%" innerRadius={40} outerRadius={60} paddingAngle={5} dataKey="value">
+                                                {resourceUsageData.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.color} />)}
+                                            </Pie>
+                                            <Tooltip />
+                                        </PieChart>
+                                    </ResponsiveContainer>
+                                    <Typography variant="body2" color="text.secondary">CPU Usage</Typography>
+                                    <Typography variant="h5" sx={{ fontWeight: 'bold', color: 'primary.main' }}>75%</Typography>
+                                </BootstrapCol>
+                                <BootstrapCol xs={12} sm={6} className="text-center">
+                                    <ResponsiveContainer width="100%" height={150}>
+                                        <PieChart>
+                                            <Pie data={memoryUsageData} cx="50%" cy="50%" innerRadius={40} outerRadius={60} paddingAngle={5} dataKey="value">
+                                                {memoryUsageData.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.color} />)}
+                                            </Pie>
+                                            <Tooltip />
+                                        </PieChart>
+                                    </ResponsiveContainer>
+                                    <Typography variant="body2" color="text.secondary">Memory Usage</Typography>
+                                    <Typography variant="h5" sx={{ fontWeight: 'bold', color: 'warning.main' }}>60%</Typography>
+                                </BootstrapCol>
+                            </BootstrapRow>
+                        </CardContent>
+                    </Card>
+                </BootstrapCol>
+            </BootstrapRow>
 
-            <Box mt={4}>
-                <RecentActivityList activities={recentActivities} />
-            </Box>
-        </Container>
+            {/* First Row of the 2x2 Grid */}
+            <BootstrapRow className="g-4 mb-4">
+                <BootstrapCol xs={12} md={6}>
+                    <Card sx={{ height: '100%', borderRadius: 4 }}>
+                        <CardContent>
+                            <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 3 }}>Performance Metrics</Typography>
+                            <Box>
+                                {performanceData.map((item, index) => (
+                                    <Box key={index} sx={{ mb: 2 }}>
+                                        <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
+                                            <Typography variant="body2">{item.name}</Typography>
+                                            <Typography variant="body2" sx={{ fontWeight: 'bold' }}>{item.value}%</Typography>
+                                        </Box>
+                                        <LinearProgress variant="determinate" value={item.value} sx={{ height: 8, borderRadius: 4, bgcolor: 'grey.200', '& .MuiLinearProgress-bar': { bgcolor: item.color } }}/>
+                                    </Box>
+                                ))}
+                            </Box>
+                        </CardContent>
+                    </Card>
+                </BootstrapCol>
+                <BootstrapCol xs={12} md={6}>
+                    <Card sx={{ height: '100%', borderRadius: 4 }}>
+                        <CardContent>
+                            <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 3 }}>System Status</Typography>
+                            <List>
+                                {systemStatusData.map((system, index) => (
+                                    <React.Fragment key={index}>
+                                        <ListItem disablePadding>
+                                            <ListItemAvatar>
+                                                <Avatar sx={{ bgcolor: getStatusColor(system.status), width: 10, height: 10, mr: 1 }} />
+                                            </ListItemAvatar>
+                                            <ListItemText primary={system.name} secondary={`Uptime: ${system.uptime}`} />
+                                            <Typography variant="body2" sx={{ fontWeight: 'bold', color: system.responseTime < 100 ? 'success.main' : system.responseTime < 300 ? 'warning.main' : 'error.main' }}>
+                                                {system.responseTime}ms
+                                            </Typography>
+                                        </ListItem>
+                                        {index < systemStatusData.length - 1 && <Divider sx={{ my: 1.5 }} />}
+                                    </React.Fragment>
+                                ))}
+                            </List>
+                        </CardContent>
+                    </Card>
+                </BootstrapCol>
+            </BootstrapRow>
+
+            {/* Second Row of the 2x2 Grid */}
+            <BootstrapRow className="g-4">
+                <BootstrapCol xs={12} md={6}>
+                    <Card sx={{ height: '100%', borderRadius: 4 }}>
+                        <CardContent>
+                            <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>Recent Activity</Typography>
+                            <List>
+                                {recentActivities.map((activity, index) => (
+                                    <React.Fragment key={activity.id}>
+                                        <ListItem disablePadding>
+                                            <ListItemAvatar>
+                                                <Avatar sx={{ bgcolor: 'background.default' }}>{getStatusIcon(activity.status)}</Avatar>
+                                            </ListItemAvatar>
+                                            <ListItemText primary={activity.text} secondary={activity.time} />
+                                            <Chip label={activity.type} size="small" variant="outlined" />
+                                        </ListItem>
+                                        {index < recentActivities.length - 1 && <Divider sx={{ my: 1.5 }} variant="inset" component="li" />}
+                                    </React.Fragment>
+                                ))}
+                            </List>
+                        </CardContent>
+                    </Card>
+                </BootstrapCol>
+                <BootstrapCol xs={12} md={6}>
+                    <Card sx={{ height: '100%', borderRadius: 4 }}>
+                        <CardContent>
+                            <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 3 }}>System Alerts</Typography>
+                            <Box>
+                                {alerts.map((alert) => (
+                                    <Alert key={alert.id} severity={alert.severity} icon={getStatusIcon(alert.status)} sx={{ mb: 2, alignItems: 'center' }}>
+                                        <AlertTitle sx={{mb: 0, fontWeight: 'bold'}}>{alert.message}</AlertTitle>
+                                        {alert.time}
+                                    </Alert>
+                                ))}
+                            </Box>
+                        </CardContent>
+                    </Card>
+                </BootstrapCol>
+            </BootstrapRow>
+
+        </BootstrapContainer>
     );
 };
 
