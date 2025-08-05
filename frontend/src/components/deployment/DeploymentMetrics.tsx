@@ -88,8 +88,8 @@ const DeploymentMetrics: React.FC<DeploymentMetricsProps> = ({ deployments }) =>
         <Card sx={{ 
             borderRadius: 3,
             boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
-            bgcolor: '#1976d2',
-            color: 'white',
+                        bgcolor: '#f7f6f6ff',
+
             height: '100%'
         }}>
             <CardContent sx={{ p: 3 }}>

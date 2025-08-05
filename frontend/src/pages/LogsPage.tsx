@@ -219,13 +219,11 @@ const LogsPage: React.FC = () => {
                     <Chip 
                         icon={<AlertCircle size={16} />}
                         label={`${logStats.errors} errors`}
-                        color="error"
                         size="small"
                     />
                     <Chip 
                         icon={<Info size={16} />}
                         label={`${logStats.warnings} warnings`}
-                        color="warning"
                         size="small"
                     />
                 </Box>

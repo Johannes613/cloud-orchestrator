@@ -1,10 +1,10 @@
 // File: src/pages/DeploymentsPage.tsx
 import { useState, useEffect } from 'react';
-import { 
-    Typography, 
-    Box, 
-    Paper, 
-    IconButton, 
+import {
+    Typography,
+    Box,
+    Paper,
+    IconButton,
     Button,
     Chip,
     LinearProgress,
@@ -25,14 +25,14 @@ import {
     Alert,
     Snackbar
 } from '@mui/material';
-import { 
-    Download, 
-    RefreshCw, 
-    Plus, 
-    TrendingUp, 
-    Clock, 
-    CheckCircle, 
-    XCircle, 
+import {
+    Download,
+    RefreshCw,
+    Plus,
+    TrendingUp,
+    Clock,
+    CheckCircle,
+    XCircle,
     AlertCircle,
     Play,
     Pause,
@@ -178,15 +178,15 @@ const DeploymentsPage: React.FC = () => {
     const stats = getStatusStats();
 
     return (
-        <Container fluid className="p-4">
+        <Container fluid className="p-2">
             {/* Header Section */}
             <Row className="mb-4">
                 <Col>
                     <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
                         <Box>
-                            <Typography variant="h3" component="h1" gutterBottom sx={{ 
-                                fontWeight: 700, 
-                                color: '#1976d2',
+                            <Typography variant="h4" component="h2" gutterBottom sx={{
+                                fontWeight: 700,
+                                color: 'black',
                                 mb: 1
                             }}>
                                 Deployments
@@ -197,23 +197,23 @@ const DeploymentsPage: React.FC = () => {
                         </Box>
                         <Box display="flex" gap={2}>
                             <Tooltip title="Refresh Deployments">
-                                <IconButton 
+                                <IconButton
                                     onClick={handleRefresh}
                                     disabled={isLoading}
-                                    sx={{ 
-                                        bgcolor: '#1976d2', 
+                                    sx={{
+                                        bgcolor: 'black',
                                         color: 'white',
-                                        '&:hover': { bgcolor: '#1565c0' }
+                                        '&:hover': { bgcolor: 'black' }
                                     }}
                                 >
                                     <RefreshCw size={20} />
                                 </IconButton>
                             </Tooltip>
                             <Tooltip title="Export Deployments">
-                                <IconButton sx={{ 
-                                    bgcolor: '#1976d2', 
+                                <IconButton sx={{
+                                    bgcolor: 'black',
                                     color: 'white',
-                                    '&:hover': { bgcolor: '#1565c0' }
+                                    '&:hover': { bgcolor: 'black' }
                                 }}>
                                     <Download size={20} />
                                 </IconButton>
@@ -223,11 +223,10 @@ const DeploymentsPage: React.FC = () => {
                                 startIcon={<Plus />}
                                 onClick={handleNewDeployment}
                                 sx={{
-                                    bgcolor: '#1976d2',
+                                    bgcolor: 'black',
                                     '&:hover': {
-                                        bgcolor: '#1565c0',
+                                        bgcolor: 'black',
                                         transform: 'translateY(-2px)',
-                                        boxShadow: '0 6px 10px 4px rgba(25, 118, 210, 0.3)'
                                     }
                                 }}
                             >
@@ -250,9 +249,9 @@ const DeploymentsPage: React.FC = () => {
             {/* Stats Cards */}
             <Row className="mb-4">
                 <Col md={3} className="mb-3">
-                    <Card sx={{ 
-                        bgcolor: '#1976d2',
-                        color: 'white',
+                    <Card sx={{
+                        bgcolor: '#f9f8f8ff',
+                        color: 'black',
                         transition: 'transform 0.3s ease-in-out',
                         '&:hover': { transform: 'translateY(-5px)' }
                     }}>
@@ -270,9 +269,9 @@ const DeploymentsPage: React.FC = () => {
                     </Card>
                 </Col>
                 <Col md={3} className="mb-3">
-                    <Card sx={{ 
-                        bgcolor: '#f44336',
-                        color: 'white',
+                    <Card sx={{
+                        bgcolor: '#f9f8f8ff',
+                        color: 'black',
                         transition: 'transform 0.3s ease-in-out',
                         '&:hover': { transform: 'translateY(-5px)' }
                     }}>
@@ -290,9 +289,9 @@ const DeploymentsPage: React.FC = () => {
                     </Card>
                 </Col>
                 <Col md={3} className="mb-3">
-                    <Card sx={{ 
-                        bgcolor: '#2196f3',
-                        color: 'white',
+                    <Card sx={{
+                        bgcolor: '#f9f8f8ff',
+                        color: 'black',
                         transition: 'transform 0.3s ease-in-out',
                         '&:hover': { transform: 'translateY(-5px)' }
                     }}>
@@ -310,9 +309,9 @@ const DeploymentsPage: React.FC = () => {
                     </Card>
                 </Col>
                 <Col md={3} className="mb-3">
-                    <Card sx={{ 
-                        bgcolor: '#ff9800',
-                        color: 'white',
+                    <Card sx={{
+                        bgcolor: '#f9f8f8ff',
+                        color: 'black',
                         transition: 'transform 0.3s ease-in-out',
                         '&:hover': { transform: 'translateY(-5px)' }
                     }}>
@@ -332,39 +331,46 @@ const DeploymentsPage: React.FC = () => {
             </Row>
 
             {/* Main Content */}
-            <Row>
-                <Col lg={8} className="mb-4">
-                    <Paper elevation={3} sx={{ 
-                        borderRadius: 3, 
-                        overflow: 'hidden',
-                        boxShadow: '0 8px 32px rgba(0,0,0,0.1)'
-                    }}>
-                        <Box sx={{ p: 3, borderBottom: '1px solid', borderColor: 'divider' }}>
-                            <Typography variant="h5" sx={{ fontWeight: 600, mb: 1, color: '#1976d2' }}>
-                                Recent Deployments
-                            </Typography>
-                            <Typography variant="body2" color="text.secondary">
-                                Track the latest deployment activities across all environments
-                            </Typography>
-                        </Box>
-                        <DeploymentTable 
-                            data={deployments} 
-                            onRollback={handleRollback}
-                            onViewDetails={(deployment) => setSelectedDeployment(deployment)}
-                        />
-                    </Paper>
-                </Col>
-                <Col lg={4} className="mb-4">
-                    <Row>
-                        <Col className="mb-4">
-                            <DeploymentMetrics deployments={deployments} />
-                        </Col>
-                        <Col>
-                            <DeploymentTimeline deployments={deployments} />
-                        </Col>
-                    </Row>
-                </Col>
-            </Row>
+           {/* Main Content */}
+<Container fluid>
+    {/* Recent Deployments - Full Width */}
+    <Row className="mb-4">
+        <Col lg={12}>
+            <Paper
+                elevation={3}
+                sx={{
+                    borderRadius: 3,
+                    overflow: 'hidden',
+                    boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
+                }}
+            >
+                <Box sx={{ p: 3, borderBottom: '1px solid', borderColor: 'divider' }}>
+                    <Typography variant="h5" sx={{ fontWeight: 600, mb: 1, color: 'black' }}>
+                        Recent Deployments
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                        Track the latest deployment activities across all environments
+                    </Typography>
+                </Box>
+                <DeploymentTable
+                    data={deployments}
+                    onRollback={handleRollback}
+                    onViewDetails={(deployment) => setSelectedDeployment(deployment)}
+                />
+            </Paper>
+        </Col>
+    </Row>
+
+    {/* Metrics and Timeline - Side by Side */}
+    <Row>
+        <Col lg={6} className="mb-4">
+            <DeploymentMetrics deployments={deployments} />
+        </Col>
+        <Col lg={6} className="mb-4">
+            <DeploymentTimeline deployments={deployments} />
+        </Col>
+    </Row>
+</Container>
 
             {/* Floating Action Button */}
             <Fab
@@ -375,9 +381,9 @@ const DeploymentsPage: React.FC = () => {
                     position: 'fixed',
                     bottom: 24,
                     right: 24,
-                    bgcolor: '#1976d2',
+                    bgcolor: 'black',
                     '&:hover': {
-                        bgcolor: '#1565c0',
+                        bgcolor: 'black',
                         transform: 'scale(1.1)'
                     }
                 }}
@@ -386,14 +392,14 @@ const DeploymentsPage: React.FC = () => {
             </Fab>
 
             {/* New Deployment Dialog */}
-            <Dialog 
-                open={showNewDeploymentDialog} 
+            <Dialog
+                open={showNewDeploymentDialog}
                 onClose={() => setShowNewDeploymentDialog(false)}
                 maxWidth="sm"
                 fullWidth
             >
                 <DialogTitle>
-                    <Typography variant="h6" sx={{ fontWeight: 600, color: '#1976d2' }}>
+                    <Typography variant="h6" sx={{ fontWeight: 600, color: 'black' }}>
                         New Deployment
                     </Typography>
                 </DialogTitle>
@@ -441,13 +447,13 @@ const DeploymentsPage: React.FC = () => {
                     <Button onClick={() => setShowNewDeploymentDialog(false)}>
                         Cancel
                     </Button>
-                    <Button 
+                    <Button
                         variant="contained"
                         onClick={() => {
                             setShowNewDeploymentDialog(false);
                             setSnackbar({ open: true, message: 'Deployment initiated successfully!', severity: 'success' });
                         }}
-                        sx={{ bgcolor: '#1976d2' }}
+                        sx={{ bgcolor: 'black' }}
                     >
                         Deploy
                     </Button>
@@ -460,8 +466,8 @@ const DeploymentsPage: React.FC = () => {
                 autoHideDuration={6000}
                 onClose={() => setSnackbar({ ...snackbar, open: false })}
             >
-                <Alert 
-                    onClose={() => setSnackbar({ ...snackbar, open: false })} 
+                <Alert
+                    onClose={() => setSnackbar({ ...snackbar, open: false })}
                     severity={snackbar.severity}
                     sx={{ width: '100%' }}
                 >

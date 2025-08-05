@@ -68,7 +68,7 @@ const ClustersPage = () => {
     const clustersToShow = tabValue === 0 ? activeClusters : inactiveClusters;
 
     return (
-        <Container maxWidth="xl" sx={{ mt: 4 }}>
+        <Container maxWidth="xl" sx={{ mt: 2 }}>
             <Box mb={4}>
                 <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 'bold' }}>
                     Clusters Overview
