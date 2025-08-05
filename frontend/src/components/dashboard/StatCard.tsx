@@ -4,7 +4,7 @@ import { alpha } from '@mui/material/styles';
 
 const StatCard = ({ title, value, Icon, color = 'primary' }) => {
   const theme = useTheme();
-  const mainColor = theme.palette[color]?.main || theme.palette.grey[500];
+  const mainColor =  theme.palette.grey[500];
   const backgroundColor = alpha(mainColor, 0.1);
 
   return (
