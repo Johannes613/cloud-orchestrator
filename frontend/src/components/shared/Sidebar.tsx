@@ -22,6 +22,7 @@ import {
     MenuItem,
     styled,
     alpha,
+    Chip,
 } from '@mui/material';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import { ColorModeContext } from '../../utils/theme';
@@ -41,14 +42,18 @@ import {
     Bell,
     ChevronDown,
     PanelLeftClose,
-    PanelLeftOpen
+    PanelLeftOpen,
+    Home,
+    Database,
+    Server,
+    Activity,
 } from 'lucide-react';
 
 import LightModeIcon from '@mui/icons-material/LightMode';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 
-const expandedDrawerWidth = 260;
-const collapsedDrawerWidth = 88;
+const expandedDrawerWidth = 280;
+const collapsedDrawerWidth = 80;
 
 /**
  * Custom SVG for the app logo, providing a more unique and professional branding.
@@ -91,13 +96,18 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
-    color: 'inherit',
+    color: '#000000',
     width: '100%',
     '& .MuiInputBase-input': {
         padding: theme.spacing(1, 1, 1, 0),
         paddingLeft: `calc(1em + ${theme.spacing(4)})`,
         transition: theme.transitions.create('width'),
         width: '100%',
+        color: '#000000',
+        '&::placeholder': {
+            color: '#666666',
+            opacity: 1,
+        },
     },
 }));
 
@@ -110,7 +120,9 @@ const Sidebar = ({ children }: { children: ReactNode }) => {
     const [mobileOpen, setMobileOpen] = useState(false);
     const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const [notificationAnchorEl, setNotificationAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
+    const notificationOpen = Boolean(notificationAnchorEl);
 
     // Effect to handle sidebar collapse on screen size change
     useEffect(() => {
@@ -135,85 +147,244 @@ const Sidebar = ({ children }: { children: ReactNode }) => {
         setAnchorEl(null);
     };
 
+    const handleNotificationMenu = (event: React.MouseEvent<HTMLElement>) => {
+        setNotificationAnchorEl(event.currentTarget);
+    };
+
+    const handleNotificationClose = () => {
+        setNotificationAnchorEl(null);
+    };
+
     const navItems = useMemo(() => [
-        { id: "", text: "Dashboard", icon: <LayoutDashboard />, path: "/" },
-        { id: "applications", text: "Applications", icon: <Rocket />, path: "/applications" },
-        { id: "deployments", text: "Deployments", icon: <CloudUpload />, path: "/deployments" },
-        { id: "clusters", text: "Clusters", icon: <Package />, path: "/clusters" },
-        { id: "gitops", text: "GitOps", icon: <GitFork />, path: "/gitops" },
-        { id: "logs", text: "Logs", icon: <ScrollText />, path: "/logs" },
+        { id: "", text: "Dashboard", icon: <LayoutDashboard size={20} />, path: "/" },
+        { id: "applications", text: "Applications", icon: <Rocket size={20} />, path: "/applications" },
+        { id: "deployments", text: "Deployments", icon: <CloudUpload size={20} />, path: "/deployments" },
+        { id: "clusters", text: "Clusters", icon: <Server size={20} />, path: "/clusters" },
+        { id: "gitops", text: "GitOps", icon: <GitFork size={20} />, path: "/gitops" },
+        { id: "logs", text: "Logs", icon: <ScrollText size={20} />, path: "/logs" },
     ], []);
 
     const activePageId = location.pathname.split('/')[1] || '';
 
     const drawerContent = (
-        <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-            <Toolbar sx={{ display: 'flex', alignItems: 'center', p: 2, gap: 1, pl: 3 }}>
-                <AppLogo color={theme.palette.primary.background} />
-                {(!isCollapsed || !isLargeScreen) && (
-                    <Typography variant="h5" component="div" sx={{ fontWeight: "bold", whiteSpace: "nowrap" }}>
-                        Orchestrator
-                    </Typography>
-                )}
-            </Toolbar>
-            <List sx={{ px: 2, py: 1, flexGrow: 1 }}>
-                {navItems.map((item) => (
-                    <ListItem key={item.text} disablePadding>
-                        <ListItemButton
-                            component={RouterLink}
-                            to={item.path}
-                            selected={activePageId === item.id}
-                            onClick={() => !isLargeScreen && setMobileOpen(false)}
-                            sx={{
-                                borderRadius: 2,
-                                mb: 1,
-                                '&.Mui-selected': {
-                                    backgroundColor: theme.palette.action.selected,
-                                    '&:hover': {
-                                        backgroundColor: theme.palette.action.hover,
+        <Box sx={{ 
+            display: 'flex', 
+            flexDirection: 'column', 
+            height: '100%',
+            background: theme.palette.mode === 'dark' 
+                ? 'linear-gradient(180deg, #1A1A1A 0%, #0A0A0A 100%)'
+                : 'linear-gradient(180deg, #FFFFFF 0%, #FAFAFA 100%)',
+        }}>
+            {/* Header Section */}
+            <Box sx={{ 
+                p: 3, 
+                borderBottom: '1px solid',
+                borderColor: 'divider',
+                background: theme.palette.mode === 'dark' 
+                    ? 'rgba(255, 255, 255, 0.02)'
+                    : 'rgba(0, 0, 0, 0.02)',
+            }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <Box sx={{
+                        p: 1,
+                        borderRadius: 2,
+                        background: theme.palette.primary.main,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }}>
+                        <AppLogo color={theme.palette.primary.contrastText} />
+                    </Box>
+                    {(!isCollapsed || !isLargeScreen) && (
+                        <Box>
+                            <Typography variant="h6" component="div" sx={{ fontWeight: 700, color: 'text.primary' }}>
+                                Orchestrator
+                            </Typography>
+                            <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 500 }}>
+                                Cloud Native Platform
+                            </Typography>
+                        </Box>
+                    )}
+                </Box>
+            </Box>
+
+            {/* Navigation Section */}
+            <Box sx={{ flexGrow: 1, p: 2 }}>
+                <Typography variant="overline" sx={{ 
+                    px: 2, 
+                    mb: 2, 
+                    display: 'block',
+                    color: 'text.secondary',
+                    fontWeight: 600,
+                    letterSpacing: 1,
+                }}>
+                    {(!isCollapsed || !isLargeScreen) ? 'NAVIGATION' : ''}
+                </Typography>
+                
+                <List sx={{ px: 0 }}>
+                    {navItems.map((item) => (
+                        <ListItem key={item.text} disablePadding sx={{ mb: 1 }}>
+                            <ListItemButton
+                                component={RouterLink}
+                                to={item.path}
+                                selected={activePageId === item.id}
+                                onClick={() => !isLargeScreen && setMobileOpen(false)}
+                                sx={{
+                                    borderRadius: 3,
+                                    mx: 1,
+                                    minHeight: 48,
+                                    '&.Mui-selected': {
+                                        background: theme.palette.mode === 'dark' 
+                                            ? 'rgba(255, 255, 255, 0.08)'
+                                            : 'rgba(0, 0, 0, 0.04)',
+                                        color: 'primary.main',
+                                        '&:hover': {
+                                            background: theme.palette.mode === 'dark' 
+                                                ? 'rgba(255, 255, 255, 0.12)'
+                                                : 'rgba(0, 0, 0, 0.08)',
+                                        },
+                                        '& .MuiListItemIcon-root': {
+                                            color: 'primary.main',
+                                        },
                                     },
-                                },
-                            }}
-                        >
-                            <ListItemIcon sx={{ minWidth: 0, mr: (isCollapsed && isLargeScreen) ? 0 : 3, justifyContent: 'center' }}>
-                                {item.icon}
-                            </ListItemIcon>
-                            {(!isCollapsed || !isLargeScreen) && <ListItemText primary={item.text} />}
-                        </ListItemButton>
-                    </ListItem>
-                ))}
-            </List>
-            <Box sx={{ p: 2 }}>
-                <Divider />
-                <List>
-                    <ListItem disablePadding>
+                                    '&:hover': {
+                                        background: theme.palette.mode === 'dark' 
+                                            ? 'rgba(255, 255, 255, 0.04)'
+                                            : 'rgba(0, 0, 0, 0.02)',
+                                    },
+                                }}
+                            >
+                                <ListItemIcon sx={{ 
+                                    minWidth: 0, 
+                                    mr: (isCollapsed && isLargeScreen) ? 0 : 2, 
+                                    justifyContent: 'center',
+                                    color: activePageId === item.id ? 'primary.main' : 'text.secondary',
+                                }}>
+                                    {item.icon}
+                                </ListItemIcon>
+                                {(!isCollapsed || !isLargeScreen) && (
+                                    <ListItemText 
+                                        primary={item.text} 
+                                        sx={{ 
+                                            '& .MuiListItemText-primary': {
+                                                fontWeight: activePageId === item.id ? 600 : 500,
+                                            }
+                                        }}
+                                    />
+                                )}
+                            </ListItemButton>
+                        </ListItem>
+                    ))}
+                </List>
+            </Box>
+
+            {/* Footer Section */}
+            <Box sx={{ p: 2, borderTop: '1px solid', borderColor: 'divider' }}>
+                <Typography variant="overline" sx={{ 
+                    px: 2, 
+                    mb: 2, 
+                    display: 'block',
+                    color: 'text.secondary',
+                    fontWeight: 600,
+                    letterSpacing: 1,
+                }}>
+                    {(!isCollapsed || !isLargeScreen) ? 'SYSTEM' : ''}
+                </Typography>
+                
+                <List sx={{ px: 0 }}>
+                    <ListItem disablePadding sx={{ mb: 1 }}>
                         <ListItemButton
                             component={RouterLink}
                             to="/settings"
                             selected={activePageId === 'settings'}
                             onClick={() => !isLargeScreen && setMobileOpen(false)}
-                            sx={{ borderRadius: 2, my: 1 }}
+                            sx={{ 
+                                borderRadius: 3, 
+                                mx: 1,
+                                minHeight: 48,
+                                '&.Mui-selected': {
+                                    background: theme.palette.mode === 'dark' 
+                                        ? 'rgba(255, 255, 255, 0.08)'
+                                        : 'rgba(0, 0, 0, 0.04)',
+                                    color: 'primary.main',
+                                },
+                            }}
                         >
-                            <ListItemIcon sx={{ minWidth: 0, mr: (isCollapsed && isLargeScreen) ? 0 : 3, justifyContent: 'center' }}>
-                                <Settings />
+                            <ListItemIcon sx={{ 
+                                minWidth: 0, 
+                                mr: (isCollapsed && isLargeScreen) ? 0 : 2, 
+                                justifyContent: 'center',
+                                color: activePageId === 'settings' ? 'primary.main' : 'text.secondary',
+                            }}>
+                                <Settings size={20} />
                             </ListItemIcon>
-                            {(!isCollapsed || !isLargeScreen) && <ListItemText primary="Settings" />}
+                            {(!isCollapsed || !isLargeScreen) && (
+                                <ListItemText 
+                                    primary="Settings" 
+                                    sx={{ 
+                                        '& .MuiListItemText-primary': {
+                                            fontWeight: activePageId === 'settings' ? 600 : 500,
+                                        }
+                                    }}
+                                />
+                            )}
                         </ListItemButton>
                     </ListItem>
-                    <ListItem disablePadding>
-                        <ListItemButton sx={{ borderRadius: 2, mb: 1 }}>
-                            <ListItemIcon sx={{ minWidth: 0, mr: (isCollapsed && isLargeScreen) ? 0 : 3, justifyContent: 'center' }}>
-                                <LogOut />
-                            </ListItemIcon>
-                            {(!isCollapsed || !isLargeScreen) && <ListItemText primary="Logout" />}
-                        </ListItemButton>
-                    </ListItem>
-                    <ListItem disablePadding>
-                        <ListItemButton onClick={colorMode?.toggleTheme} sx={{ borderRadius: 2, mb: 1 }}>
-                            <ListItemIcon sx={{ minWidth: 0, mr: (isCollapsed && isLargeScreen) ? 0 : 3, justifyContent: 'center' }}>
+                    
+                    <ListItem disablePadding sx={{ mb: 1 }}>
+                        <ListItemButton 
+                            onClick={colorMode?.toggleTheme}
+                            sx={{ 
+                                borderRadius: 3, 
+                                mx: 1,
+                                minHeight: 48,
+                            }}
+                        >
+                            <ListItemIcon sx={{ 
+                                minWidth: 0, 
+                                mr: (isCollapsed && isLargeScreen) ? 0 : 2, 
+                                justifyContent: 'center',
+                                color: 'text.secondary',
+                            }}>
                                 {theme.palette.mode === "dark" ? <LightModeIcon /> : <DarkModeIcon />}
                             </ListItemIcon>
-                            {(!isCollapsed || !isLargeScreen) && <ListItemText primary={theme.palette.mode === "dark" ? "Light Mode" : "Dark Mode"} />}
+                            {(!isCollapsed || !isLargeScreen) && (
+                                <ListItemText 
+                                    primary={theme.palette.mode === "dark" ? "Light Mode" : "Dark Mode"}
+                                    sx={{ 
+                                        '& .MuiListItemText-primary': {
+                                            fontWeight: 500,
+                                        }
+                                    }}
+                                />
+                            )}
+                        </ListItemButton>
+                    </ListItem>
+                    
+                    <ListItem disablePadding>
+                        <ListItemButton sx={{ 
+                            borderRadius: 3, 
+                            mx: 1,
+                            minHeight: 48,
+                        }}>
+                            <ListItemIcon sx={{ 
+                                minWidth: 0, 
+                                mr: (isCollapsed && isLargeScreen) ? 0 : 2, 
+                                justifyContent: 'center',
+                                color: 'text.secondary',
+                            }}>
+                                <LogOut size={20} />
+                            </ListItemIcon>
+                            {(!isCollapsed || !isLargeScreen) && (
+                                <ListItemText 
+                                    primary="Logout"
+                                    sx={{ 
+                                        '& .MuiListItemText-primary': {
+                                            fontWeight: 500,
+                                        }
+                                    }}
+                                />
+                            )}
                         </ListItemButton>
                     </ListItem>
                 </List>
@@ -275,25 +446,194 @@ const Sidebar = ({ children }: { children: ReactNode }) => {
                     {/* Right side: Notifications and User Menu */}
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
                         {/* Notification Bell */}
-                        <IconButton color="inherit" sx={{ mr: 1, color: theme.palette.text.primary }}>
+                        <IconButton 
+                            onClick={handleNotificationMenu}
+                            color="inherit" 
+                            sx={{ 
+                                mr: 1, 
+                                color: theme.palette.text.primary,
+                                '&:hover': {
+                                    backgroundColor: theme.palette.mode === 'dark' 
+                                        ? 'rgba(255, 255, 255, 0.08)'
+                                        : 'rgba(0, 0, 0, 0.04)',
+                                },
+                            }}
+                        >
                             <Badge badgeContent={4} color="error">
-                                <Bell />
+                                <Bell size={20} />
                             </Badge>
                         </IconButton>
+                        <Menu
+                            id="notification-menu"
+                            anchorEl={notificationAnchorEl}
+                            anchorOrigin={{
+                                vertical: 'bottom',
+                                horizontal: 'right',
+                            }}
+                            keepMounted
+                            transformOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                            }}
+                            open={notificationOpen}
+                            onClose={handleNotificationClose}
+                            sx={{
+                                '& .MuiPaper-root': {
+                                    borderRadius: '12px',
+                                    mt: 1,
+                                    minWidth: 320,
+                                    maxHeight: 400,
+                                    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
+                                },
+                                '& .MuiMenuItem-root': {
+                                    py: 1.5,
+                                    px: 2,
+                                    borderRadius: 1,
+                                    mx: 1,
+                                    my: 0.5,
+                                    '&:hover': {
+                                        backgroundColor: theme.palette.mode === 'dark' 
+                                            ? 'rgba(255, 255, 255, 0.08)'
+                                            : 'rgba(0, 0, 0, 0.04)',
+                                    },
+                                },
+                            }}
+                        >
+                            <Box sx={{ p: 2, borderBottom: '1px solid', borderColor: 'divider' }}>
+                                <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                                    Notifications
+                                </Typography>
+                                <Typography variant="caption" color="text.secondary">
+                                    4 new notifications
+                                </Typography>
+                            </Box>
+                            <Box sx={{ maxHeight: 300, overflow: 'auto' }}>
+                                <MenuItem onClick={handleNotificationClose}>
+                                    <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, width: '100%' }}>
+                                        <Box sx={{
+                                            width: 8,
+                                            height: 8,
+                                            borderRadius: '50%',
+                                            backgroundColor: 'error.main',
+                                            mt: 1,
+                                        }} />
+                                        <Box sx={{ flex: 1 }}>
+                                            <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                                                Cluster Alert
+                                            </Typography>
+                                            <Typography variant="caption" color="text.secondary">
+                                                Production cluster CPU usage is at 85%
+                                            </Typography>
+                                            <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 0.5 }}>
+                                                2 minutes ago
+                                            </Typography>
+                                        </Box>
+                                    </Box>
+                                </MenuItem>
+                                <MenuItem onClick={handleNotificationClose}>
+                                    <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, width: '100%' }}>
+                                        <Box sx={{
+                                            width: 8,
+                                            height: 8,
+                                            borderRadius: '50%',
+                                            backgroundColor: 'warning.main',
+                                            mt: 1,
+                                        }} />
+                                        <Box sx={{ flex: 1 }}>
+                                            <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                                                Deployment Success
+                                            </Typography>
+                                            <Typography variant="caption" color="text.secondary">
+                                                Application 'frontend-app' deployed successfully
+                                            </Typography>
+                                            <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 0.5 }}>
+                                                5 minutes ago
+                                            </Typography>
+                                        </Box>
+                                    </Box>
+                                </MenuItem>
+                                <MenuItem onClick={handleNotificationClose}>
+                                    <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, width: '100%' }}>
+                                        <Box sx={{
+                                            width: 8,
+                                            height: 8,
+                                            borderRadius: '50%',
+                                            backgroundColor: 'info.main',
+                                            mt: 1,
+                                        }} />
+                                        <Box sx={{ flex: 1 }}>
+                                            <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                                                System Update
+                                            </Typography>
+                                            <Typography variant="caption" color="text.secondary">
+                                                New system update available
+                                            </Typography>
+                                            <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 0.5 }}>
+                                                10 minutes ago
+                                            </Typography>
+                                        </Box>
+                                    </Box>
+                                </MenuItem>
+                                <MenuItem onClick={handleNotificationClose}>
+                                    <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, width: '100%' }}>
+                                        <Box sx={{
+                                            width: 8,
+                                            height: 8,
+                                            borderRadius: '50%',
+                                            backgroundColor: 'success.main',
+                                            mt: 1,
+                                        }} />
+                                        <Box sx={{ flex: 1 }}>
+                                            <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                                                Backup Complete
+                                            </Typography>
+                                            <Typography variant="caption" color="text.secondary">
+                                                Database backup completed successfully
+                                            </Typography>
+                                            <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 0.5 }}>
+                                                1 hour ago
+                                            </Typography>
+                                        </Box>
+                                    </Box>
+                                </MenuItem>
+                            </Box>
+                            <Box sx={{ p: 2, borderTop: '1px solid', borderColor: 'divider' }}>
+                                <MenuItem onClick={handleNotificationClose} sx={{ justifyContent: 'center' }}>
+                                    <Typography variant="body2" color="primary.main" sx={{ fontWeight: 600 }}>
+                                        View All Notifications
+                                    </Typography>
+                                </MenuItem>
+                            </Box>
+                        </Menu>
 
                         {/* User Avatar and Dropdown Menu */}
                         <IconButton
                             onClick={handleMenu}
                             color="inherit"
                             sx={{
-                                p: 0,
+                                p: 1,
                                 ml: 1,
                                 display: 'flex',
                                 alignItems: 'center',
                                 color: theme.palette.text.primary,
+                                borderRadius: 2,
+                                '&:hover': {
+                                    backgroundColor: theme.palette.mode === 'dark' 
+                                        ? 'rgba(255, 255, 255, 0.08)'
+                                        : 'rgba(0, 0, 0, 0.04)',
+                                },
                             }}
                         >
-                            <Avatar alt="User Avatar" src="https://i.pravatar.cc/300" sx={{ width: 32, height: 32 }} />
+                            <Avatar 
+                                alt="User Avatar" 
+                                src="https://i.pravatar.cc/300" 
+                                sx={{ 
+                                    width: 32, 
+                                    height: 32,
+                                    border: '2px solid',
+                                    borderColor: 'divider',
+                                }} 
+                            />
                             <ChevronDown size={16} style={{ marginLeft: theme.spacing(1) }} />
                         </IconButton>
                         <Menu
@@ -312,15 +652,55 @@ const Sidebar = ({ children }: { children: ReactNode }) => {
                             onClose={handleClose}
                             sx={{
                                 '& .MuiPaper-root': {
-                                    borderRadius: '8px',
+                                    borderRadius: '12px',
                                     mt: 1,
+                                    minWidth: 200,
+                                    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
+                                },
+                                '& .MuiMenuItem-root': {
+                                    py: 1.5,
+                                    px: 2,
+                                    borderRadius: 1,
+                                    mx: 1,
+                                    my: 0.5,
+                                    '&:hover': {
+                                        backgroundColor: theme.palette.mode === 'dark' 
+                                            ? 'rgba(255, 255, 255, 0.08)'
+                                            : 'rgba(0, 0, 0, 0.04)',
+                                    },
                                 },
                             }}
                         >
-                            <MenuItem onClick={handleClose}>Profile</MenuItem>
-                            <MenuItem onClick={handleClose}>My account</MenuItem>
+                            <MenuItem onClick={handleClose}>
+                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                                    <Avatar 
+                                        alt="User Avatar" 
+                                        src="https://i.pravatar.cc/300" 
+                                        sx={{ width: 32, height: 32 }} 
+                                    />
+                                    <Box>
+                                        <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                                            John Doe
+                                        </Typography>
+                                        <Typography variant="caption" color="text.secondary">
+                                            john.doe@company.com
+                                        </Typography>
+                                    </Box>
+                                </Box>
+                            </MenuItem>
                             <Divider />
-                            <MenuItem onClick={handleClose}>Logout</MenuItem>
+                            <MenuItem onClick={handleClose}>
+                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                                    <Settings size={16} />
+                                    <Typography variant="body2">Settings</Typography>
+                                </Box>
+                            </MenuItem>
+                            <MenuItem onClick={handleClose}>
+                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                                    <LogOut size={16} />
+                                    <Typography variant="body2">Logout</Typography>
+                                </Box>
+                            </MenuItem>
                         </Menu>
                     </Box>
                 </Toolbar>
@@ -341,14 +721,15 @@ const Sidebar = ({ children }: { children: ReactNode }) => {
                         '& .MuiDrawer-paper': {
                             boxSizing: 'border-box',
                             width: isLargeScreen ? currentDrawerWidth : expandedDrawerWidth,
-                            borderRight: 'none',
+                            borderRight: '1px solid',
+                            borderColor: 'divider',
                             overflowX: 'hidden',
                             transition: theme.transitions.create("width", {
                                 easing: theme.transitions.easing.sharp,
                                 duration: theme.transitions.duration.enteringScreen,
                             }),
                             borderRadius: 0,
-                            bgcolor: theme.palette.background.paper,
+                            bgcolor: 'transparent',
                         },
                     }}
                 >
