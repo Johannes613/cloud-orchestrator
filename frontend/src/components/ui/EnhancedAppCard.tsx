@@ -94,26 +94,6 @@ const EnhancedAppCard: React.FC<EnhancedAppCardProps> = ({ application, onAction
             </Box>
 
             <Box sx={{ flex: 1 }}>
-                <Box display="flex" alignItems="center" gap={2} mb={2}>
-                    <Box display="flex" alignItems="center" gap={0.5}>
-                        <Cpu size={14} />
-                        <Typography variant="caption">
-                            {cpuUsage.toFixed(1)}%
-                        </Typography>
-                    </Box>
-                    <Box display="flex" alignItems="center" gap={0.5}>
-                        <MemoryStick size={14} />
-                        <Typography variant="caption">
-                            {memoryUsage.toFixed(1)}%
-                        </Typography>
-                    </Box>
-                    <Box display="flex" alignItems="center" gap={0.5}>
-                        <Activity size={14} />
-                        <Typography variant="caption">
-                            {application.metrics.requests.perSecond.toFixed(1)} req/s
-                        </Typography>
-                    </Box>
-                </Box>
 
                 <Box mb={2}>
                     <Box display="flex" justifyContent="space-between" alignItems="center" mb={0.5}>

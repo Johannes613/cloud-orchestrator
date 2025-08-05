@@ -78,7 +78,7 @@ const ApplicationsPage = () => {
     const statusCounts = getStatusCounts();
 
     return (
-        <Container maxWidth="xl" sx={{ mt: 4 }}>
+        <Container maxWidth="xl" sx={{ mt: 1 }}>
             {/* Header */}
             <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
                 <Typography variant="h4" fontWeight="bold">Applications</Typography>

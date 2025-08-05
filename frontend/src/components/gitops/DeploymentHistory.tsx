@@ -79,7 +79,7 @@ const DeploymentHistory: React.FC<DeploymentHistoryProps> = ({ deployments, repo
             case 'failed':
                 return <XCircle size={16} color="#F44336" />;
             case 'running':
-                return <RefreshCw size={16} color="#2196F3" />;
+                return <RefreshCw size={16} color= 'black' />;
             case 'pending':
                 return <Clock size={16} color="#FF9800" />;
             default:
@@ -124,7 +124,7 @@ const DeploymentHistory: React.FC<DeploymentHistoryProps> = ({ deployments, repo
 
     return (
         <Box>
-            <Typography variant="h6" gutterBottom sx={{ color: '#5E6AD2', fontWeight: 'bold', mb: 2 }}>
+            <Typography variant="h6" gutterBottom sx={{ color: 'black', fontWeight: 'bold', mb: 2 }}>
                 Deployment History - {repositoryName}
             </Typography>
 
@@ -133,14 +133,14 @@ const DeploymentHistory: React.FC<DeploymentHistoryProps> = ({ deployments, repo
                     <Table>
                         <TableHead>
                             <TableRow sx={{ backgroundColor: '#f8f9fa' }}>
-                                <TableCell sx={{ fontWeight: 'bold', color: '#5E6AD2' }}>Status</TableCell>
-                                <TableCell sx={{ fontWeight: 'bold', color: '#5E6AD2' }}>Commit</TableCell>
-                                <TableCell sx={{ fontWeight: 'bold', color: '#5E6AD2' }}>Branch</TableCell>
-                                <TableCell sx={{ fontWeight: 'bold', color: '#5E6AD2' }}>Author</TableCell>
-                                <TableCell sx={{ fontWeight: 'bold', color: '#5E6AD2' }}>Environment</TableCell>
-                                <TableCell sx={{ fontWeight: 'bold', color: '#5E6AD2' }}>Duration</TableCell>
-                                <TableCell sx={{ fontWeight: 'bold', color: '#5E6AD2' }}>Timestamp</TableCell>
-                                <TableCell sx={{ fontWeight: 'bold', color: '#5E6AD2' }}>Actions</TableCell>
+                                <TableCell sx={{ fontWeight: 'bold', color: 'black' }}>Status</TableCell>
+                                <TableCell sx={{ fontWeight: 'bold', color: 'black' }}>Commit</TableCell>
+                                <TableCell sx={{ fontWeight: 'bold', color: 'black' }}>Branch</TableCell>
+                                <TableCell sx={{ fontWeight: 'bold', color: 'black' }}>Author</TableCell>
+                                <TableCell sx={{ fontWeight: 'bold', color: 'black' }}>Environment</TableCell>
+                                <TableCell sx={{ fontWeight: 'bold', color: 'black' }}>Duration</TableCell>
+                                <TableCell sx={{ fontWeight: 'bold', color: 'black' }}>Timestamp</TableCell>
+                                <TableCell sx={{ fontWeight: 'bold', color: 'black' }}>Actions</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -213,7 +213,7 @@ const DeploymentHistory: React.FC<DeploymentHistoryProps> = ({ deployments, repo
                                                             e.stopPropagation();
                                                             setSelectedDeployment(deployment);
                                                         }}
-                                                        sx={{ color: '#5E6AD2' }}
+                                                        sx={{ color: 'black' }}
                                                     >
                                                         <Eye size={16} />
                                                     </IconButton>
@@ -246,7 +246,7 @@ const DeploymentHistory: React.FC<DeploymentHistoryProps> = ({ deployments, repo
                                         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={8}>
                                             <Collapse in={expandedRows.has(deployment.id)} timeout="auto" unmountOnExit>
                                                 <Box sx={{ margin: 1 }}>
-                                                    <Typography variant="h6" gutterBottom sx={{ color: '#5E6AD2', fontWeight: 'bold' }}>
+                                                    <Typography variant="h6" gutterBottom sx={{ color: 'black', fontWeight: 'bold' }}>
                                                         Deployment Resources
                                                     </Typography>
                                                     <Box display="flex" gap={2} flexWrap="wrap">
@@ -292,13 +292,13 @@ const DeploymentHistory: React.FC<DeploymentHistoryProps> = ({ deployments, repo
             >
                 {selectedDeployment && (
                     <>
-                        <DialogTitle sx={{ color: '#5E6AD2', fontWeight: 'bold' }}>
+                        <DialogTitle sx={{ color: 'black', fontWeight: 'bold' }}>
                             Deployment Details
                         </DialogTitle>
                         <DialogContent>
                             <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 3 }}>
                                 <Box>
-                                    <Typography variant="h6" gutterBottom sx={{ color: '#5E6AD2', fontWeight: 'bold' }}>
+                                    <Typography variant="h6" gutterBottom sx={{ color: 'black', fontWeight: 'bold' }}>
                                         Commit Information
                                     </Typography>
                                     <Typography variant="body2" sx={{ fontFamily: 'monospace', mb: 1 }}>
@@ -316,7 +316,7 @@ const DeploymentHistory: React.FC<DeploymentHistoryProps> = ({ deployments, repo
                                 </Box>
                                 
                                 <Box>
-                                    <Typography variant="h6" gutterBottom sx={{ color: '#5E6AD2', fontWeight: 'bold' }}>
+                                    <Typography variant="h6" gutterBottom sx={{ color: 'black', fontWeight: 'bold' }}>
                                         Deployment Info
                                     </Typography>
                                     <Typography variant="body2" mb={1}>
@@ -343,7 +343,7 @@ const DeploymentHistory: React.FC<DeploymentHistoryProps> = ({ deployments, repo
                                     onClick={() => setLogDialogOpen(true)}
                                     variant="contained"
                                     startIcon={<GitCommit size={16} />}
-                                    sx={{ backgroundColor: '#5E6AD2' }}
+                                    sx={{ backgroundColor: 'black' }}
                                 >
                                     View Logs
                                 </Button>
@@ -361,7 +361,7 @@ const DeploymentHistory: React.FC<DeploymentHistoryProps> = ({ deployments, repo
                 fullWidth
                 PaperProps={{ sx: { borderRadius: 3 } }}
             >
-                <DialogTitle sx={{ color: '#5E6AD2', fontWeight: 'bold' }}>
+                <DialogTitle sx={{ color: 'black', fontWeight: 'bold' }}>
                     Deployment Logs
                 </DialogTitle>
                 <DialogContent>

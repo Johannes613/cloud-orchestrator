@@ -197,11 +197,11 @@ const LogsPage: React.FC = () => {
     }, [logs]);
 
     return (
-        <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
+        <Container maxWidth="xl" sx={{ mt: 2, mb: 4 }}>
             {/* Header */}
             <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
                 <Box>
-                    <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 'bold', color: '#5E6AD2' }}>
+                    <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 'bold', color: 'black' }}>
                         Application Logs
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
@@ -214,7 +214,7 @@ const LogsPage: React.FC = () => {
                         icon={<FileText size={16} />}
                         label={`${logStats.total} total logs`}
                         variant="outlined"
-                        sx={{ borderColor: '#5E6AD2', color: '#5E6AD2' }}
+                        sx={{ borderColor: 'black', color: 'black' }}
                     />
                     <Chip 
                         icon={<AlertCircle size={16} />}
@@ -240,12 +240,12 @@ const LogsPage: React.FC = () => {
                         '& .MuiTab-root': {
                             color: '#666',
                             '&.Mui-selected': {
-                                color: '#5E6AD2',
+                                color: 'black',
                                 fontWeight: 'bold'
                             }
                         },
                         '& .MuiTabs-indicator': {
-                            backgroundColor: '#5E6AD2'
+                            backgroundColor: 'black'
                         }
                     }}
                 >
@@ -314,7 +314,7 @@ const LogsPage: React.FC = () => {
 
             {activeTab === 1 && (
                 <Box>
-                    <Typography variant="h6" gutterBottom sx={{ color: '#5E6AD2', fontWeight: 'bold', mb: 3 }}>
+                    <Typography variant="h6" gutterBottom sx={{ color: 'black', fontWeight: 'bold', mb: 3 }}>
                         Log Analytics Dashboard
                     </Typography>
                     <LogAnalytics logs={logs} />
@@ -323,13 +323,13 @@ const LogsPage: React.FC = () => {
 
             {activeTab === 2 && (
                 <Box>
-                    <Typography variant="h6" gutterBottom sx={{ color: '#5E6AD2', fontWeight: 'bold', mb: 3 }}>
+                    <Typography variant="h6" gutterBottom sx={{ color: 'black', fontWeight: 'bold', mb: 3 }}>
                         Real-Time Log Streaming
                     </Typography>
                     <RealTimeLogs onNewLog={handleNewLog} />
                     
                     <Box mt={3}>
-                        <Typography variant="h6" gutterBottom sx={{ color: '#5E6AD2', fontWeight: 'bold', mb: 2 }}>
+                        <Typography variant="h6" gutterBottom sx={{ color: 'black', fontWeight: 'bold', mb: 2 }}>
                             Recent Streamed Logs
                         </Typography>
                         <LogsTable 

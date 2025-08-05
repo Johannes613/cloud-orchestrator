@@ -172,14 +172,14 @@ const RepositoryTable: React.FC<RepositoryTableProps> = ({
                     <Table>
                         <TableHead>
                             <TableRow sx={{ backgroundColor: '#f8f9fa' }}>
-                                <TableCell sx={{ fontWeight: 'bold', color: '#5E6AD2' }}>Repository</TableCell>
-                                <TableCell sx={{ fontWeight: 'bold', color: '#5E6AD2' }}>Branch</TableCell>
-                                <TableCell sx={{ fontWeight: 'bold', color: '#5E6AD2' }}>Environment</TableCell>
-                                <TableCell sx={{ fontWeight: 'bold', color: '#5E6AD2' }}>Status</TableCell>
-                                <TableCell sx={{ fontWeight: 'bold', color: '#5E6AD2' }}>Auto-Deploy</TableCell>
-                                <TableCell sx={{ fontWeight: 'bold', color: '#5E6AD2' }}>Last Deployed</TableCell>
-                                <TableCell sx={{ fontWeight: 'bold', color: '#5E6AD2' }}>Stats</TableCell>
-                                <TableCell sx={{ fontWeight: 'bold', color: '#5E6AD2' }}>Actions</TableCell>
+                                <TableCell sx={{ fontWeight: 'bold', color: 'black' }}>Repository</TableCell>
+                                <TableCell sx={{ fontWeight: 'bold', color: 'black' }}>Branch</TableCell>
+                                <TableCell sx={{ fontWeight: 'bold', color: 'black' }}>Environment</TableCell>
+                                <TableCell sx={{ fontWeight: 'bold', color: 'black' }}>Status</TableCell>
+                                <TableCell sx={{ fontWeight: 'bold', color: 'black' }}>Auto-Deploy</TableCell>
+                                <TableCell sx={{ fontWeight: 'bold', color: 'black' }}>Last Deployed</TableCell>
+                                <TableCell sx={{ fontWeight: 'bold', color: 'black' }}>Stats</TableCell>
+                                <TableCell sx={{ fontWeight: 'bold', color: 'black' }}>Actions</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -259,7 +259,7 @@ const RepositoryTable: React.FC<RepositoryTableProps> = ({
                                                     size="small"
                                                     onClick={() => handleSync(repo)}
                                                     disabled={repo.status === 'Syncing'}
-                                                    sx={{ color: '#5E6AD2' }}
+                                                    sx={{ color: 'black' }}
                                                 >
                                                     <RefreshCw size={16} />
                                                 </IconButton>
@@ -337,7 +337,7 @@ const RepositoryTable: React.FC<RepositoryTableProps> = ({
                 fullWidth
                 PaperProps={{ sx: { borderRadius: 3 } }}
             >
-                <DialogTitle sx={{ color: '#5E6AD2', fontWeight: 'bold' }}>
+                <DialogTitle sx={{ color: 'black', fontWeight: 'bold' }}>
                     <Box display="flex" alignItems="center" gap={2}>
                         <AlertCircle size={24} color="#F44336" />
                         Delete Repository

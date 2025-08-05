@@ -124,7 +124,7 @@ const RepositoryForm: React.FC<RepositoryFormProps> = ({
                 sx: { borderRadius: 3 }
             }}
         >
-            <DialogTitle sx={{ color: '#5E6AD2', fontWeight: 'bold' }}>
+            <DialogTitle sx={{ color: 'black', fontWeight: 'bold' }}>
                 <Box display="flex" alignItems="center" gap={2}>
                     <GitBranch size={24} />
                     {mode === 'add' ? 'Add Repository' : 'Edit Repository'}
@@ -143,7 +143,7 @@ const RepositoryForm: React.FC<RepositoryFormProps> = ({
                 <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 3 }}>
                     {/* Basic Information */}
                     <Box>
-                        <Typography variant="h6" gutterBottom sx={{ color: '#5E6AD2', fontWeight: 'bold', mb: 2 }}>
+                        <Typography variant="h6" gutterBottom sx={{ color: 'black', fontWeight: 'bold', mb: 2 }}>
                             Basic Information
                         </Typography>
                         
@@ -189,7 +189,7 @@ const RepositoryForm: React.FC<RepositoryFormProps> = ({
 
                     {/* Deployment Configuration */}
                     <Box>
-                        <Typography variant="h6" gutterBottom sx={{ color: '#5E6AD2', fontWeight: 'bold', mb: 2 }}>
+                        <Typography variant="h6" gutterBottom sx={{ color: 'black', fontWeight: 'bold', mb: 2 }}>
                             Deployment Configuration
                         </Typography>
 
@@ -271,7 +271,7 @@ const RepositoryForm: React.FC<RepositoryFormProps> = ({
                     onClick={handleSubmit}
                     variant="contained"
                     startIcon={<GitCommit size={16} />}
-                    sx={{ backgroundColor: '#5E6AD2' }}
+                    sx={{ backgroundColor: 'black' }}
                 >
                     {mode === 'add' ? 'Add Repository' : 'Update Repository'}
                 </Button>

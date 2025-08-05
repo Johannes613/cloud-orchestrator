@@ -149,7 +149,7 @@ const Sidebar = ({ children }: { children: ReactNode }) => {
     const drawerContent = (
         <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
             <Toolbar sx={{ display: 'flex', alignItems: 'center', p: 2, gap: 1, pl: 3 }}>
-                <AppLogo color={theme.palette.primary.main} />
+                <AppLogo color={theme.palette.primary.background} />
                 {(!isCollapsed || !isLargeScreen) && (
                     <Typography variant="h5" component="div" sx={{ fontWeight: "bold", whiteSpace: "nowrap" }}>
                         Orchestrator
@@ -360,7 +360,7 @@ const Sidebar = ({ children }: { children: ReactNode }) => {
                 component="main"
                 sx={{
                     flexGrow: 1,
-                    p: 3,
+                    p: 2.5,
                     width: { lg: `calc(100% - ${currentDrawerWidth}px)` },
                     minHeight: '100vh',
                     bgcolor: theme.palette.background.default

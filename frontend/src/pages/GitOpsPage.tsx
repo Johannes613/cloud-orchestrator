@@ -12,7 +12,8 @@ import {
     Alert,
     Snackbar,
     Dialog,
-    DialogContent
+    DialogContent,
+    useTheme
 } from '@mui/material';
 import { 
     Plus, 
@@ -68,6 +69,7 @@ interface Deployment {
 }
 
 const GitOpsPage: React.FC = () => {
+    const theme = useTheme();
     const [activeTab, setActiveTab] = useState(0);
     const [repositories, setRepositories] = useState<RepositoryData[]>([
         {
@@ -342,11 +344,11 @@ const GitOpsPage: React.FC = () => {
     };
 
     return (
-        <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
+        <Container maxWidth="xl" sx={{ mt: 2, mb: 4 }}>
             {/* Header */}
             <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
                 <Box>
-                    <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 'bold', color: '#5E6AD2' }}>
+                    <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 'bold' }}>
                         GitOps Management
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
@@ -359,13 +361,13 @@ const GitOpsPage: React.FC = () => {
                         icon={<GitBranch size={16} />}
                         label={`${metrics.totalRepositories} repositories`}
                         variant="outlined"
-                        sx={{ borderColor: '#5E6AD2', color: '#5E6AD2' }}
+                        sx={{ borderColor: 'black', color: 'black' }}
                     />
                     <Chip 
                         icon={<GitCommit size={16} />}
                         label={`${metrics.totalDeployments} deployments`}
                         variant="outlined"
-                        sx={{ borderColor: '#5E6AD2', color: '#5E6AD2' }}
+                        sx={{ borderColor: theme.palette.text.primary, color: theme.palette.text.primary }}
                     />
                     <Button 
                         variant="outlined" 
@@ -381,7 +383,13 @@ const GitOpsPage: React.FC = () => {
                         variant="contained" 
                         startIcon={<Plus size={16} />}
                         onClick={handleAddNew}
-                        sx={{ backgroundColor: '#5E6AD2' }}
+                        sx={{ 
+                            backgroundColor: theme.palette.text.primary, 
+                            color: theme.palette.background.paper,
+                            '&:hover': {
+                                backgroundColor: theme.palette.text.secondary
+                            }
+                        }}
                     >
                         Add Repository
                     </Button>
@@ -395,14 +403,14 @@ const GitOpsPage: React.FC = () => {
                     onChange={(e, newValue) => setActiveTab(newValue)}
                     sx={{
                         '& .MuiTab-root': {
-                            color: '#666',
+                            color: theme.palette.text.secondary,
                             '&.Mui-selected': {
-                                color: '#5E6AD2',
+                                color: theme.palette.text.primary,
                                 fontWeight: 'bold'
                             }
                         },
                         '& .MuiTabs-indicator': {
-                            backgroundColor: '#5E6AD2'
+                            backgroundColor: theme.palette.text.primary
                         }
                     }}
                 >
@@ -431,7 +439,7 @@ const GitOpsPage: React.FC = () => {
 
             {activeTab === 1 && (
                 <Box>
-                    <Typography variant="h6" gutterBottom sx={{ color: '#5E6AD2', fontWeight: 'bold', mb: 3 }}>
+                    <Typography variant="h6" gutterBottom sx={{ color: theme.palette.text.primary, fontWeight: 'bold', mb: 3 }}>
                         Git Repositories
                     </Typography>
                     <RepositoryTable 
@@ -447,7 +455,7 @@ const GitOpsPage: React.FC = () => {
 
             {activeTab === 2 && (
                 <Box>
-                    <Typography variant="h6" gutterBottom sx={{ color: '#5E6AD2', fontWeight: 'bold', mb: 3 }}>
+                    <Typography variant="h6" gutterBottom sx={{ color: theme.palette.text.primary, fontWeight: 'bold', mb: 3 }}>
                         Deployment History
                     </Typography>
                     <DeploymentHistory 
