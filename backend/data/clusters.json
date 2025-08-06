@@ -1,0 +1,74 @@
+[
+  {
+    "id": "cluster-1",
+    "name": "Production Cluster",
+    "provider": "aws",
+    "region": "us-east-1",
+    "version": "1.24.0",
+    "status": "Active",
+    "description": "Main production cluster for web applications",
+    "environment": "production",
+    "created": "2024-01-15T10:00:00Z",
+    "updated": "2024-01-15T10:00:00Z",
+    "last_health_check": "2024-01-15T10:00:00Z",
+    "metrics": {
+      "cpu_usage": 65.5,
+      "memory_usage": 78.2,
+      "node_count": 12,
+      "pod_count": 156,
+      "namespace_count": 8
+    },
+    "node_count": 12,
+    "pod_count": 156,
+    "namespace_count": 8,
+    "deployment_count": 3
+  },
+  {
+    "id": "cluster-2",
+    "name": "Staging Cluster",
+    "provider": "gcp",
+    "region": "us-central1",
+    "version": "1.23.0",
+    "status": "Active",
+    "description": "Staging environment for testing deployments",
+    "environment": "staging",
+    "created": "2024-01-10T14:30:00Z",
+    "updated": "2024-01-15T09:45:00Z",
+    "last_health_check": "2024-01-15T09:45:00Z",
+    "metrics": {
+      "cpu_usage": 45.2,
+      "memory_usage": 62.8,
+      "node_count": 6,
+      "pod_count": 89,
+      "namespace_count": 5
+    },
+    "node_count": 6,
+    "pod_count": 89,
+    "namespace_count": 5,
+    "deployment_count": 1
+  },
+  {
+    "id": "cluster-3",
+    "name": "Development Cluster",
+    "provider": "azure",
+    "region": "eastus",
+    "version": "1.22.0",
+    "status": "Active",
+    "description": "Development environment for developers",
+    "environment": "dev",
+    "created": "2024-01-05T08:15:00Z",
+    "updated": "2024-01-15T08:20:00Z",
+    "last_health_check": "2024-01-15T08:20:00Z",
+    "metrics": {
+      "cpu_usage": 32.1,
+      "memory_usage": 48.7,
+      "node_count": 4,
+      "pod_count": 67,
+      "namespace_count": 3
+    },
+    "node_count": 4,
+    "pod_count": 67,
+    "namespace_count": 3,
+    "deployment_count": 0
+  }
+]

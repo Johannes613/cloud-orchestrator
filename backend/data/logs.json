@@ -1,0 +1,132 @@
+[
+  {
+    "id": "log-1",
+    "timestamp": "2024-01-15T10:30:00Z",
+    "level": "info",
+    "message": "Application WebApp-1 started successfully",
+    "source": "application",
+    "details": {
+      "port": 8080,
+      "version": "2.1.0"
+    },
+    "application_id": "app-1",
+    "deployment_id": null
+  },
+  {
+    "id": "log-2",
+    "timestamp": "2024-01-15T10:31:00Z",
+    "level": "info",
+    "message": "Database connection established",
+    "source": "application",
+    "details": {
+      "database": "postgresql",
+      "connection_time": "150ms"
+    },
+    "application_id": "app-1",
+    "deployment_id": null
+  },
+  {
+    "id": "log-3",
+    "timestamp": "2024-01-15T10:32:00Z",
+    "level": "warning",
+    "message": "High memory usage detected",
+    "source": "application",
+    "details": {
+      "memory_usage": "85%",
+      "threshold": "80%"
+    },
+    "application_id": "app-1",
+    "deployment_id": null
+  },
+  {
+    "id": "log-4",
+    "timestamp": "2024-01-15T10:35:00Z",
+    "level": "error",
+    "message": "Authentication service failed to start",
+    "source": "application",
+    "details": {
+      "error_code": "AUTH_001",
+      "reason": "Invalid configuration"
+    },
+    "application_id": "app-2",
+    "deployment_id": null
+  },
+  {
+    "id": "log-5",
+    "timestamp": "2024-01-15T10:36:00Z",
+    "level": "info",
+    "message": "Deployment completed successfully",
+    "source": "deployment",
+    "details": {
+      "deployment_id": "deploy-1",
+      "duration": "2m 30s"
+    },
+    "application_id": "app-1",
+    "deployment_id": "deploy-1"
+  },
+  {
+    "id": "log-6",
+    "timestamp": "2024-01-15T10:40:00Z",
+    "level": "info",
+    "message": "Data processing job started",
+    "source": "application",
+    "details": {
+      "job_id": "data-job-001",
+      "records": 15000
+    },
+    "application_id": "app-3",
+    "deployment_id": null
+  },
+  {
+    "id": "log-7",
+    "timestamp": "2024-01-15T10:42:00Z",
+    "level": "error",
+    "message": "API Gateway timeout error",
+    "source": "application",
+    "details": {
+      "endpoint": "/api/users",
+      "timeout": "30s"
+    },
+    "application_id": "app-5",
+    "deployment_id": null
+  },
+  {
+    "id": "log-8",
+    "timestamp": "2024-01-15T10:45:00Z",
+    "level": "info",
+    "message": "Health check passed",
+    "source": "system",
+    "details": {
+      "check_type": "liveness",
+      "response_time": "50ms"
+    },
+    "application_id": "app-1",
+    "deployment_id": null
+  },
+  {
+    "id": "log-9",
+    "timestamp": "2024-01-15T10:50:00Z",
+    "level": "warning",
+    "message": "Slow database query detected",
+    "source": "application",
+    "details": {
+      "query_time": "2.5s",
+      "threshold": "1s"
+    },
+    "application_id": "app-3",
+    "deployment_id": null
+  },
+  {
+    "id": "log-10",
+    "timestamp": "2024-01-15T10:55:00Z",
+    "level": "info",
+    "message": "User authentication successful",
+    "source": "application",
+    "details": {
+      "user_id": "user-123",
+      "method": "jwt"
+    },
+    "application_id": "app-2",
+    "deployment_id": null
+  }
+] 
