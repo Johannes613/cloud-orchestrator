@@ -1,26 +1,28 @@
-import asyncio
-import sys
+import json
 import os
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-from services.cluster_service import ClusterService
-
-async def recalculate_deployment_counts():
-    """Recalculate deployment counts for all clusters"""
+def recalculate_deployment_counts():
     try:
-        cluster_service = ClusterService()
-        await cluster_service.recalculate_deployment_counts()
-        print("✅ Deployment counts recalculated successfully")
+        with open('data/clusters.json', 'r') as f:
+            clusters = json.load(f)
         
-        # Show the results
-        clusters = await cluster_service.get_all_clusters()
-        print("\n📊 Updated cluster deployment counts:")
+        with open('data/deployments.json', 'r') as f:
+            deployments = json.load(f)
+        
         for cluster in clusters:
-            print(f"  • {cluster.name}: {cluster.deployment_count} deployments")
+            cluster['deployment_count'] = len([d for d in deployments if d.get('cluster_id') == cluster['id']])
+        
+        with open('data/clusters.json', 'w') as f:
+            json.dump(clusters, f, indent=2)
+        
+        print("Deployment counts recalculated successfully")
+        
+        print("\nUpdated cluster deployment counts:")
+        for cluster in clusters:
+            print(f"  • {cluster['name']}: {cluster['deployment_count']} deployments")
             
     except Exception as e:
-        print(f"❌ Error recalculating deployment counts: {e}")
+        print(f"Error recalculating deployment counts: {e}")
 
 if __name__ == "__main__":
-    asyncio.run(recalculate_deployment_counts()) 
+    recalculate_deployment_counts() 

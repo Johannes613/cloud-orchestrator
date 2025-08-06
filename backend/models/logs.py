@@ -1,24 +1,24 @@
 from pydantic import BaseModel
-from typing import Optional, List, Dict, Any
+from typing import Optional
 from datetime import datetime
-
-class LogEntryCreate(BaseModel):
-    level: str  # 'info', 'warning', 'error', 'debug'
-    message: str
-    source: str  # 'application', 'system', 'deployment'
-    details: Optional[Dict[str, Any]] = None
-    application_id: Optional[str] = None
-    deployment_id: Optional[str] = None
 
 class LogEntry(BaseModel):
     id: str
-    timestamp: str
     level: str
     message: str
     source: str
-    details: Optional[Dict[str, Any]] = None
     application_id: Optional[str] = None
     deployment_id: Optional[str] = None
+    timestamp: datetime
+    metadata: Optional[dict] = None
+
+class LogEntryCreate(BaseModel):
+    level: str
+    message: str
+    source: str
+    application_id: Optional[str] = None
+    deployment_id: Optional[str] = None
+    metadata: Optional[dict] = None
 
 class LogFilter(BaseModel):
     level: Optional[str] = None

@@ -1,42 +1,38 @@
-import asyncio
-import sys
+import json
 import os
+from typing import List, Dict, Any
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-from services.gitops_service import GitOpsService
-from services.deployment_service import DeploymentService
-
-async def sync_gitops_deployments():
-    """Sync GitOps deployment counts with main deployments"""
+def sync_gitops_deployments():
     try:
-        gitops_service = GitOpsService()
-        deployment_service = DeploymentService()
+        main_deployment_count = 0
+        with open('data/deployments.json', 'r') as f:
+            main_deployments = json.load(f)
+            main_deployment_count = len(main_deployments)
         
-        # Get main deployment count
-        main_deployments = await deployment_service.get_all_deployments()
-        main_deployment_count = len(main_deployments)
+        print(f"Main deployments count: {main_deployment_count}")
         
-        print(f"📊 Main deployments count: {main_deployment_count}")
+        with open('data/gitops_repositories.json', 'r') as f:
+            gitops_repos = json.load(f)
         
-        # Sync GitOps
-        await gitops_service.sync_with_main_deployments()
-        
-        # Show the results
-        gitops_repos = await gitops_service.get_all_repositories()
-        print(f"\n📊 GitOps repositories after sync:")
         for repo in gitops_repos:
-            print(f"  • {repo.name}: {repo.deploymentCount} deployments")
+            repo['deploymentCount'] = main_deployment_count // len(gitops_repos)
         
-        # Verify sync
-        gitops_total = sum(repo.deploymentCount for repo in gitops_repos)
-        print(f"\n✅ Sync verification:")
+        with open('data/gitops_repositories.json', 'w') as f:
+            json.dump(gitops_repos, f, indent=2)
+        
+        print(f"\nGitOps repositories after sync:")
+        for repo in gitops_repos:
+            print(f"  • {repo['name']}: {repo['deploymentCount']} deployments")
+        
+        gitops_total = sum(repo['deploymentCount'] for repo in gitops_repos)
+        
+        print(f"\nSync verification:")
         print(f"  • Main deployments: {main_deployment_count}")
         print(f"  • GitOps total: {gitops_total}")
-        print(f"  • Synchronized: {'✅ Yes' if main_deployment_count == gitops_total else '❌ No'}")
+        print(f"  • Synchronized: {'Yes' if main_deployment_count == gitops_total else 'No'}")
         
     except Exception as e:
-        print(f"❌ Error syncing GitOps deployments: {e}")
+        print(f"Error syncing GitOps deployments: {e}")
 
 if __name__ == "__main__":
-    asyncio.run(sync_gitops_deployments()) 
+    sync_gitops_deployments() 
