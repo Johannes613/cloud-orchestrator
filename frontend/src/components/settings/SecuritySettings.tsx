@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
     Typography,
     Box,
@@ -8,10 +8,9 @@ import {
     Switch,
     FormControlLabel,
     Divider,
-    Alert,
-    Grid,
     Stack
 } from '@mui/material';
+
 import { Save, Shield, Key, Lock } from 'lucide-react';
 
 /**
@@ -77,8 +76,8 @@ const SecuritySettings = () => {
                         <Lock size={20} color="#1976d2" />
                         <Typography variant="h6" sx={{ fontWeight: 'medium' }}>Password Settings</Typography>
                     </Stack>
-                    <Grid container spacing={2}>
-                        <Grid item xs={12} md={6}>
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
+                        <Box sx={{ flex: '1 1 300px', minWidth: 0 }}>
                             <TextField
                                 fullWidth
                                 label="Session Timeout (minutes)"
@@ -87,8 +86,8 @@ const SecuritySettings = () => {
                                 onChange={(e) => handleInputChange('sessionTimeout', e.target.value)}
                                 variant="outlined"
                             />
-                        </Grid>
-                        <Grid item xs={12} md={6}>
+                        </Box>
+                        <Box sx={{ flex: '1 1 300px', minWidth: 0 }}>
                             <TextField
                                 fullWidth
                                 label="Password Expiry (days)"
@@ -97,8 +96,8 @@ const SecuritySettings = () => {
                                 onChange={(e) => handleInputChange('passwordExpiry', e.target.value)}
                                 variant="outlined"
                             />
-                        </Grid>
-                        <Grid item xs={12} md={6}>
+                        </Box>
+                        <Box sx={{ flex: '1 1 300px', minWidth: 0 }}>
                             <TextField
                                 fullWidth
                                 label="Failed Login Attempts"
@@ -107,8 +106,8 @@ const SecuritySettings = () => {
                                 onChange={(e) => handleInputChange('failedLoginAttempts', e.target.value)}
                                 variant="outlined"
                             />
-                        </Grid>
-                    </Grid>
+                        </Box>
+                    </Box>
                 </Box>
 
                 <Divider />
@@ -118,8 +117,8 @@ const SecuritySettings = () => {
                         <Key size={20} color="#1976d2" />
                         <Typography variant="h6" sx={{ fontWeight: 'medium' }}>Change Password</Typography>
                     </Stack>
-                    <Grid container spacing={2}>
-                        <Grid item xs={12}>
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
+                        <Box sx={{ width: '100%' }}>
                             <TextField
                                 fullWidth
                                 label="Current Password"
@@ -128,8 +127,8 @@ const SecuritySettings = () => {
                                 onChange={(e) => handleInputChange('currentPassword', e.target.value)}
                                 variant="outlined"
                             />
-                        </Grid>
-                        <Grid item xs={12} md={6}>
+                        </Box>
+                        <Box sx={{ flex: '1 1 300px', minWidth: 0 }}>
                             <TextField
                                 fullWidth
                                 label="New Password"
@@ -138,8 +137,8 @@ const SecuritySettings = () => {
                                 onChange={(e) => handleInputChange('newPassword', e.target.value)}
                                 variant="outlined"
                             />
-                        </Grid>
-                        <Grid item xs={12} md={6}>
+                        </Box>
+                        <Box sx={{ flex: '1 1 300px', minWidth: 0 }}>
                             <TextField
                                 fullWidth
                                 label="Confirm New Password"
@@ -150,8 +149,8 @@ const SecuritySettings = () => {
                                 error={!!settings.newPassword && !passwordsMatch}
                                 helperText={!!settings.newPassword && !passwordsMatch ? 'Passwords do not match' : ''}
                             />
-                        </Grid>
-                    </Grid>
+                        </Box>
+                    </Box>
                 </Box>
             </Stack>
 

@@ -1,11 +1,12 @@
 import { useState, useMemo, useEffect } from 'react';
 import {
     Container, Typography, Box, Paper, InputBase, Button, ButtonGroup,
-    Tabs, Tab, Grid, Card, Dialog, DialogTitle, DialogContent, DialogActions,
-    TextField, FormControl, InputLabel, Select, MenuItem, Alert, CircularProgress
+    Dialog, DialogTitle, DialogContent, DialogActions,
+    Alert, CircularProgress
 } from '@mui/material';
+
 import {
-    Search as SearchIcon, PlusCircle, Filter, Grid3X3, List,
+    Search as SearchIcon, PlusCircle, Grid3X3, List,
     Download, Upload
 } from 'lucide-react';
 
@@ -27,7 +28,7 @@ const ApplicationsPage = () => {
     const [applications, setApplications] = useState<Application[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [tabIndex, setTabIndex] = useState(0);
+
     const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
     const [searchTerm, setSearchTerm] = useState('');
     const [filters, setFilters] = useState<ApplicationFilter>({});
@@ -164,13 +165,13 @@ const ApplicationsPage = () => {
             )}
 
             {/* Status Overview */}
-            <Grid container spacing={3} mb={5}>
-                {Object.entries(statusCounts).map(([status, count]) => (
-                    <Grid item xs={12} sm={6} md={4} lg={2} key={status}>
-                        <StatusCard status={status} count={count} />
-                    </Grid>
-                ))}
-            </Grid>
+                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3, mb: 5 }}>
+                    {Object.entries(statusCounts).map(([status, count]) => (
+                        <Box sx={{ flex: '1 1 200px', minWidth: 0 }} key={status}>
+                            <StatusCard status={status} count={count} />
+                        </Box>
+                    ))}
+                </Box>
 
             {/* Filters */}
             <ApplicationFilters
@@ -218,13 +219,13 @@ const ApplicationsPage = () => {
                     <Typography>No applications found</Typography>
                 </Paper>
             ) : viewMode === 'grid' ? (
-                <Grid container spacing={3}>
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3 }}>
                     {filteredApplications.map(app => (
-                        <Grid item xs={12} sm={6} md={4} key={app.id}>
+                        <Box sx={{ flex: '1 1 400px', minWidth: 0 }} key={app.id}>
                             <EnhancedAppCard application={app} onAction={handleApplicationAction} />
-                        </Grid>
+                        </Box>
                     ))}
-                </Grid>
+                </Box>
             ) : (
                 <Box>
                     {filteredApplications.map(app => (
