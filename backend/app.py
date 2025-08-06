@@ -533,4 +533,6 @@ async def clear_logs(
     except HTTPException:
         raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error clearing logs: {str(e)}") 
+        raise HTTPException(status_code=500, detail=f"Error clearing logs: {str(e)}")
+
+ 
