@@ -1,5 +1,5 @@
 // File: src/pages/ClustersPage.tsx
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import {
     Typography,
@@ -10,6 +10,8 @@ import {
     Chip,
     IconButton,
     Tooltip,
+    CircularProgress,
+    Alert,
 } from '@mui/material';
 import { 
     Add as AddIcon, 
@@ -17,6 +19,10 @@ import {
     Refresh as RefreshIcon 
 } from '@mui/icons-material';
 import ClusterCard from '../components/cluster/ClusterCard.tsx';
+import { firebaseService } from '../services/firebaseService';
+import type { Cluster } from '../services/firebaseService';
+import { useAuth } from '../contexts/AuthContext';
+import { mockClusters } from '../utils/mockData';
 
 // Mock data for active clusters
 const activeClusters = [
@@ -75,13 +81,52 @@ const inactiveClusters = [
 ];
 
 const ClustersPage = () => {
+    const { currentUser } = useAuth();
+    const [clusters, setClusters] = useState<Cluster[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
     const [tabValue, setTabValue] = useState(0);
+
+    useEffect(() => {
+        const loadClusters = async () => {
+            if (!currentUser) {
+                // Show mock data for non-logged-in users
+                setClusters(mockClusters);
+                setLoading(false);
+                return;
+            }
+            try {
+                setLoading(true);
+                setError(null);
+                const data = await firebaseService.getClusters(currentUser.uid);
+                setClusters(data);
+            } catch (err) {
+                setError(err instanceof Error ? err.message : 'Failed to load clusters');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        loadClusters();
+    }, [currentUser]);
 
     const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
         setTabValue(newValue);
     };
 
+    const activeClusters = clusters.filter(cluster => cluster.status === 'active');
+    const inactiveClusters = clusters.filter(cluster => cluster.status !== 'active');
     const clustersToShow = tabValue === 0 ? activeClusters : inactiveClusters;
+
+    if (loading) {
+        return (
+            <Container fluid className="py-4">
+                <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
+                    <CircularProgress />
+                </Box>
+            </Container>
+        );
+    }
 
     return (
         <Container fluid className="py-4">
@@ -123,6 +168,19 @@ const ClustersPage = () => {
                     </Box>
                 </Col>
             </Row>
+
+            {/* Demo Notification for Non-logged-in Users */}
+            {!currentUser && (
+                <Alert severity="info" sx={{ mb: 3 }}>
+                    You're viewing demonstration data. Sign in to access your personal clusters and manage them.
+                </Alert>
+            )}
+
+            {error && (
+                <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError(null)}>
+                    {error}
+                </Alert>
+            )}
 
             <Row className="mb-4">
                 <Col>
@@ -182,7 +240,7 @@ const ClustersPage = () => {
                             <Row>
                                 {clustersToShow.map((cluster) => (
                                     <Col key={cluster.id} lg={6} xl={4} className="mb-4">
-                                        <ClusterCard {...cluster} />
+                                        <ClusterCard cluster={cluster} />
                                     </Col>
                                 ))}
                             </Row>

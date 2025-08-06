@@ -32,11 +32,15 @@ import RepositoryTable from '../components/gitops/RepositoryTable';
 import RepositoryForm from '../components/gitops/RepositoryForm';
 import DeploymentHistory from '../components/gitops/DeploymentHistory';
 
-// Import API service
-import { gitopsApiService } from '../services/gitopsApi';
-import type { Repository, DeploymentHistory as DeploymentHistoryType } from '../services/gitopsApi';
+// Import Firebase service
+import { firebaseService } from '../services/firebaseService';
+import type { Repository, DeploymentHistory as DeploymentHistoryType } from '../types/gitops';
+import { useAuth } from '../contexts/AuthContext';
+import { mockRepositories, mockDeploymentHistory } from '../utils/mockData';
+import { showSignInPrompt } from '../utils/toast';
 
 const GitOpsPage: React.FC = () => {
+    const { currentUser } = useAuth();
     const theme = useTheme();
     const [activeTab, setActiveTab] = useState(0);
     const [repositories, setRepositories] = useState<Repository[]>([]);
@@ -67,13 +71,20 @@ const GitOpsPage: React.FC = () => {
 
     // Load data
     const loadData = async () => {
+        if (!currentUser) {
+            // Show mock data for non-logged-in users
+            setRepositories(mockRepositories);
+            setDeploymentHistory(mockDeploymentHistory);
+            setIsLoading(false);
+            return;
+        }
         try {
             setIsLoading(true);
             setError(null);
             
             const [reposData, historyData] = await Promise.all([
-                gitopsApiService.getRepositories(),
-                gitopsApiService.getDeploymentHistory()
+                firebaseService.getRepositories(currentUser.uid),
+                firebaseService.getDeploymentHistory(currentUser.uid)
             ]);
             
             setRepositories(reposData);
@@ -87,7 +98,7 @@ const GitOpsPage: React.FC = () => {
 
     useEffect(() => {
         loadData();
-    }, []);
+    }, [currentUser]);
 
     // Calculate metrics
     const metrics = useMemo(() => {
@@ -114,8 +125,12 @@ const GitOpsPage: React.FC = () => {
 
     // Handle repository operations
     const handleAddRepository = async (data: any) => {
+        if (!currentUser) {
+            showSignInPrompt();
+            return;
+        }
         try {
-            const newRepo = await gitopsApiService.createRepository(data);
+            const newRepo = await firebaseService.createRepository(data, currentUser.uid);
             setRepositories(prev => [newRepo, ...prev]);
             showNotification('Repository added successfully', 'success');
         } catch (err) {
@@ -124,9 +139,13 @@ const GitOpsPage: React.FC = () => {
     };
 
     const handleEditRepository = async (data: any) => {
+        if (!currentUser) {
+            showSignInPrompt();
+            return;
+        }
         if (editingRepo) {
             try {
-                const updatedRepo = await gitopsApiService.updateRepository(editingRepo.id, data);
+                const updatedRepo = await firebaseService.updateRepository(editingRepo.id, data);
                 setRepositories(prev => prev.map(repo => 
                     repo.id === editingRepo.id ? updatedRepo : repo
                 ));
@@ -138,8 +157,12 @@ const GitOpsPage: React.FC = () => {
     };
 
     const handleDeleteRepository = async (repoId: string) => {
+        if (!currentUser) {
+            showSignInPrompt();
+            return;
+        }
         try {
-            await gitopsApiService.deleteRepository(repoId);
+            await firebaseService.deleteRepository(repoId);
             setRepositories(prev => prev.filter(repo => repo.id !== repoId));
             showNotification('Repository deleted successfully', 'success');
         } catch (err) {
@@ -148,8 +171,12 @@ const GitOpsPage: React.FC = () => {
     };
 
     const handleToggleAutoDeploy = async (repoId: string, enabled: boolean) => {
+        if (!currentUser) {
+            showSignInPrompt();
+            return;
+        }
         try {
-            const updatedRepo = await gitopsApiService.updateRepository(repoId, { autoDeploy: enabled });
+            const updatedRepo = await firebaseService.updateRepository(repoId, { autoDeploy: enabled });
             setRepositories(prev => prev.map(repo => 
                 repo.id === repoId ? updatedRepo : repo
             ));
@@ -160,12 +187,16 @@ const GitOpsPage: React.FC = () => {
     };
 
     const handleSync = async (repoId: string) => {
+        if (!currentUser) {
+            showSignInPrompt();
+            return;
+        }
         try {
             setRepositories(prev => prev.map(repo => 
                 repo.id === repoId ? { ...repo, status: 'Syncing' } : repo
             ));
             
-            const result = await gitopsApiService.syncRepository(repoId);
+            const result = await firebaseService.syncRepository(repoId);
             setRepositories(prev => prev.map(repo => 
                 repo.id === repoId ? result.repository : repo
             ));
@@ -190,6 +221,10 @@ const GitOpsPage: React.FC = () => {
     };
 
     const handleAddNew = () => {
+        if (!currentUser) {
+            showSignInPrompt();
+            return;
+        }
         setEditingRepo(null);
         setFormMode('add');
         setFormOpen(true);
@@ -289,6 +324,13 @@ const GitOpsPage: React.FC = () => {
                     </Button>
                 </Box>
             </Box>
+
+            {/* Demo Notification for Non-logged-in Users */}
+            {!currentUser && (
+                <Alert severity="info" sx={{ mb: 3 }}>
+                    You're viewing demonstration data. Sign in to access your personal GitOps repositories and manage them.
+                </Alert>
+            )}
 
             {/* Error Alert */}
             {error && (

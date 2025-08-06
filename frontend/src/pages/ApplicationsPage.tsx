@@ -17,9 +17,13 @@ import StatusCard from '../components/ui/StatusCard';
 import CreateApplicationForm from '../components/ui/CreateApplicationForm';
 
 import type { Application, ApplicationFilter } from '../types/application';
-import { apiService } from '../services/api';
+import { firebaseService } from '../services/firebaseService';
+import { useAuth } from '../contexts/AuthContext';
+import { mockApplications } from '../utils/mockData';
+import { showSignInPrompt } from '../utils/toast';
 
 const ApplicationsPage = () => {
+    const { currentUser } = useAuth();
     const [applications, setApplications] = useState<Application[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -32,12 +36,18 @@ const ApplicationsPage = () => {
     const [showMetricsDialog, setShowMetricsDialog] = useState(false);
     const [showLogsDialog, setShowLogsDialog] = useState(false);
 
-    // Load applications from API
+    // Load applications from Firebase
     const loadApplications = async () => {
+        if (!currentUser) {
+            // Show mock data for non-logged-in users
+            setApplications(mockApplications);
+            setLoading(false);
+            return;
+        }
         try {
             setLoading(true);
             setError(null);
-            const data = await apiService.getApplications();
+            const data = await firebaseService.getApplications(currentUser.uid);
             setApplications(data);
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Failed to load applications');
@@ -48,7 +58,7 @@ const ApplicationsPage = () => {
 
     useEffect(() => {
         loadApplications();
-    }, []);
+    }, [currentUser]);
 
     const filteredApplications = useMemo(() => {
         return applications.filter(app => {
@@ -67,6 +77,11 @@ const ApplicationsPage = () => {
     }, [applications, searchTerm, filters]);
 
     const handleApplicationAction = (action: string, application: Application) => {
+        if (!currentUser) {
+            showSignInPrompt();
+            return;
+        }
+        
         switch (action) {
             case 'metrics':
                 setSelectedApplication(application);
@@ -122,11 +137,24 @@ const ApplicationsPage = () => {
                 <Button
                     variant="contained"
                     startIcon={<PlusCircle />}
-                    onClick={() => setShowCreateDialog(true)}
+                    onClick={() => {
+                        if (!currentUser) {
+                            showSignInPrompt();
+                            return;
+                        }
+                        setShowCreateDialog(true);
+                    }}
                 >
                     New Application
                 </Button>
             </Box>
+
+            {/* Demo Notification for Non-logged-in Users */}
+            {!currentUser && (
+                <Alert severity="info" sx={{ mb: 3 }}>
+                    You're viewing demonstration data. Sign in to access your personal applications and manage them.
+                </Alert>
+            )}
 
             {/* Error Alert */}
             {error && (

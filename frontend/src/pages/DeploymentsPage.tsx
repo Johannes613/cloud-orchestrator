@@ -45,11 +45,14 @@ import { Container, Row, Col } from 'react-bootstrap';
 import DeploymentTable from '../components/deployment/DeploymentTable';
 import DeploymentMetrics from '../components/deployment/DeploymentMetrics';
 import DeploymentTimeline from '../components/deployment/DeploymentTimeline';
-import { deploymentApiService } from '../services/deploymentApi';
-import { apiService } from '../services/api';
+import { firebaseService } from '../services/firebaseService';
 import type { Deployment, Application } from '../types/deployment';
+import { useAuth } from '../contexts/AuthContext';
+import { mockDeployments, mockApplications } from '../utils/mockData';
+import { showSignInPrompt } from '../utils/toast';
 
 const DeploymentsPage: React.FC = () => {
+    const { currentUser } = useAuth();
     const [deployments, setDeployments] = useState<Deployment[]>([]);
     const [applications, setApplications] = useState<Application[]>([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -70,14 +73,21 @@ const DeploymentsPage: React.FC = () => {
 
     // Load deployments and applications
     const loadData = async () => {
+        if (!currentUser) {
+            // Show mock data for non-logged-in users
+            setDeployments(mockDeployments);
+            setApplications(mockApplications);
+            setIsLoading(false);
+            return;
+        }
         try {
             setIsLoading(true);
             setError(null);
             
             // Load both deployments and applications
             const [deploymentsData, applicationsData] = await Promise.all([
-                deploymentApiService.getDeployments(),
-                apiService.getApplications()
+                firebaseService.getDeployments(currentUser.uid),
+                firebaseService.getApplications(currentUser.uid)
             ]);
             
             setDeployments(deploymentsData);
@@ -91,7 +101,7 @@ const DeploymentsPage: React.FC = () => {
 
     useEffect(() => {
         loadData();
-    }, []);
+    }, [currentUser]);
 
     const handleRefresh = async () => {
         setIsRefreshing(true);
@@ -106,6 +116,10 @@ const DeploymentsPage: React.FC = () => {
     };
 
     const handleNewDeployment = () => {
+        if (!currentUser) {
+            showSignInPrompt();
+            return;
+        }
         setShowNewDeploymentDialog(true);
         // Reset form when opening dialog
         setDeploymentForm({
@@ -119,7 +133,7 @@ const DeploymentsPage: React.FC = () => {
 
     const handleCreateDeployment = async (deploymentData: any) => {
         try {
-            const newDeployment = await deploymentApiService.createDeployment(deploymentData);
+            const newDeployment = await firebaseService.createDeployment(deploymentData);
             setDeployments(prev => [newDeployment, ...prev]);
             setShowNewDeploymentDialog(false);
             setSnackbar({ open: true, message: 'Deployment initiated successfully!', severity: 'success' });
@@ -129,10 +143,15 @@ const DeploymentsPage: React.FC = () => {
     };
 
     const handleRollback = async (deployment: Deployment) => {
+        if (!currentUser) {
+            showSignInPrompt();
+            return;
+        }
         try {
-            await deploymentApiService.rollbackDeployment(deployment.id);
+            // Update deployment status to rolled_back
+            await firebaseService.updateDeployment(deployment.id, { status: 'rolled_back' });
             setSnackbar({ open: true, message: `Rollback initiated for ${deployment.version}`, severity: 'warning' });
-            // Refresh deployments to show the new rollback deployment
+            // Refresh deployments to show the updated status
             await loadData();
         } catch (err) {
             setSnackbar({ open: true, message: 'Failed to initiate rollback', severity: 'error' });
@@ -243,6 +262,13 @@ const DeploymentsPage: React.FC = () => {
                     </Box>
                 </Col>
             </Row>
+
+            {/* Demo Notification for Non-logged-in Users */}
+            {!currentUser && (
+                <Alert severity="info" sx={{ mb: 3 }}>
+                    You're viewing demonstration data. Sign in to access your personal deployments and manage them.
+                </Alert>
+            )}
 
             {/* Error Alert */}
             {error && (

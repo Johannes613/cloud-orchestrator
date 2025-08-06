@@ -113,4 +113,43 @@ export interface ApplicationAction {
     action: (application: Application) => void;
     disabled?: boolean;
     confirmation?: string;
+}
+
+export interface CreateApplicationData {
+  name: string;
+  description: string;
+  namespace: string;
+  image: string;
+  version: string;
+  environment: string;
+  replicas: number;
+  resources: {
+    cpu: {
+      request: string;
+      limit: string;
+    };
+    memory: {
+      request: string;
+      limit: string;
+    };
+    storage: {
+      size: string;
+      type: string;
+    };
+  };
+  tags: string[];
+  owner: string;
+  team: string;
+}
+
+export interface UpdateApplicationData {
+  name?: string;
+  description?: string;
+  status?: string;
+  replicas?: number;
+  version?: string;
+  environment?: string;
+  tags?: string[];
+  owner?: string;
+  team?: string;
 } 

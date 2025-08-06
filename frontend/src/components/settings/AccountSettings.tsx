@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Container,
     Typography,
@@ -9,22 +9,65 @@ import {
     Avatar,
     IconButton,
     Grid,
-    Stack
+    Stack,
+    Alert,
+    CircularProgress
 } from '@mui/material';
 import { Camera, Save } from 'lucide-react';
+import { useAuth } from '../../contexts/AuthContext';
+import { firebaseService } from '../../services/firebaseService';
 
 /**
  * Account settings component for managing user profile information.
  */
 const AccountSettings = () => {
+    const { currentUser } = useAuth();
     const [formData, setFormData] = useState({
-        firstName: 'John',
-        lastName: 'Doe',
-        email: 'john.doe@company.com',
-        phone: '+1 (555) 123-4567',
-        company: 'Tech Corp',
-        position: 'Senior Developer'
+        firstName: '',
+        lastName: '',
+        email: '',
+        phone: '',
+        company: '',
+        position: ''
     });
+    const [loading, setLoading] = useState(true);
+    const [saving, setSaving] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const [success, setSuccess] = useState<string | null>(null);
+
+    useEffect(() => {
+        const loadUserProfile = async () => {
+            if (currentUser) {
+                try {
+                    setLoading(true);
+                    // Get user profile from Firebase
+                    const userProfile = await firebaseService.getUserProfile(currentUser.uid);
+                    setFormData({
+                        firstName: userProfile?.firstName || currentUser.displayName?.split(' ')[0] || '',
+                        lastName: userProfile?.lastName || currentUser.displayName?.split(' ').slice(1).join(' ') || '',
+                        email: currentUser.email || '',
+                        phone: userProfile?.phone || '',
+                        company: userProfile?.company || '',
+                        position: userProfile?.position || ''
+                    });
+                } catch (error) {
+                    // If no profile exists, use basic user info
+                    setFormData({
+                        firstName: currentUser.displayName?.split(' ')[0] || '',
+                        lastName: currentUser.displayName?.split(' ').slice(1).join(' ') || '',
+                        email: currentUser.email || '',
+                        phone: '',
+                        company: '',
+                        position: ''
+                    });
+                } finally {
+                    setLoading(false);
+                }
+            }
+        };
+
+        loadUserProfile();
+    }, [currentUser]);
 
     const handleInputChange = (field: string, value: string) => {
         setFormData(prev => ({
@@ -33,12 +76,53 @@ const AccountSettings = () => {
         }));
     };
 
-    const handleSave = () => {
-        console.log('Saving account settings:', formData);
+    const handleSave = async () => {
+        if (!currentUser) return;
+        
+        try {
+            setSaving(true);
+            setError(null);
+            setSuccess(null);
+            
+            await firebaseService.updateUserProfile(currentUser.uid, {
+                firstName: formData.firstName,
+                lastName: formData.lastName,
+                phone: formData.phone,
+                company: formData.company,
+                position: formData.position
+            });
+            
+            setSuccess('Profile updated successfully!');
+        } catch (err) {
+            setError('Failed to update profile. Please try again.');
+        } finally {
+            setSaving(false);
+        }
     };
+
+    if (loading) {
+        return (
+            <Paper elevation={3} sx={{ p: { xs: 2, md: 4 }, borderRadius: 2 }}>
+                <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
+                    <CircularProgress />
+                </Box>
+            </Paper>
+        );
+    }
 
     return (
         <Paper elevation={3} sx={{ p: { xs: 2, md: 4 }, borderRadius: 2 }}>
+            {error && (
+                <Alert severity="error" sx={{ mb: 2 }} onClose={() => setError(null)}>
+                    {error}
+                </Alert>
+            )}
+            {success && (
+                <Alert severity="success" sx={{ mb: 2 }} onClose={() => setSuccess(null)}>
+                    {success}
+                </Alert>
+            )}
+            
             <Stack direction="row" alignItems="center" spacing={3} mb={4}>
                 <Box sx={{ position: 'relative' }}>
                     <Avatar sx={{ width: 100, height: 100, fontSize: '2.5rem' }}>
@@ -126,8 +210,13 @@ const AccountSettings = () => {
             </Grid>
 
             <Box mt={4} textAlign="right">
-                <Button variant="contained" startIcon={<Save size={16} />} onClick={handleSave}>
-                    Save Changes
+                <Button 
+                    variant="contained" 
+                    startIcon={saving ? <CircularProgress size={16} /> : <Save size={16} />} 
+                    onClick={handleSave}
+                    disabled={saving}
+                >
+                    {saving ? 'Saving...' : 'Save Changes'}
                 </Button>
             </Box>
         </Paper>

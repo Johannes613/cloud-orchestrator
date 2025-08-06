@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Typography,
   Box,
@@ -14,6 +14,7 @@ import {
   Divider,
   Alert,
   AlertTitle,
+  Button,
 } from '@mui/material';
 import {
   AreaChart,
@@ -39,10 +40,63 @@ import {
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container as BootstrapContainer, Row as BootstrapRow, Col as BootstrapCol } from 'react-bootstrap';
 import DashboardHeader from '../components/dashboard/DashboardHeader'; 
-import StatCard from '../components/dashboard/StatCard'; 
+import StatCard from '../components/dashboard/StatCard';
+import { firebaseService } from '../services/firebaseService';
+import { seedInitialData } from '../utils/seedData';
+import { useAuth } from '../contexts/AuthContext';
+import { mockDashboardStats } from '../utils/mockData';
+import { showSignInPrompt } from '../utils/toast'; 
 
 const DashboardPage = () => {
-    // Mock data for charts
+    const { currentUser } = useAuth();
+    const [dashboardStats, setDashboardStats] = useState({
+        totalApplications: 0,
+        runningApplications: 0,
+        failedApplications: 0,
+        totalReplicas: 0,
+        averageCpuUsage: 0,
+        averageMemoryUsage: 0,
+    });
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const loadDashboardStats = async () => {
+            if (!currentUser) {
+                // Show mock data for non-logged-in users
+                setDashboardStats(mockDashboardStats);
+                setLoading(false);
+                return;
+            }
+            try {
+                const stats = await firebaseService.getDashboardStats(currentUser.uid);
+                setDashboardStats(stats);
+            } catch (error) {
+                console.error('Error loading dashboard stats:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        loadDashboardStats();
+    }, [currentUser]);
+
+    const handleSeedData = async () => {
+        if (!currentUser) {
+            // Show sign-in prompt for non-logged-in users
+            showSignInPrompt();
+            return;
+        }
+        try {
+            await seedInitialData(currentUser.uid);
+            // Reload stats after seeding
+            const stats = await firebaseService.getDashboardStats(currentUser.uid);
+            setDashboardStats(stats);
+        } catch (error) {
+            console.error('Error seeding data:', error);
+        }
+    };
+
+    // Mock data for charts (you can replace with real data from Firebase)
     const salesData = [
         { name: 'Jan', value: 4000 }, { name: 'Feb', value: 3000 },
         { name: 'Mar', value: 5000 }, { name: 'Apr', value: 2780 },
@@ -108,20 +162,46 @@ const DashboardPage = () => {
     return (
         <BootstrapContainer fluid className="mt-2 mb-4 ">
             <DashboardHeader />
+            
+            {/* Demo Notification for Non-logged-in Users */}
+            {!currentUser && (
+                <Alert severity="info" sx={{ mb: 2 }}>
+                    <AlertTitle>Demo Mode</AlertTitle>
+                    You're viewing demonstration data. Sign in to access your personal dashboard and manage your applications.
+                </Alert>
+            )}
+            
+            {/* Seed Data Button for Testing */}
+            <Box sx={{ mb: 2, textAlign: 'center' }}>
+                <Button 
+                    variant="outlined" 
+                    onClick={handleSeedData}
+                    sx={{ 
+                        borderColor: '#5E6AD2', 
+                        color: '#5E6AD2',
+                        '&:hover': { 
+                            borderColor: '#4a5bc0', 
+                            backgroundColor: 'rgba(94, 106, 210, 0.1)' 
+                        }
+                    }}
+                >
+                    {currentUser ? 'Seed Test Data' : 'Try Interactive Features'}
+                </Button>
+            </Box>
 
             {/* Stats Cards */}
             <BootstrapRow className="g-4 mb-4">
                 <BootstrapCol xs={12} sm={6} lg={3}>
-                    <StatCard title="Total Revenue" value="$24,895" Icon={AttachMoney} color="primary" />
+                    <StatCard title="Total Applications" value={dashboardStats.totalApplications.toString()} Icon={Cloud} color="primary" />
                 </BootstrapCol>
                 <BootstrapCol xs={12} sm={6} lg={3}>
-                    <StatCard title="Active Users" value="1,245" Icon={People} color="secondary" />
+                    <StatCard title="Running Applications" value={dashboardStats.runningApplications.toString()} Icon={People} color="success" />
                 </BootstrapCol>
                 <BootstrapCol xs={12} sm={6} lg={3}>
-                    <StatCard title="Active Services" value="12" Icon={Cloud} color="success" />
+                    <StatCard title="Failed Applications" value={dashboardStats.failedApplications.toString()} Icon={Warning} color="error" />
                 </BootstrapCol>
                 <BootstrapCol xs={12} sm={6} lg={3}>
-                    <StatCard title="System Uptime" value="99.9%" Icon={Speed} color="warning" />
+                    <StatCard title="Total Replicas" value={dashboardStats.totalReplicas.toString()} Icon={Speed} color="warning" />
                 </BootstrapCol>
             </BootstrapRow>
 

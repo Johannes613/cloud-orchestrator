@@ -15,7 +15,8 @@ import {
     Box,
     Alert
 } from '@mui/material';
-import { apiService } from '../../services/api';
+import { firebaseService } from '../../services/firebaseService';
+import { useAuth } from '../../contexts/AuthContext';
 
 interface CreateApplicationFormProps {
     open: boolean;
@@ -28,6 +29,7 @@ const CreateApplicationForm: React.FC<CreateApplicationFormProps> = ({
     onClose,
     onSuccess
 }) => {
+    const { currentUser } = useAuth();
     const [formData, setFormData] = useState({
         name: '',
         description: '',
@@ -72,7 +74,12 @@ const CreateApplicationForm: React.FC<CreateApplicationFormProps> = ({
         setError(null);
 
         try {
-            await apiService.createApplication({
+            if (!currentUser) {
+                setError('User not authenticated');
+                return;
+            }
+            
+            await firebaseService.createApplication({
                 name: formData.name,
                 description: formData.description,
                 namespace: formData.namespace,
@@ -88,7 +95,7 @@ const CreateApplicationForm: React.FC<CreateApplicationFormProps> = ({
                 tags: formData.tags,
                 owner: formData.owner || 'admin@company.com',
                 team: formData.team
-            });
+            }, currentUser.uid);
 
             onSuccess();
             onClose();

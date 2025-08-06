@@ -19,45 +19,27 @@ import {
     Memory as MemoryIcon,
     Storage as StorageIcon,
 } from '@mui/icons-material';
+import type { Cluster } from '../../services/firebaseService';
 
 interface ClusterCardProps {
-    id: string;
-    name: string;
-    status: string;
-    nodes: number;
-    pods: number;
-    cpuUsage: string;
-    memoryUsage: string;
-    image: string;
-    region?: string;
-    version?: string;
+    cluster: Cluster;
 }
 
-const ClusterCard: React.FC<ClusterCardProps> = ({ 
-    name, 
-    status, 
-    nodes, 
-    pods, 
-    cpuUsage, 
-    memoryUsage, 
-    image,
-    region = 'Unknown',
-    version = 'Unknown'
-}) => {
-    const isActive = status === 'Running';
-    const cpuUsageNumber = parseInt(cpuUsage.replace('%', ''));
-    const memoryUsageNumber = parseInt(memoryUsage.replace('%', ''));
+const ClusterCard: React.FC<ClusterCardProps> = ({ cluster }) => {
+    const isActive = cluster.status === 'active';
+    const cpuUsagePercentage = cluster.cpu.total > 0 ? (cluster.cpu.used / cluster.cpu.total) * 100 : 0;
+    const memoryUsagePercentage = cluster.memory.total > 0 ? (cluster.memory.used / cluster.memory.total) * 100 : 0;
 
     const getStatusColor = (status: string) => {
         switch (status.toLowerCase()) {
-            case 'running':
+            case 'active':
                 return 'success';
-            case 'stopped':
-                return 'error';
             case 'inactive':
-                return 'default';
-            default:
+                return 'error';
+            case 'maintenance':
                 return 'warning';
+            default:
+                return 'default';
         }
     };
 
@@ -94,164 +76,155 @@ const ClusterCard: React.FC<ClusterCardProps> = ({
                 }}
             >
                 <Box
-                    component="img"
-                    src={image}
-                    alt={`${name} cluster`}
-                    sx={{
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'cover',
-                        opacity: 0.8,
-                    }}
-                />
-                <Box
                     sx={{
                         position: 'absolute',
                         top: 12,
                         right: 12,
-                        display: 'flex',
-                        gap: 1,
+                        zIndex: 1,
                     }}
                 >
                     <Chip
-                        icon={isActive ? <RunningIcon /> : <StoppedIcon />}
-                        label={status}
+                        label={cluster.status}
+                        color={getStatusColor(cluster.status) as any}
                         size="small"
-                        color={getStatusColor(status) as any}
-                        sx={{
-                            fontWeight: 600,
-                            '& .MuiChip-icon': {
-                                fontSize: '1rem',
-                            },
-                        }}
+                        sx={{ fontWeight: 600 }}
                     />
                 </Box>
                 <Box
                     sx={{
-                        position: 'absolute',
-                        bottom: 12,
-                        left: 12,
+                        width: '100%',
+                        height: '100%',
                         display: 'flex',
-                        gap: 1,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        background: 'rgba(0,0,0,0.3)',
                     }}
                 >
-                    <Chip
-                        label={region}
-                        size="small"
-                        variant="outlined"
+                    <Typography
+                        variant="h5"
                         sx={{
-                            backgroundColor: 'rgba(255, 255, 255, 0.1)',
                             color: 'white',
-                            borderColor: 'rgba(255, 255, 255, 0.3)',
-                            fontWeight: 500,
+                            fontWeight: 700,
+                            textAlign: 'center',
+                            textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
                         }}
-                    />
+                    >
+                        {cluster.name}
+                    </Typography>
                 </Box>
             </Box>
 
             <CardContent sx={{ flexGrow: 1, p: 3 }}>
                 <Box display="flex" justifyContent="space-between" alignItems="flex-start" mb={2}>
-                    <Typography variant="h6" component="h3" sx={{ fontWeight: 600, color: 'text.primary' }}>
-                        {name}
-                    </Typography>
-                    <Chip
-                        label={`v${version}`}
-                        size="small"
-                        variant="outlined"
-                        sx={{
-                            fontSize: '0.75rem',
-                            fontWeight: 500,
-                        }}
-                    />
-                </Box>
-
-                <Box display="flex" gap={3} mb={3}>
-                    <Box display="flex" alignItems="center" gap={1}>
-                        <StorageIcon sx={{ fontSize: '1rem', color: 'text.secondary' }} />
-                        <Typography variant="body2" color="text.secondary">
-                            {nodes} nodes
+                    <Box>
+                        <Typography variant="h6" component="h3" gutterBottom sx={{ fontWeight: 600 }}>
+                            {cluster.name}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary" gutterBottom>
+                            {cluster.provider} • {cluster.region}
                         </Typography>
                     </Box>
-                    <Box display="flex" alignItems="center" gap={1}>
-                        <MemoryIcon sx={{ fontSize: '1rem', color: 'text.secondary' }} />
-                        <Typography variant="body2" color="text.secondary">
-                            {pods} pods
+                    <Avatar sx={{ bgcolor: 'primary.main', width: 40, height: 40 }}>
+                        {cluster.name.charAt(0)}
+                    </Avatar>
+                </Box>
+
+                <Box display="flex" gap={2} mb={2}>
+                    <Box flex={1}>
+                        <Typography variant="body2" color="text.secondary" gutterBottom>
+                            Nodes
+                        </Typography>
+                        <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                            {cluster.nodes}
+                        </Typography>
+                    </Box>
+                    <Box flex={1}>
+                        <Typography variant="body2" color="text.secondary" gutterBottom>
+                            Applications
+                        </Typography>
+                        <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                            {cluster.applications}
                         </Typography>
                     </Box>
                 </Box>
 
                 <Box mb={2}>
                     <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
-                        <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500 }}>
+                        <Typography variant="body2" color="text.secondary">
                             CPU Usage
                         </Typography>
-                        <Typography variant="body2" color="text.primary" sx={{ fontWeight: 600 }}>
-                            {cpuUsage}
+                        <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                            {cpuUsagePercentage.toFixed(1)}%
                         </Typography>
                     </Box>
                     <LinearProgress
                         variant="determinate"
-                        value={cpuUsageNumber}
-                        color={getUsageColor(cpuUsageNumber) as any}
-                        sx={{
-                            height: 6,
-                            borderRadius: 3,
-                            backgroundColor: 'action.hover',
-                        }}
+                        value={cpuUsagePercentage}
+                        color={getUsageColor(cpuUsagePercentage) as any}
+                        sx={{ height: 6, borderRadius: 3 }}
                     />
                 </Box>
 
-                <Box>
+                <Box mb={2}>
                     <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
-                        <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500 }}>
+                        <Typography variant="body2" color="text.secondary">
                             Memory Usage
                         </Typography>
-                        <Typography variant="body2" color="text.primary" sx={{ fontWeight: 600 }}>
-                            {memoryUsage}
+                        <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                            {memoryUsagePercentage.toFixed(1)}%
                         </Typography>
                     </Box>
                     <LinearProgress
                         variant="determinate"
-                        value={memoryUsageNumber}
-                        color={getUsageColor(memoryUsageNumber) as any}
-                        sx={{
-                            height: 6,
-                            borderRadius: 3,
-                            backgroundColor: 'action.hover',
-                        }}
+                        value={memoryUsagePercentage}
+                        color={getUsageColor(memoryUsagePercentage) as any}
+                        sx={{ height: 6, borderRadius: 3 }}
+                    />
+                </Box>
+
+                <Box display="flex" gap={1} mb={2}>
+                    <Chip
+                        icon={<MemoryIcon />}
+                        label={`${cluster.memory.used}GB / ${cluster.memory.total}GB`}
+                        size="small"
+                        variant="outlined"
+                    />
+                    <Chip
+                        icon={<StorageIcon />}
+                        label={`${cluster.storage.used}GB / ${cluster.storage.total}GB`}
+                        size="small"
+                        variant="outlined"
                     />
                 </Box>
             </CardContent>
 
-            <CardActions sx={{ p: 3, pt: 0, gap: 1 }}>
-                <Tooltip title="View cluster details">
-                    <IconButton
-                        size="small"
-                        sx={{
-                            border: '1px solid',
-                            borderColor: 'divider',
-                            '&:hover': {
-                                backgroundColor: 'action.hover',
-                            },
-                        }}
-                    >
-                        <ViewIcon />
-                    </IconButton>
-                </Tooltip>
-                <Tooltip title="Cluster settings">
-                    <IconButton
-                        size="small"
-                        sx={{
-                            border: '1px solid',
-                            borderColor: 'divider',
-                            '&:hover': {
-                                backgroundColor: 'action.hover',
-                            },
-                        }}
-                    >
-                        <SettingsIcon />
-                    </IconButton>
-                </Tooltip>
+            <CardActions sx={{ p: 3, pt: 0 }}>
+                <Box display="flex" gap={1} width="100%">
+                    <Tooltip title="View cluster details">
+                        <IconButton
+                            size="small"
+                            sx={{
+                                border: '1px solid',
+                                borderColor: 'divider',
+                                '&:hover': { backgroundColor: 'action.hover' }
+                            }}
+                        >
+                            <ViewIcon />
+                        </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Cluster settings">
+                        <IconButton
+                            size="small"
+                            sx={{
+                                border: '1px solid',
+                                borderColor: 'divider',
+                                '&:hover': { backgroundColor: 'action.hover' }
+                            }}
+                        >
+                            <SettingsIcon />
+                        </IconButton>
+                    </Tooltip>
+                </Box>
             </CardActions>
         </Card>
     );

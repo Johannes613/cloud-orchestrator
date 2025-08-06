@@ -24,8 +24,9 @@ import {
     alpha,
     Chip,
 } from '@mui/material';
-import { Link as RouterLink, useLocation } from 'react-router-dom';
+import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import { ColorModeContext } from '../../utils/theme';
+import { useAuth } from '../../contexts/AuthContext';
 
 // Lucide-react icons for a more professional look
 import {
@@ -115,6 +116,8 @@ const Sidebar = ({ children }: { children: ReactNode }) => {
     const theme = useTheme();
     const colorMode = useContext(ColorModeContext);
     const location = useLocation();
+    const navigate = useNavigate();
+    const { currentUser, signOut } = useAuth();
 
     const [isCollapsed, setIsCollapsed] = useState(false);
     const [mobileOpen, setMobileOpen] = useState(false);
@@ -155,6 +158,21 @@ const Sidebar = ({ children }: { children: ReactNode }) => {
         setNotificationAnchorEl(null);
     };
 
+    const handleLogout = async () => {
+        try {
+            await signOut();
+            navigate('/');
+            handleClose();
+        } catch (error) {
+            console.error('Error logging out:', error);
+        }
+    };
+
+    const handleNavigateToLanding = () => {
+        navigate('/');
+        handleClose();
+    };
+
     const navItems = useMemo(() => [
         { id: "", text: "Dashboard", icon: <LayoutDashboard size={20} />, path: "/app" },
         { id: "applications", text: "Applications", icon: <Rocket size={20} />, path: "/app/applications" },
@@ -162,6 +180,7 @@ const Sidebar = ({ children }: { children: ReactNode }) => {
         { id: "clusters", text: "Clusters", icon: <Server size={20} />, path: "/app/clusters" },
         { id: "gitops", text: "GitOps", icon: <GitFork size={20} />, path: "/app/gitops" },
         { id: "logs", text: "Logs", icon: <ScrollText size={20} />, path: "/app/logs" },
+        { id: "landing", text: "Landing Page", icon: <Home size={20} />, path: "/" },
     ], []);
 
     const activePageId = location.pathname.split('/')[2] || '';
@@ -225,10 +244,10 @@ const Sidebar = ({ children }: { children: ReactNode }) => {
                     {navItems.map((item) => (
                         <ListItem key={item.text} disablePadding sx={{ mb: 1 }}>
                             <ListItemButton
-                                component={RouterLink}
-                                to={item.path}
+                                component={item.id === "landing" ? "button" : RouterLink}
+                                to={item.id === "landing" ? undefined : item.path}
+                                onClick={item.id === "landing" ? handleNavigateToLanding : () => !isLargeScreen && setMobileOpen(false)}
                                 selected={activePageId === item.id}
-                                onClick={() => !isLargeScreen && setMobileOpen(false)}
                                 sx={{
                                     borderRadius: 3,
                                     mx: 1,
@@ -361,32 +380,37 @@ const Sidebar = ({ children }: { children: ReactNode }) => {
                         </ListItemButton>
                     </ListItem>
                     
-                    <ListItem disablePadding>
-                        <ListItemButton sx={{ 
-                            borderRadius: 3, 
-                            mx: 1,
-                            minHeight: 48,
-                        }}>
-                            <ListItemIcon sx={{ 
-                                minWidth: 0, 
-                                mr: (isCollapsed && isLargeScreen) ? 0 : 2, 
-                                justifyContent: 'center',
-                                color: 'text.secondary',
-                            }}>
-                                <LogOut size={20} />
-                            </ListItemIcon>
-                            {(!isCollapsed || !isLargeScreen) && (
-                                <ListItemText 
-                                    primary="Logout"
-                                    sx={{ 
-                                        '& .MuiListItemText-primary': {
-                                            fontWeight: 500,
-                                        }
-                                    }}
-                                />
-                            )}
-                        </ListItemButton>
-                    </ListItem>
+                    {currentUser && (
+                        <ListItem disablePadding>
+                            <ListItemButton 
+                                onClick={handleLogout}
+                                sx={{ 
+                                    borderRadius: 3, 
+                                    mx: 1,
+                                    minHeight: 48,
+                                }}
+                            >
+                                <ListItemIcon sx={{ 
+                                    minWidth: 0, 
+                                    mr: (isCollapsed && isLargeScreen) ? 0 : 2, 
+                                    justifyContent: 'center',
+                                    color: 'text.secondary',
+                                }}>
+                                    <LogOut size={20} />
+                                </ListItemIcon>
+                                {(!isCollapsed || !isLargeScreen) && (
+                                    <ListItemText 
+                                        primary="Logout"
+                                        sx={{ 
+                                            '& .MuiListItemText-primary': {
+                                                fontWeight: 500,
+                                            }
+                                        }}
+                                    />
+                                )}
+                            </ListItemButton>
+                        </ListItem>
+                    )}
                 </List>
             </Box>
         </Box>
@@ -680,22 +704,28 @@ const Sidebar = ({ children }: { children: ReactNode }) => {
                                     />
                                     <Box>
                                         <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                                            John Doe
+                                            {currentUser?.displayName || 'User'}
                                         </Typography>
                                         <Typography variant="caption" color="text.secondary">
-                                            john.doe@company.com
+                                            {currentUser?.email || 'user@example.com'}
                                         </Typography>
                                     </Box>
                                 </Box>
                             </MenuItem>
                             <Divider />
+                            <MenuItem onClick={handleNavigateToLanding}>
+                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                                    <Home size={16} />
+                                    <Typography variant="body2">Landing Page</Typography>
+                                </Box>
+                            </MenuItem>
                             <MenuItem onClick={handleClose}>
                                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                                     <Settings size={16} />
                                     <Typography variant="body2">Settings</Typography>
                                 </Box>
                             </MenuItem>
-                            <MenuItem onClick={handleClose}>
+                            <MenuItem onClick={handleLogout}>
                                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                                     <LogOut size={16} />
                                     <Typography variant="body2">Logout</Typography>
