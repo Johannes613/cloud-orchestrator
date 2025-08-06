@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Typography,
@@ -15,12 +15,16 @@ import {
 } from '@mui/material';
 import { Container, Row, Col, Button as BootstrapButton } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
+import SignInModal from '../components/auth/SignInModal';
+import { useAuth } from '../contexts/AuthContext';
 
 // Placeholder for LandingHeader and LoadingAnimation if they are external
-const LandingHeader: React.FC = () => {
+const LandingHeader: React.FC<{ onSignInClick: () => void }> = ({ onSignInClick }) => {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const { currentUser, signOut } = useAuth();
+  const navigate = useNavigate();
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -29,6 +33,20 @@ const LandingHeader: React.FC = () => {
   const handleNavClick = (sectionId: string) => {
     document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
     setMobileOpen(false);
+  };
+
+  const handleSignInClick = () => {
+    setMobileOpen(false);
+    onSignInClick();
+  };
+
+  const handleLogout = async () => {
+    try {
+      await signOut();
+      navigate('/');
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
   };
 
   const navItems = [
@@ -80,6 +98,23 @@ const LandingHeader: React.FC = () => {
                {item.text}
              </BootstrapButton>
            ))}
+                       <BootstrapButton 
+              variant={currentUser ? "outline-light" : "light"}
+              size="sm"
+              onClick={currentUser ? handleLogout : handleSignInClick}
+              style={{
+                fontSize: '14px',
+                fontWeight: 500,
+                padding: '8px 16px',
+                borderRadius: '6px',
+                transition: 'all 0.2s ease',
+                backgroundColor: currentUser ? 'transparent' : '#ffffff',
+                color: currentUser ? '#ffffff' : '#000000',
+                borderColor: currentUser ? 'rgba(255,255,255,0.3)' : '#ffffff',
+              }}
+            >
+              {currentUser ? 'Logout' : 'Sign In'}
+            </BootstrapButton>
            <Link to="/app" style={{ textDecoration: 'none' }}>
              <BootstrapButton 
                variant="light" 
@@ -168,6 +203,24 @@ const LandingHeader: React.FC = () => {
               {item.text}
             </BootstrapButton>
           ))}
+          <BootstrapButton 
+            variant={currentUser ? "outline-light" : "light"}
+            size="lg"
+            onClick={currentUser ? handleLogout : handleSignInClick}
+            style={{
+              fontSize: '18px',
+              fontWeight: 500,
+              padding: '12px 24px',
+              borderRadius: '6px',
+              transition: 'all 0.2s ease',
+              minWidth: '200px',
+              backgroundColor: currentUser ? 'transparent' : '#ffffff',
+              color: currentUser ? '#ffffff' : '#000000',
+              borderColor: currentUser ? 'rgba(255,255,255,0.3)' : '#ffffff',
+            }}
+          >
+            {currentUser ? 'Logout' : 'Sign In'}
+          </BootstrapButton>
           <Link to="/app" style={{ textDecoration: 'none' }}>
             <BootstrapButton 
               variant="light" 
@@ -214,9 +267,19 @@ const LandingPage: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const navigate = useNavigate();
+  const [signInModalOpen, setSignInModalOpen] = useState(false);
+  const { currentUser } = useAuth();
 
   const handleDashboardClick = () => {
     navigate('/app');
+  };
+
+  const handleSignInClick = () => {
+    setSignInModalOpen(true);
+  };
+
+  const handleSignInModalClose = () => {
+    setSignInModalOpen(false);
   };
 
   // Consistent styles for cards
@@ -327,7 +390,7 @@ const LandingPage: React.FC = () => {
 
   return (
     <Box sx={{ bgcolor: '#000000', color: '#ffffff', minHeight: '100vh' }}>
-      <LandingHeader />
+      <LandingHeader onSignInClick={handleSignInClick} />
 
              {/* Hero Section */}
        <Box
@@ -407,7 +470,7 @@ const LandingPage: React.FC = () => {
                      transition: 'all 0.2s ease',
                    }}
                  >
-                   Launch Dashboard <ArrowForwardOutlined sx={{ ml: 1, fontSize: '1.1rem' }} />
+                   {currentUser ? 'Go to Dashboard' : 'Launch Dashboard'} <ArrowForwardOutlined sx={{ ml: 1, fontSize: '1.1rem' }} />
                  </BootstrapButton>
                  <BootstrapButton
                    onClick={() => document.getElementById('demo-section')?.scrollIntoView({ behavior: 'smooth' })}
@@ -904,7 +967,7 @@ const LandingPage: React.FC = () => {
                    transition: 'all 0.2s ease',
                  }}
                >
-                 Launch Dashboard <ArrowForwardOutlined sx={{ ml: 1, fontSize: '1.1rem' }} />
+                 {currentUser ? 'Go to Dashboard' : 'Launch Dashboard'} <ArrowForwardOutlined sx={{ ml: 1, fontSize: '1.1rem' }} />
                </BootstrapButton>
                <BootstrapButton
                  onClick={() => document.getElementById('demo-section')?.scrollIntoView({ behavior: 'smooth' })}
@@ -938,6 +1001,12 @@ const LandingPage: React.FC = () => {
           </Typography>
         </Container>
       </Box>
+
+      {/* Sign In Modal */}
+      <SignInModal 
+        open={signInModalOpen} 
+        onClose={handleSignInModalClose} 
+      />
     </Box>
   );
 };

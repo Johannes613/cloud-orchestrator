@@ -10,10 +10,11 @@ import ClustersPage from './pages/ClustersPage.tsx';
 import GitOpsPage from './pages/GitOpsPage.tsx';
 import LogsPage from './pages/LogsPage.tsx';
 import SettingsPage from './pages/SettingsPage.tsx';
+import { AuthProvider } from './contexts/AuthContext';
 
 const App = () => {
     return (
-        <>
+        <AuthProvider>
             <Routes>
                 <Route path="/" element={<LandingPage />} />
                 <Route path="/app/*" element={
@@ -31,7 +32,7 @@ const App = () => {
                     </Sidebar>
                 } />
             </Routes>
-        </>
+        </AuthProvider>
     );
 };
 
