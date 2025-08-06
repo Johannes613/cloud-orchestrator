@@ -1,147 +1,19 @@
-{
-  "3dccc8c2-2a90-4b6c-9aca-125acedffde7": {
-    "id": "3dccc8c2-2a90-4b6c-9aca-125acedffde7",
-    "name": "WebApp-1",
-    "description": "Main web application for customer portal",
-    "status": "Running",
-    "replicas": 3,
-    "created": "2025-08-05T22:52:48.926627",
-    "updated": "2025-08-05T22:52:48.926627",
-    "namespace": "default",
-    "image": "nginx:1.24",
-    "version": "2.1.0",
-    "environment": "production",
-    "health": {
-      "status": "Running",
-      "lastCheck": "2025-08-05T22:52:48.926627",
-      "responseTime": 120,
-      "uptime": 86400,
-      "errorRate": 0.5
-    },
-    "metrics": {
-      "cpu": {
-        "current": 1.2,
-        "limit": 2.0,
-        "unit": "cores"
-      },
-      "memory": {
-        "current": 512,
-        "limit": 1024,
-        "unit": "Mi"
-      },
-      "network": {
-        "bytesIn": 1073741824,
-        "bytesOut": 536870912
-      },
-      "requests": {
-        "total": 1500000,
-        "perSecond": 25.5,
-        "errors": 7500
-      }
-    },
-    "resources": {
-      "cpu": {
-        "request": "500m",
-        "limit": "2"
-      },
-      "memory": {
-        "request": "256Mi",
-        "limit": "1Gi"
-      },
-      "storage": {
-        "size": "10Gi",
-        "type": "SSD"
-      }
-    },
-    "logs": [],
-    "vulnerabilities": [],
-    "tags": [
-      "web",
-      "frontend",
-      "customer-portal"
-    ],
-    "owner": "john.doe@company.com",
-    "team": "Frontend"
-  },
-  "e2b20339-ba6c-44c3-8e6d-903e78be2a62": {
-    "id": "e2b20339-ba6c-44c3-8e6d-903e78be2a62",
-    "name": "Microservice-A",
-    "description": "Authentication and authorization service",
-    "status": "Running",
-    "replicas": 1,
-    "created": "2025-08-05T22:52:48.926845",
-    "updated": "2025-08-05T22:52:48.926845",
-    "namespace": "auth",
-    "image": "auth-service:1.2.0",
-    "version": "1.2.0",
-    "environment": "staging",
-    "health": {
-      "status": "Running",
-      "lastCheck": "2025-08-05T22:52:48.926845",
-      "responseTime": 120,
-      "uptime": 86400,
-      "errorRate": 0.5
-    },
-    "metrics": {
-      "cpu": {
-        "current": 1.2,
-        "limit": 2.0,
-        "unit": "cores"
-      },
-      "memory": {
-        "current": 512,
-        "limit": 1024,
-        "unit": "Mi"
-      },
-      "network": {
-        "bytesIn": 1073741824,
-        "bytesOut": 536870912
-      },
-      "requests": {
-        "total": 1500000,
-        "perSecond": 25.5,
-        "errors": 7500
-      }
-    },
-    "resources": {
-      "cpu": {
-        "request": "500m",
-        "limit": "2"
-      },
-      "memory": {
-        "request": "256Mi",
-        "limit": "1Gi"
-      },
-      "storage": {
-        "size": "10Gi",
-        "type": "SSD"
-      }
-    },
-    "logs": [],
-    "vulnerabilities": [],
-    "tags": [
-      "microservice",
-      "auth",
-      "security"
-    ],
-    "owner": "jane.smith@company.com",
-    "team": "Backend"
-  },
-  "95430ad0-3f86-4b09-9ff8-13959979c18b": {
-    "id": "95430ad0-3f86-4b09-9ff8-13959979c18b",
-    "name": "test",
-    "description": "t",
+[
+  {
+    "id": "39c5c9ac-d8ab-43c2-a15d-a79fbe4b0252",
+    "name": "sd",
+    "description": "sdsd",
     "status": "Creating",
     "replicas": 1,
-    "created": "2025-08-05T22:54:03.985802",
-    "updated": "2025-08-05T22:54:03.985802",
-    "namespace": "deftault",
+    "created": "2025-08-06T13:52:27.787474",
+    "updated": "2025-08-06T13:52:27.787474",
+    "namespace": "defasdult",
     "image": "nginx:latest",
     "version": "1.0.0",
     "environment": "development",
     "health": {
       "status": "Starting",
-      "lastCheck": "2025-08-05T22:54:03.985802",
+      "lastCheck": "2025-08-06T13:52:27.787474",
       "responseTime": 0,
       "uptime": 0,
       "errorRate": 0.0
@@ -184,7 +56,7 @@
     "logs": [],
     "vulnerabilities": [],
     "tags": [],
-    "owner": "tt",
+    "owner": "ds",
     "team": "DevOps"
   }
-}
+]

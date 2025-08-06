@@ -17,7 +17,11 @@ class DeploymentService:
             if os.path.exists(self.data_file):
                 with open(self.data_file, 'r') as f:
                     data = json.load(f)
-                    self.deployments = data
+                    # Handle both array and object formats
+                    if isinstance(data, list):
+                        self.deployments = {item['id']: item for item in data}
+                    else:
+                        self.deployments = data
         except Exception as e:
             print(f"Error loading deployment data: {e}")
             self.deployments = {}

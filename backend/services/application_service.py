@@ -17,7 +17,11 @@ class ApplicationService:
             if os.path.exists(self.data_file):
                 with open(self.data_file, 'r') as f:
                     data = json.load(f)
-                    self.applications = {app['id']: app for app in data}
+                    # Handle both array and object formats
+                    if isinstance(data, list):
+                        self.applications = {app['id']: app for app in data}
+                    else:
+                        self.applications = data
         except Exception as e:
             print(f"Error loading data: {e}")
             self.applications = {}

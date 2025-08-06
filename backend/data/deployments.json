@@ -166,5 +166,33 @@
         "limit": "512Mi"
       }
     }
+  },
+  "3852448c-5c26-4bd5-948c-36b09340aa53": {
+    "id": "3852448c-5c26-4bd5-948c-36b09340aa53",
+    "application_id": "39c5c9ac-d8ab-43c2-a15d-a79fbe4b0252",
+    "version": "1.1.1.1",
+    "status": "Pending",
+    "commit_hash": "qewrwe",
+    "environment": "staging",
+    "deployed_at": "2025-08-06T13:53:20.689134",
+    "logs_url": "https://logs.example.com/deployment-3852448c-5c26-4bd5-948c-36b09340aa53",
+    "duration": 0,
+    "created": "2025-08-06T13:53:20.689134",
+    "updated": "2025-08-06T13:53:20.689134",
+    "description": "sfsef",
+    "triggered_by": "admin@company.com",
+    "rollback_version": "",
+    "deployment_strategy": "rolling",
+    "replicas": 1,
+    "resources": {
+      "cpu": {
+        "request": "100m",
+        "limit": "500m"
+      },
+      "memory": {
+        "request": "128Mi",
+        "limit": "512Mi"
+      }
+    }
   }
 }
