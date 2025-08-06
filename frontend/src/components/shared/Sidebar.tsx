@@ -156,15 +156,15 @@ const Sidebar = ({ children }: { children: ReactNode }) => {
     };
 
     const navItems = useMemo(() => [
-        { id: "", text: "Dashboard", icon: <LayoutDashboard size={20} />, path: "/" },
-        { id: "applications", text: "Applications", icon: <Rocket size={20} />, path: "/applications" },
-        { id: "deployments", text: "Deployments", icon: <CloudUpload size={20} />, path: "/deployments" },
-        { id: "clusters", text: "Clusters", icon: <Server size={20} />, path: "/clusters" },
-        { id: "gitops", text: "GitOps", icon: <GitFork size={20} />, path: "/gitops" },
-        { id: "logs", text: "Logs", icon: <ScrollText size={20} />, path: "/logs" },
+        { id: "", text: "Dashboard", icon: <LayoutDashboard size={20} />, path: "/app" },
+        { id: "applications", text: "Applications", icon: <Rocket size={20} />, path: "/app/applications" },
+        { id: "deployments", text: "Deployments", icon: <CloudUpload size={20} />, path: "/app/deployments" },
+        { id: "clusters", text: "Clusters", icon: <Server size={20} />, path: "/app/clusters" },
+        { id: "gitops", text: "GitOps", icon: <GitFork size={20} />, path: "/app/gitops" },
+        { id: "logs", text: "Logs", icon: <ScrollText size={20} />, path: "/app/logs" },
     ], []);
 
-    const activePageId = location.pathname.split('/')[1] || '';
+    const activePageId = location.pathname.split('/')[2] || '';
 
     const drawerContent = (
         <Box sx={{ 
@@ -295,7 +295,7 @@ const Sidebar = ({ children }: { children: ReactNode }) => {
                     <ListItem disablePadding sx={{ mb: 1 }}>
                         <ListItemButton
                             component={RouterLink}
-                            to="/settings"
+                            to="/app/settings"
                             selected={activePageId === 'settings'}
                             onClick={() => !isLargeScreen && setMobileOpen(false)}
                             sx={{ 
