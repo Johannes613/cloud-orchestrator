@@ -1,0 +1,170 @@
+{
+  "ff018c9b-c808-4189-86f6-21bcc58d86aa": {
+    "id": "ff018c9b-c808-4189-86f6-21bcc58d86aa",
+    "application_id": "3dccc8c2-2a90-4b6c-9aca-125acedffde7",
+    "version": "v1.2.0",
+    "status": "Success",
+    "commit_hash": "a1b2c3d4",
+    "environment": "production",
+    "deployed_at": "2025-08-05T22:52:48.928822",
+    "logs_url": "https://logs.example.com/deployment-ff018c9b-c808-4189-86f6-21bcc58d86aa",
+    "duration": 120,
+    "created": "2025-08-05T22:52:48.928822",
+    "updated": "2025-08-05T22:52:48.928822",
+    "description": "Production deployment",
+    "triggered_by": "john.doe@company.com",
+    "rollback_version": "v1.0.0",
+    "deployment_strategy": "rolling",
+    "replicas": 1,
+    "resources": {
+      "cpu": {
+        "request": "100m",
+        "limit": "500m"
+      },
+      "memory": {
+        "request": "128Mi",
+        "limit": "512Mi"
+      }
+    }
+  },
+  "8d926f73-ebf3-4b65-8424-6276df2a4ac4": {
+    "id": "8d926f73-ebf3-4b65-8424-6276df2a4ac4",
+    "application_id": "e2b20339-ba6c-44c3-8e6d-903e78be2a62",
+    "version": "v1.1.5",
+    "status": "Deploying",
+    "commit_hash": "e5f6g7h8",
+    "environment": "staging",
+    "deployed_at": "2025-08-05T22:52:48.928964",
+    "logs_url": "https://logs.example.com/deployment-8d926f73-ebf3-4b65-8424-6276df2a4ac4",
+    "duration": 45,
+    "created": "2025-08-05T22:52:48.928964",
+    "updated": "2025-08-05T22:52:48.928964",
+    "description": "Staging deployment",
+    "triggered_by": "jane.smith@company.com",
+    "rollback_version": "v1.0.0",
+    "deployment_strategy": "rolling",
+    "replicas": 1,
+    "resources": {
+      "cpu": {
+        "request": "100m",
+        "limit": "500m"
+      },
+      "memory": {
+        "request": "128Mi",
+        "limit": "512Mi"
+      }
+    }
+  },
+  "3b4c9bce-68f6-4bb1-aa6c-7bf1df8dcc29": {
+    "id": "3b4c9bce-68f6-4bb1-aa6c-7bf1df8dcc29",
+    "application_id": "3dccc8c2-2a90-4b6c-9aca-125acedffde7",
+    "version": "v1.0.0",
+    "status": "Failed",
+    "commit_hash": "i9j0k1l2",
+    "environment": "production",
+    "deployed_at": "2025-08-05T22:52:48.929096",
+    "logs_url": "https://logs.example.com/deployment-3b4c9bce-68f6-4bb1-aa6c-7bf1df8dcc29",
+    "duration": 300,
+    "created": "2025-08-05T22:52:48.929096",
+    "updated": "2025-08-05T22:52:48.929096",
+    "description": "Failed production deployment",
+    "triggered_by": "john.doe@company.com",
+    "rollback_version": "v1.0.0",
+    "deployment_strategy": "rolling",
+    "replicas": 1,
+    "resources": {
+      "cpu": {
+        "request": "100m",
+        "limit": "500m"
+      },
+      "memory": {
+        "request": "128Mi",
+        "limit": "512Mi"
+      }
+    }
+  },
+  "59625da3-29d6-4b13-86e8-c51e4daf3bb5": {
+    "id": "59625da3-29d6-4b13-86e8-c51e4daf3bb5",
+    "application_id": "e2b20339-ba6c-44c3-8e6d-903e78be2a62",
+    "version": "1.1.1.1",
+    "status": "Pending",
+    "commit_hash": "wefsfewe42",
+    "environment": "production",
+    "deployed_at": "2025-08-05T23:01:05.459924",
+    "logs_url": "https://logs.example.com/deployment-59625da3-29d6-4b13-86e8-c51e4daf3bb5",
+    "duration": 0,
+    "created": "2025-08-05T23:01:05.459924",
+    "updated": "2025-08-05T23:01:05.459924",
+    "description": "test",
+    "triggered_by": "admin@company.com",
+    "rollback_version": "",
+    "deployment_strategy": "rolling",
+    "replicas": 1,
+    "resources": {
+      "cpu": {
+        "request": "100m",
+        "limit": "500m"
+      },
+      "memory": {
+        "request": "128Mi",
+        "limit": "512Mi"
+      }
+    }
+  },
+  "82b3c944-07ab-46a4-a1a5-5523eae5b2db": {
+    "id": "82b3c944-07ab-46a4-a1a5-5523eae5b2db",
+    "application_id": "3dccc8c2-2a90-4b6c-9aca-125acedffde7",
+    "version": "v1.0.0",
+    "status": "Pending",
+    "commit_hash": "a1b2c3d4",
+    "environment": "production",
+    "deployed_at": "2025-08-05T23:01:28.686133",
+    "logs_url": "https://logs.example.com/rollback-82b3c944-07ab-46a4-a1a5-5523eae5b2db",
+    "duration": 0,
+    "created": "2025-08-05T23:01:28.686133",
+    "updated": "2025-08-05T23:01:28.686133",
+    "description": "Rollback from v1.2.0",
+    "triggered_by": "system",
+    "rollback_version": "v1.2.0",
+    "deployment_strategy": "rolling",
+    "replicas": 1,
+    "resources": {
+      "cpu": {
+        "request": "100m",
+        "limit": "500m"
+      },
+      "memory": {
+        "request": "128Mi",
+        "limit": "512Mi"
+      }
+    }
+  },
+  "859bb04a-f2fc-4298-8444-e3c35413db82": {
+    "id": "859bb04a-f2fc-4298-8444-e3c35413db82",
+    "application_id": "e2b20339-ba6c-44c3-8e6d-903e78be2a62",
+    "version": "1.1.1.1",
+    "status": "Pending",
+    "commit_hash": "sg",
+    "environment": "staging",
+    "deployed_at": "2025-08-05T23:01:56.145262",
+    "logs_url": "https://logs.example.com/deployment-859bb04a-f2fc-4298-8444-e3c35413db82",
+    "duration": 0,
+    "created": "2025-08-05T23:01:56.145262",
+    "updated": "2025-08-05T23:01:56.145262",
+    "description": "edt",
+    "triggered_by": "admin@company.com",
+    "rollback_version": "",
+    "deployment_strategy": "rolling",
+    "replicas": 1,
+    "resources": {
+      "cpu": {
+        "request": "100m",
+        "limit": "500m"
+      },
+      "memory": {
+        "request": "128Mi",
+        "limit": "512Mi"
+      }
+    }
+  }
+}

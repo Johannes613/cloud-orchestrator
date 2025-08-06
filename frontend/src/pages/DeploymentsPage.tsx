@@ -23,7 +23,8 @@ import {
     Select,
     MenuItem,
     Alert,
-    Snackbar
+    Snackbar,
+    CircularProgress
 } from '@mui/material';
 import {
     Download,
@@ -44,125 +45,121 @@ import { Container, Row, Col } from 'react-bootstrap';
 import DeploymentTable from '../components/deployment/DeploymentTable';
 import DeploymentMetrics from '../components/deployment/DeploymentMetrics';
 import DeploymentTimeline from '../components/deployment/DeploymentTimeline';
-
-interface Application {
-    id: string;
-    name: string;
-    repo_url: string;
-    owner: string;
-    created_at: string;
-}
-
-interface Deployment {
-    id: string;
-    application_id: string;
-    version: string;
-    status: 'Pending' | 'Deploying' | 'Success' | 'Failed';
-    commit_hash: string;
-    environment: 'dev' | 'staging' | 'production';
-    deployed_at: string;
-    logs_url: string;
-    // Additional fields for UI
-    application?: Application;
-    duration?: number;
-}
+import { deploymentApiService } from '../services/deploymentApi';
+import { apiService } from '../services/api';
+import type { Deployment, Application } from '../types/deployment';
 
 const DeploymentsPage: React.FC = () => {
-    const [deployments, setDeployments] = useState<Deployment[]>([
-        {
-            id: '1',
-            application_id: 'app-1',
-            version: 'v1.2.0',
-            status: 'Success',
-            commit_hash: 'a1b2c3d4',
-            environment: 'production',
-            deployed_at: '2024-01-15T10:30:00Z',
-            logs_url: 'https://logs.example.com/deployment-1',
-            duration: 120,
-            application: {
-                id: 'app-1',
-                name: 'Frontend App',
-                repo_url: 'https://github.com/company/frontend',
-                owner: 'John Doe',
-                created_at: '2024-01-01T00:00:00Z'
-            }
-        },
-        {
-            id: '2',
-            application_id: 'app-2',
-            version: 'v1.1.5',
-            status: 'Deploying',
-            commit_hash: 'e5f6g7h8',
-            environment: 'staging',
-            deployed_at: '2024-01-15T09:15:00Z',
-            logs_url: 'https://logs.example.com/deployment-2',
-            duration: 45,
-            application: {
-                id: 'app-2',
-                name: 'Backend API',
-                repo_url: 'https://github.com/company/backend',
-                owner: 'Jane Smith',
-                created_at: '2024-01-01T00:00:00Z'
-            }
-        },
-        {
-            id: '3',
-            application_id: 'app-1',
-            version: 'v1.0.0',
-            status: 'Failed',
-            commit_hash: 'i9j0k1l2',
-            environment: 'production',
-            deployed_at: '2024-01-15T08:00:00Z',
-            logs_url: 'https://logs.example.com/deployment-3',
-            duration: 300,
-            application: {
-                id: 'app-1',
-                name: 'Frontend App',
-                repo_url: 'https://github.com/company/frontend',
-                owner: 'John Doe',
-                created_at: '2024-01-01T00:00:00Z'
-            }
-        },
-        {
-            id: '4',
-            application_id: 'app-3',
-            version: 'v0.9.8',
-            status: 'Success',
-            commit_hash: 'm3n4o5p6',
-            environment: 'dev',
-            deployed_at: '2024-01-14T16:45:00Z',
-            logs_url: 'https://logs.example.com/deployment-4',
-            duration: 95,
-            application: {
-                id: 'app-3',
-                name: 'Mobile App',
-                repo_url: 'https://github.com/company/mobile',
-                owner: 'Sarah Wilson',
-                created_at: '2024-01-01T00:00:00Z'
-            }
-        }
-    ]);
-
-    const [isLoading, setIsLoading] = useState(false);
+    const [deployments, setDeployments] = useState<Deployment[]>([]);
+    const [applications, setApplications] = useState<Application[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [isRefreshing, setIsRefreshing] = useState(false);
+    const [error, setError] = useState<string | null>(null);
     const [showNewDeploymentDialog, setShowNewDeploymentDialog] = useState(false);
     const [selectedDeployment, setSelectedDeployment] = useState<Deployment | null>(null);
     const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' as 'success' | 'error' | 'warning' | 'info' });
 
+    // Form state for new deployment
+    const [deploymentForm, setDeploymentForm] = useState({
+        application_id: '',
+        version: '',
+        environment: '',
+        commit_hash: '',
+        description: ''
+    });
+
+    // Load deployments and applications
+    const loadData = async () => {
+        try {
+            setIsLoading(true);
+            setError(null);
+            
+            // Load both deployments and applications
+            const [deploymentsData, applicationsData] = await Promise.all([
+                deploymentApiService.getDeployments(),
+                apiService.getApplications()
+            ]);
+            
+            setDeployments(deploymentsData);
+            setApplications(applicationsData);
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Failed to load deployments');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        loadData();
+    }, []);
+
     const handleRefresh = async () => {
-        setIsLoading(true);
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        setIsLoading(false);
-        setSnackbar({ open: true, message: 'Deployments refreshed successfully!', severity: 'success' });
+        setIsRefreshing(true);
+        try {
+            await loadData();
+            setSnackbar({ open: true, message: 'Deployments refreshed successfully!', severity: 'success' });
+        } catch (err) {
+            setSnackbar({ open: true, message: 'Failed to refresh deployments', severity: 'error' });
+        } finally {
+            setIsRefreshing(false);
+        }
     };
 
     const handleNewDeployment = () => {
         setShowNewDeploymentDialog(true);
+        // Reset form when opening dialog
+        setDeploymentForm({
+            application_id: '',
+            version: '',
+            environment: '',
+            commit_hash: '',
+            description: ''
+        });
     };
 
-    const handleRollback = (deployment: Deployment) => {
-        setSelectedDeployment(deployment);
-        setSnackbar({ open: true, message: `Rollback initiated for ${deployment.version}`, severity: 'warning' });
+    const handleCreateDeployment = async (deploymentData: any) => {
+        try {
+            const newDeployment = await deploymentApiService.createDeployment(deploymentData);
+            setDeployments(prev => [newDeployment, ...prev]);
+            setShowNewDeploymentDialog(false);
+            setSnackbar({ open: true, message: 'Deployment initiated successfully!', severity: 'success' });
+        } catch (err) {
+            setSnackbar({ open: true, message: 'Failed to create deployment', severity: 'error' });
+        }
+    };
+
+    const handleRollback = async (deployment: Deployment) => {
+        try {
+            await deploymentApiService.rollbackDeployment(deployment.id);
+            setSnackbar({ open: true, message: `Rollback initiated for ${deployment.version}`, severity: 'warning' });
+            // Refresh deployments to show the new rollback deployment
+            await loadData();
+        } catch (err) {
+            setSnackbar({ open: true, message: 'Failed to initiate rollback', severity: 'error' });
+        }
+    };
+
+    const handleFormChange = (field: string, value: string) => {
+        setDeploymentForm(prev => ({
+            ...prev,
+            [field]: value
+        }));
+    };
+
+    const handleSubmitDeployment = () => {
+        if (!deploymentForm.application_id || !deploymentForm.version || !deploymentForm.environment || !deploymentForm.commit_hash) {
+            setSnackbar({ open: true, message: 'Please fill in all required fields', severity: 'error' });
+            return;
+        }
+
+        handleCreateDeployment({
+            application_id: deploymentForm.application_id,
+            version: deploymentForm.version,
+            environment: deploymentForm.environment,
+            commit_hash: deploymentForm.commit_hash,
+            description: deploymentForm.description,
+            triggered_by: 'admin@company.com'
+        });
     };
 
     const getStatusStats = () => {
@@ -176,6 +173,16 @@ const DeploymentsPage: React.FC = () => {
     };
 
     const stats = getStatusStats();
+
+    if (isLoading) {
+        return (
+            <Container fluid className="p-2">
+                <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
+                    <CircularProgress />
+                </Box>
+            </Container>
+        );
+    }
 
     return (
         <Container fluid className="p-2">
@@ -199,7 +206,7 @@ const DeploymentsPage: React.FC = () => {
                             <Tooltip title="Refresh Deployments">
                                 <IconButton
                                     onClick={handleRefresh}
-                                    disabled={isLoading}
+                                    disabled={isRefreshing}
                                     sx={{
                                         bgcolor: 'black',
                                         color: 'white',
@@ -237,8 +244,15 @@ const DeploymentsPage: React.FC = () => {
                 </Col>
             </Row>
 
+            {/* Error Alert */}
+            {error && (
+                <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError(null)}>
+                    {error}
+                </Alert>
+            )}
+
             {/* Loading Progress */}
-            {isLoading && (
+            {isRefreshing && (
                 <Row className="mb-3">
                     <Col>
                         <LinearProgress sx={{ height: 4, borderRadius: 2 }} />
@@ -331,46 +345,45 @@ const DeploymentsPage: React.FC = () => {
             </Row>
 
             {/* Main Content */}
-           {/* Main Content */}
-<Container fluid>
-    {/* Recent Deployments - Full Width */}
-    <Row className="mb-4">
-        <Col lg={12}>
-            <Paper
-                elevation={3}
-                sx={{
-                    borderRadius: 3,
-                    overflow: 'hidden',
-                    boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
-                }}
-            >
-                <Box sx={{ p: 3, borderBottom: '1px solid', borderColor: 'divider' }}>
-                    <Typography variant="h5" sx={{ fontWeight: 600, mb: 1, color: 'black' }}>
-                        Recent Deployments
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                        Track the latest deployment activities across all environments
-                    </Typography>
-                </Box>
-                <DeploymentTable
-                    data={deployments}
-                    onRollback={handleRollback}
-                    onViewDetails={(deployment) => setSelectedDeployment(deployment)}
-                />
-            </Paper>
-        </Col>
-    </Row>
+            <Container fluid>
+                {/* Recent Deployments - Full Width */}
+                <Row className="mb-4">
+                    <Col lg={12}>
+                        <Paper
+                            elevation={3}
+                            sx={{
+                                borderRadius: 3,
+                                overflow: 'hidden',
+                                boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
+                            }}
+                        >
+                            <Box sx={{ p: 3, borderBottom: '1px solid', borderColor: 'divider' }}>
+                                <Typography variant="h5" sx={{ fontWeight: 600, mb: 1, color: 'black' }}>
+                                    Recent Deployments
+                                </Typography>
+                                <Typography variant="body2" color="text.secondary">
+                                    Track the latest deployment activities across all environments
+                                </Typography>
+                            </Box>
+                            <DeploymentTable
+                                data={deployments}
+                                onRollback={handleRollback}
+                                onViewDetails={(deployment) => setSelectedDeployment(deployment)}
+                            />
+                        </Paper>
+                    </Col>
+                </Row>
 
-    {/* Metrics and Timeline - Side by Side */}
-    <Row>
-        <Col lg={6} className="mb-4">
-            <DeploymentMetrics deployments={deployments} />
-        </Col>
-        <Col lg={6} className="mb-4">
-            <DeploymentTimeline deployments={deployments} />
-        </Col>
-    </Row>
-</Container>
+                {/* Metrics and Timeline - Side by Side */}
+                <Row>
+                    <Col lg={6} className="mb-4">
+                        <DeploymentMetrics deployments={deployments} />
+                    </Col>
+                    <Col lg={6} className="mb-4">
+                        <DeploymentTimeline deployments={deployments} />
+                    </Col>
+                </Row>
+            </Container>
 
             {/* Floating Action Button */}
             <Fab
@@ -408,10 +421,16 @@ const DeploymentsPage: React.FC = () => {
                         <Box sx={{ mb: 3 }}>
                             <FormControl fullWidth>
                                 <InputLabel>Application</InputLabel>
-                                <Select label="Application">
-                                    <MenuItem value="app-1">Frontend App</MenuItem>
-                                    <MenuItem value="app-2">Backend API</MenuItem>
-                                    <MenuItem value="app-3">Mobile App</MenuItem>
+                                <Select 
+                                    label="Application" 
+                                    value={deploymentForm.application_id}
+                                    onChange={(e) => handleFormChange('application_id', e.target.value)}
+                                >
+                                    {applications.map(app => (
+                                        <MenuItem key={app.id} value={app.id}>
+                                            {app.name}
+                                        </MenuItem>
+                                    ))}
                                 </Select>
                             </FormControl>
                         </Box>
@@ -421,12 +440,18 @@ const DeploymentsPage: React.FC = () => {
                                 label="Version"
                                 placeholder="v1.2.1"
                                 variant="outlined"
+                                value={deploymentForm.version}
+                                onChange={(e) => handleFormChange('version', e.target.value)}
                             />
                         </Box>
                         <Box sx={{ mb: 3 }}>
                             <FormControl fullWidth>
                                 <InputLabel>Environment</InputLabel>
-                                <Select label="Environment">
+                                <Select 
+                                    label="Environment" 
+                                    value={deploymentForm.environment}
+                                    onChange={(e) => handleFormChange('environment', e.target.value)}
+                                >
                                     <MenuItem value="dev">Development</MenuItem>
                                     <MenuItem value="staging">Staging</MenuItem>
                                     <MenuItem value="production">Production</MenuItem>
@@ -439,6 +464,20 @@ const DeploymentsPage: React.FC = () => {
                                 label="Commit Hash"
                                 placeholder="a1b2c3d4"
                                 variant="outlined"
+                                value={deploymentForm.commit_hash}
+                                onChange={(e) => handleFormChange('commit_hash', e.target.value)}
+                            />
+                        </Box>
+                        <Box sx={{ mb: 3 }}>
+                            <TextField
+                                fullWidth
+                                label="Description"
+                                placeholder="Deployment description"
+                                variant="outlined"
+                                multiline
+                                rows={3}
+                                value={deploymentForm.description}
+                                onChange={(e) => handleFormChange('description', e.target.value)}
                             />
                         </Box>
                     </Box>
@@ -449,10 +488,7 @@ const DeploymentsPage: React.FC = () => {
                     </Button>
                     <Button
                         variant="contained"
-                        onClick={() => {
-                            setShowNewDeploymentDialog(false);
-                            setSnackbar({ open: true, message: 'Deployment initiated successfully!', severity: 'success' });
-                        }}
+                        onClick={handleSubmitDeployment}
                         sx={{ bgcolor: 'black' }}
                     >
                         Deploy

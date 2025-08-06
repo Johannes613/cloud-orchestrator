@@ -1,5 +1,5 @@
 // File: src/pages/GitOpsPage.tsx
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { 
     Container, 
     Typography, 
@@ -13,7 +13,8 @@ import {
     Snackbar,
     Dialog,
     DialogContent,
-    useTheme
+    useTheme,
+    CircularProgress
 } from '@mui/material';
 import { 
     Plus, 
@@ -31,120 +32,26 @@ import RepositoryTable from '../components/gitops/RepositoryTable';
 import RepositoryForm from '../components/gitops/RepositoryForm';
 import DeploymentHistory from '../components/gitops/DeploymentHistory';
 
-interface RepositoryData {
-    id: string;
-    name: string;
-    url: string;
-    branch: string;
-    autoDeploy: boolean;
-    status: 'Active' | 'Inactive' | 'Error' | 'Syncing';
-    lastDeployed: string;
-    environment: string;
-    namespace: string;
-    path: string;
-    syncInterval: number;
-    lastSync: string;
-    commitCount: number;
-    deploymentCount: number;
-}
-
-interface Deployment {
-    id: string;
-    commitHash: string;
-    commitMessage: string;
-    branch: string;
-    author: string;
-    timestamp: string;
-    status: 'success' | 'failed' | 'pending' | 'running';
-    duration: number;
-    environment: string;
-    namespace: string;
-    resources: {
-        deployments: number;
-        services: number;
-        configMaps: number;
-        secrets: number;
-    };
-    logs?: string[];
-}
+// Import API service
+import { gitopsApiService } from '../services/gitopsApi';
+import type { Repository, DeploymentHistory as DeploymentHistoryType } from '../services/gitopsApi';
 
 const GitOpsPage: React.FC = () => {
     const theme = useTheme();
     const [activeTab, setActiveTab] = useState(0);
-    const [repositories, setRepositories] = useState<RepositoryData[]>([
-        {
-            id: '1',
-            name: 'webapp-repo',
-            url: 'https://github.com/company/webapp',
-            branch: 'main',
-            autoDeploy: true,
-            status: 'Active',
-            lastDeployed: '2024-01-15T10:30:00Z',
-            environment: 'production',
-            namespace: 'webapp',
-            path: './k8s',
-            syncInterval: 5,
-            lastSync: '2024-01-15T10:25:00Z',
-            commitCount: 156,
-            deploymentCount: 23
-        },
-        {
-            id: '2',
-            name: 'api-repo',
-            url: 'https://github.com/company/api',
-            branch: 'develop',
-            autoDeploy: true,
-            status: 'Active',
-            lastDeployed: '2024-01-15T09:15:00Z',
-            environment: 'staging',
-            namespace: 'api',
-            path: './deploy',
-            syncInterval: 5,
-            lastSync: '2024-01-15T09:10:00Z',
-            commitCount: 89,
-            deploymentCount: 15
-        },
-        {
-            id: '3',
-            name: 'config-repo',
-            url: 'https://github.com/company/config',
-            branch: 'main',
-            autoDeploy: false,
-            status: 'Inactive',
-            lastDeployed: '2024-01-14T16:45:00Z',
-            environment: 'development',
-            namespace: 'config',
-            path: './manifests',
-            syncInterval: 15,
-            lastSync: '2024-01-14T16:40:00Z',
-            commitCount: 45,
-            deploymentCount: 8
-        },
-        {
-            id: '4',
-            name: 'monitoring-repo',
-            url: 'https://github.com/company/monitoring',
-            branch: 'main',
-            autoDeploy: true,
-            status: 'Error',
-            lastDeployed: '2024-01-15T08:20:00Z',
-            environment: 'production',
-            namespace: 'monitoring',
-            path: './k8s',
-            syncInterval: 5,
-            lastSync: '2024-01-15T08:15:00Z',
-            commitCount: 67,
-            deploymentCount: 12
-        }
-    ]);
+    const [repositories, setRepositories] = useState<Repository[]>([]);
+    const [deploymentHistory, setDeploymentHistory] = useState<DeploymentHistoryType[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [isRefreshing, setIsRefreshing] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
     // Form states
     const [formOpen, setFormOpen] = useState(false);
     const [formMode, setFormMode] = useState<'add' | 'edit'>('add');
-    const [editingRepo, setEditingRepo] = useState<RepositoryData | null>(null);
+    const [editingRepo, setEditingRepo] = useState<Repository | null>(null);
 
     // History states
-    const [selectedRepoForHistory, setSelectedRepoForHistory] = useState<RepositoryData | null>(null);
+    const [selectedRepoForHistory, setSelectedRepoForHistory] = useState<Repository | null>(null);
     const [historyOpen, setHistoryOpen] = useState(false);
 
     // Notification states
@@ -158,74 +65,29 @@ const GitOpsPage: React.FC = () => {
         severity: 'success'
     });
 
-    // Mock deployment history data
-    const mockDeployments: Deployment[] = [
-        {
-            id: '1',
-            commitHash: 'a1b2c3d4e5f6',
-            commitMessage: 'Add new feature for user authentication',
-            branch: 'main',
-            author: 'john.doe@company.com',
-            timestamp: '2024-01-15T10:30:00Z',
-            status: 'success',
-            duration: 180,
-            environment: 'production',
-            namespace: 'webapp',
-            resources: {
-                deployments: 3,
-                services: 2,
-                configMaps: 1,
-                secrets: 0
-            },
-            logs: [
-                'INFO: Starting deployment for commit a1b2c3d4',
-                'INFO: Applying Kubernetes manifests',
-                'INFO: Deployment completed successfully',
-                'INFO: Health checks passed'
-            ]
-        },
-        {
-            id: '2',
-            commitHash: 'f6e5d4c3b2a1',
-            commitMessage: 'Fix database connection issue',
-            branch: 'main',
-            author: 'jane.smith@company.com',
-            timestamp: '2024-01-15T09:15:00Z',
-            status: 'success',
-            duration: 120,
-            environment: 'production',
-            namespace: 'webapp',
-            resources: {
-                deployments: 3,
-                services: 2,
-                configMaps: 1,
-                secrets: 0
-            }
-        },
-        {
-            id: '3',
-            commitHash: 'b2c3d4e5f6a1',
-            commitMessage: 'Update API endpoints',
-            branch: 'develop',
-            author: 'mike.wilson@company.com',
-            timestamp: '2024-01-15T08:45:00Z',
-            status: 'failed',
-            duration: 90,
-            environment: 'staging',
-            namespace: 'api',
-            resources: {
-                deployments: 2,
-                services: 1,
-                configMaps: 0,
-                secrets: 1
-            },
-            logs: [
-                'ERROR: Failed to apply deployment',
-                'ERROR: Image pull failed',
-                'ERROR: Deployment rolled back'
-            ]
+    // Load data
+    const loadData = async () => {
+        try {
+            setIsLoading(true);
+            setError(null);
+            
+            const [reposData, historyData] = await Promise.all([
+                gitopsApiService.getRepositories(),
+                gitopsApiService.getDeploymentHistory()
+            ]);
+            
+            setRepositories(reposData);
+            setDeploymentHistory(historyData);
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Failed to load GitOps data');
+        } finally {
+            setIsLoading(false);
         }
-    ];
+    };
+
+    useEffect(() => {
+        loadData();
+    }, []);
 
     // Calculate metrics
     const metrics = useMemo(() => {
@@ -251,65 +113,77 @@ const GitOpsPage: React.FC = () => {
     }, [repositories]);
 
     // Handle repository operations
-    const handleAddRepository = (data: any) => {
-        const newRepo: RepositoryData = {
-            id: Date.now().toString(),
-            ...data,
-            status: 'Active',
-            lastDeployed: new Date().toISOString(),
-            lastSync: new Date().toISOString(),
-            commitCount: 0,
-            deploymentCount: 0
-        };
-        setRepositories(prev => [newRepo, ...prev]);
-        showNotification('Repository added successfully', 'success');
-    };
-
-    const handleEditRepository = (data: any) => {
-        if (editingRepo) {
-            setRepositories(prev => prev.map(repo => 
-                repo.id === editingRepo.id ? { ...repo, ...data } : repo
-            ));
-            showNotification('Repository updated successfully', 'success');
+    const handleAddRepository = async (data: any) => {
+        try {
+            const newRepo = await gitopsApiService.createRepository(data);
+            setRepositories(prev => [newRepo, ...prev]);
+            showNotification('Repository added successfully', 'success');
+        } catch (err) {
+            showNotification('Failed to add repository', 'error');
         }
     };
 
-    const handleDeleteRepository = (repoId: string) => {
-        setRepositories(prev => prev.filter(repo => repo.id !== repoId));
-        showNotification('Repository deleted successfully', 'success');
+    const handleEditRepository = async (data: any) => {
+        if (editingRepo) {
+            try {
+                const updatedRepo = await gitopsApiService.updateRepository(editingRepo.id, data);
+                setRepositories(prev => prev.map(repo => 
+                    repo.id === editingRepo.id ? updatedRepo : repo
+                ));
+                showNotification('Repository updated successfully', 'success');
+            } catch (err) {
+                showNotification('Failed to update repository', 'error');
+            }
+        }
     };
 
-    const handleToggleAutoDeploy = (repoId: string, enabled: boolean) => {
-        setRepositories(prev => prev.map(repo => 
-            repo.id === repoId ? { ...repo, autoDeploy: enabled } : repo
-        ));
-        showNotification(`Auto-deploy ${enabled ? 'enabled' : 'disabled'}`, 'info');
+    const handleDeleteRepository = async (repoId: string) => {
+        try {
+            await gitopsApiService.deleteRepository(repoId);
+            setRepositories(prev => prev.filter(repo => repo.id !== repoId));
+            showNotification('Repository deleted successfully', 'success');
+        } catch (err) {
+            showNotification('Failed to delete repository', 'error');
+        }
     };
 
-    const handleSync = (repoId: string) => {
-        setRepositories(prev => prev.map(repo => 
-            repo.id === repoId ? { ...repo, status: 'Syncing' } : repo
-        ));
-        
-        // Simulate sync process
-        setTimeout(() => {
+    const handleToggleAutoDeploy = async (repoId: string, enabled: boolean) => {
+        try {
+            const updatedRepo = await gitopsApiService.updateRepository(repoId, { autoDeploy: enabled });
             setRepositories(prev => prev.map(repo => 
-                repo.id === repoId ? { 
-                    ...repo, 
-                    status: 'Active',
-                    lastSync: new Date().toISOString()
-                } : repo
+                repo.id === repoId ? updatedRepo : repo
+            ));
+            showNotification(`Auto-deploy ${enabled ? 'enabled' : 'disabled'}`, 'info');
+        } catch (err) {
+            showNotification('Failed to update auto-deploy setting', 'error');
+        }
+    };
+
+    const handleSync = async (repoId: string) => {
+        try {
+            setRepositories(prev => prev.map(repo => 
+                repo.id === repoId ? { ...repo, status: 'Syncing' } : repo
+            ));
+            
+            const result = await gitopsApiService.syncRepository(repoId);
+            setRepositories(prev => prev.map(repo => 
+                repo.id === repoId ? result.repository : repo
             ));
             showNotification('Repository synced successfully', 'success');
-        }, 2000);
+        } catch (err) {
+            setRepositories(prev => prev.map(repo => 
+                repo.id === repoId ? { ...repo, status: 'Error' } : repo
+            ));
+            showNotification('Failed to sync repository', 'error');
+        }
     };
 
-    const handleViewHistory = (repo: RepositoryData) => {
+    const handleViewHistory = (repo: Repository) => {
         setSelectedRepoForHistory(repo);
         setHistoryOpen(true);
     };
 
-    const handleEdit = (repo: RepositoryData) => {
+    const handleEdit = (repo: Repository) => {
         setEditingRepo(repo);
         setFormMode('edit');
         setFormOpen(true);
@@ -321,14 +195,26 @@ const GitOpsPage: React.FC = () => {
         setFormOpen(true);
     };
 
-    const handleFormSubmit = (data: any) => {
+    const handleFormSubmit = async (data: any) => {
         if (formMode === 'add') {
-            handleAddRepository(data);
+            await handleAddRepository(data);
         } else {
-            handleEditRepository(data);
+            await handleEditRepository(data);
         }
         setFormOpen(false);
         setEditingRepo(null);
+    };
+
+    const handleRefresh = async () => {
+        setIsRefreshing(true);
+        try {
+            await loadData();
+            showNotification('GitOps data refreshed successfully!', 'success');
+        } catch (err) {
+            showNotification('Failed to refresh GitOps data', 'error');
+        } finally {
+            setIsRefreshing(false);
+        }
     };
 
     const showNotification = (message: string, severity: 'success' | 'error' | 'info') => {
@@ -342,6 +228,16 @@ const GitOpsPage: React.FC = () => {
     const handleCloseSnackbar = () => {
         setSnackbar(prev => ({ ...prev, open: false }));
     };
+
+    if (isLoading) {
+        return (
+            <Container maxWidth="xl" sx={{ mt: 2, mb: 4 }}>
+                <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
+                    <CircularProgress />
+                </Box>
+            </Container>
+        );
+    }
 
     return (
         <Container maxWidth="xl" sx={{ mt: 2, mb: 4 }}>
@@ -372,12 +268,10 @@ const GitOpsPage: React.FC = () => {
                     <Button 
                         variant="outlined" 
                         startIcon={<RefreshCw size={16} />}
-                        onClick={() => {
-                            repositories.forEach(repo => handleSync(repo.id));
-                            showNotification('Syncing all repositories...', 'info');
-                        }}
+                        onClick={handleRefresh}
+                        disabled={isRefreshing}
                     >
-                        Sync All
+                        Refresh
                     </Button>
                     <Button 
                         variant="contained" 
@@ -395,6 +289,13 @@ const GitOpsPage: React.FC = () => {
                     </Button>
                 </Box>
             </Box>
+
+            {/* Error Alert */}
+            {error && (
+                <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError(null)}>
+                    {error}
+                </Alert>
+            )}
 
             {/* Tabs */}
             <Paper sx={{ mb: 3, borderRadius: 3 }}>
@@ -459,7 +360,7 @@ const GitOpsPage: React.FC = () => {
                         Deployment History
                     </Typography>
                     <DeploymentHistory 
-                        deployments={mockDeployments}
+                        deployments={deploymentHistory}
                         repositoryName="All Repositories"
                     />
                 </Box>
@@ -488,7 +389,7 @@ const GitOpsPage: React.FC = () => {
                 >
                     <DialogContent sx={{ p: 0 }}>
                         <DeploymentHistory 
-                            deployments={mockDeployments}
+                            deployments={deploymentHistory.filter(d => d.repositoryId === selectedRepoForHistory.id)}
                             repositoryName={selectedRepoForHistory.name}
                         />
                     </DialogContent>

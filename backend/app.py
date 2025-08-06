@@ -1,17 +1,28 @@
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from typing import List, Optional
-import asyncio
+from typing import List, Dict, Any
+import json
+from datetime import datetime
+import uuid
+import os
+import sys
 
-from .models import Application, ApplicationCreate, ApplicationUpdate
-from .services import ApplicationService
+# Add the current directory to Python path
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
+# Import our modules
+from models.application import Application, ApplicationCreate, ApplicationUpdate
+from models.deployment import Deployment, DeploymentCreate, DeploymentUpdate
+from services.application_service import ApplicationService
+from services.deployment_service import DeploymentService
+from utils.seed_data import seed_initial_data
 
 app = FastAPI(title="Cloud Native App Orchestrator API", version="1.0.0")
 
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://localhost:3000"],  # Frontend URLs
+    allow_origins=["http://localhost:5173", "http://localhost:3000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -19,10 +30,21 @@ app.add_middleware(
 
 # Initialize services
 application_service = ApplicationService()
+deployment_service = DeploymentService()
+
+@app.on_event("startup")
+async def startup_event():
+    """Initialize data on startup"""
+    seed_initial_data()
 
 @app.get("/")
 def read_root():
     return {"message": "Cloud Native App Orchestrator API", "version": "1.0.0"}
+
+@app.get("/health")
+async def health_check():
+    """Health check endpoint"""
+    return {"status": "healthy", "service": "Cloud Native App Orchestrator API"}
 
 # Application endpoints
 @app.get("/api/applications", response_model=List[Application])
@@ -138,8 +160,80 @@ async def add_application_vulnerability(app_id: str, vulnerability_data: dict):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error adding vulnerability: {str(e)}")
 
-# Health check endpoint
-@app.get("/health")
-async def health_check():
-    """Health check endpoint"""
-    return {"status": "healthy", "service": "Cloud Native App Orchestrator API"}
+# Deployment endpoints
+@app.get("/api/deployments", response_model=List[Deployment])
+async def get_deployments():
+    """Get all deployments"""
+    try:
+        deployments = await deployment_service.get_all_deployments()
+        return deployments
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error fetching deployments: {str(e)}")
+
+@app.get("/api/deployments/{deployment_id}", response_model=Deployment)
+async def get_deployment(deployment_id: str):
+    """Get a specific deployment by ID"""
+    try:
+        deployment = await deployment_service.get_deployment_by_id(deployment_id)
+        if not deployment:
+            raise HTTPException(status_code=404, detail="Deployment not found")
+        return deployment
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error fetching deployment: {str(e)}")
+
+@app.post("/api/deployments", response_model=Deployment)
+async def create_deployment(deployment_data: DeploymentCreate):
+    """Create a new deployment"""
+    try:
+        deployment = await deployment_service.create_deployment(deployment_data)
+        if not deployment:
+            raise HTTPException(status_code=500, detail="Failed to create deployment")
+        return deployment
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error creating deployment: {str(e)}")
+
+@app.put("/api/deployments/{deployment_id}", response_model=Deployment)
+async def update_deployment(deployment_id: str, deployment_data: DeploymentUpdate):
+    """Update an existing deployment"""
+    try:
+        deployment = await deployment_service.update_deployment(deployment_id, deployment_data)
+        if not deployment:
+            raise HTTPException(status_code=404, detail="Deployment not found")
+        return deployment
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error updating deployment: {str(e)}")
+
+@app.delete("/api/deployments/{deployment_id}")
+async def delete_deployment(deployment_id: str):
+    """Delete a deployment"""
+    try:
+        success = await deployment_service.delete_deployment(deployment_id)
+        if not success:
+            raise HTTPException(status_code=404, detail="Deployment not found")
+        return {"message": "Deployment deleted successfully"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error deleting deployment: {str(e)}")
+
+@app.post("/api/deployments/{deployment_id}/rollback")
+async def rollback_deployment(deployment_id: str):
+    """Rollback a deployment"""
+    try:
+        rollback_deployment = await deployment_service.rollback_deployment(deployment_id)
+        if not rollback_deployment:
+            raise HTTPException(status_code=404, detail="Deployment not found")
+        return {
+            "message": "Rollback initiated successfully",
+            "rollback_id": rollback_deployment.id
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error rolling back deployment: {str(e)}") 

@@ -1,8 +1,8 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
     Container, Typography, Box, Paper, InputBase, Button, ButtonGroup,
     Tabs, Tab, Grid, Card, Dialog, DialogTitle, DialogContent, DialogActions,
-    TextField, FormControl, InputLabel, Select, MenuItem
+    TextField, FormControl, InputLabel, Select, MenuItem, Alert, CircularProgress
 } from '@mui/material';
 import {
     Search as SearchIcon, PlusCircle, Filter, Grid3X3, List,
@@ -14,11 +14,15 @@ import ApplicationFilters from '../components/ui/ApplicationFilters';
 import ApplicationMetricsDashboard from '../components/ui/ApplicationMetricsDashboard';
 import ApplicationLogsViewer from '../components/ui/ApplicationLogsViewer';
 import StatusCard from '../components/ui/StatusCard';
+import CreateApplicationForm from '../components/ui/CreateApplicationForm';
 
 import type { Application, ApplicationFilter } from '../types/application';
-import { mockApplications } from '../data/mockApplications';
+import { apiService } from '../services/api';
 
 const ApplicationsPage = () => {
+    const [applications, setApplications] = useState<Application[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
     const [tabIndex, setTabIndex] = useState(0);
     const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
     const [searchTerm, setSearchTerm] = useState('');
@@ -28,8 +32,26 @@ const ApplicationsPage = () => {
     const [showMetricsDialog, setShowMetricsDialog] = useState(false);
     const [showLogsDialog, setShowLogsDialog] = useState(false);
 
+    // Load applications from API
+    const loadApplications = async () => {
+        try {
+            setLoading(true);
+            setError(null);
+            const data = await apiService.getApplications();
+            setApplications(data);
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Failed to load applications');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        loadApplications();
+    }, []);
+
     const filteredApplications = useMemo(() => {
-        return mockApplications.filter(app => {
+        return applications.filter(app => {
             const matchesSearch = app.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 app.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 app.team.toLowerCase().includes(searchTerm.toLowerCase());
@@ -42,7 +64,7 @@ const ApplicationsPage = () => {
 
             return matchesSearch && matchesStatus && matchesEnvironment && matchesTeam && matchesTags;
         });
-    }, [searchTerm, filters]);
+    }, [applications, searchTerm, filters]);
 
     const handleApplicationAction = (action: string, application: Application) => {
         switch (action) {
@@ -64,18 +86,33 @@ const ApplicationsPage = () => {
 
     const handleClearFilters = () => setFilters({});
 
+    const handleCreateSuccess = () => {
+        // Reload applications after creating a new one
+        loadApplications();
+    };
+
     const getStatusCounts = () => {
         const counts = {
             Running: 0, Deploying: 0, Failed: 0,
             Pending: 0, Stopped: 0, Archived: 0
         };
-        mockApplications.forEach(app => {
-            counts[app.status]++;
+        applications.forEach(app => {
+            counts[app.status] = (counts[app.status] || 0) + 1;
         });
         return counts;
     };
 
     const statusCounts = getStatusCounts();
+
+    if (loading) {
+        return (
+            <Container maxWidth="xl" sx={{ mt: 1 }}>
+                <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
+                    <CircularProgress />
+                </Box>
+            </Container>
+        );
+    }
 
     return (
         <Container maxWidth="xl" sx={{ mt: 1 }}>
@@ -90,6 +127,13 @@ const ApplicationsPage = () => {
                     New Application
                 </Button>
             </Box>
+
+            {/* Error Alert */}
+            {error && (
+                <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError(null)}>
+                    {error}
+                </Alert>
+            )}
 
             {/* Status Overview */}
             <Grid container spacing={3} mb={5}>
@@ -161,46 +205,12 @@ const ApplicationsPage = () => {
                 </Box>
             )}
 
-            {/* Create Dialog */}
-            <Dialog open={showCreateDialog} onClose={() => setShowCreateDialog(false)} maxWidth="md" fullWidth>
-                <DialogTitle>Create New Application</DialogTitle>
-                <DialogContent>
-                    <Grid container spacing={2} mt={1}>
-                        <Grid item xs={12} md={6}>
-                            <TextField fullWidth label="Application Name" />
-                        </Grid>
-                        <Grid item xs={12} md={6}>
-                            <TextField fullWidth label="Namespace" />
-                        </Grid>
-                        <Grid item xs={12} md={6}>
-                            <TextField fullWidth label="Image" />
-                        </Grid>
-                        <Grid item xs={12} md={6}>
-                            <TextField fullWidth label="Version" />
-                        </Grid>
-                        <Grid item xs={12} md={6}>
-                            <FormControl fullWidth>
-                                <InputLabel>Environment</InputLabel>
-                                <Select label="Environment">
-                                    <MenuItem value="development">Development</MenuItem>
-                                    <MenuItem value="staging">Staging</MenuItem>
-                                    <MenuItem value="production">Production</MenuItem>
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={12} md={6}>
-                            <TextField fullWidth label="Replicas" type="number" />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField fullWidth label="Description" multiline rows={3} />
-                        </Grid>
-                    </Grid>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setShowCreateDialog(false)}>Cancel</Button>
-                    <Button variant="contained">Create</Button>
-                </DialogActions>
-            </Dialog>
+            {/* Create Application Form */}
+            <CreateApplicationForm
+                open={showCreateDialog}
+                onClose={() => setShowCreateDialog(false)}
+                onSuccess={handleCreateSuccess}
+            />
 
             {/* Metrics Dialog */}
             <Dialog open={showMetricsDialog} onClose={() => setShowMetricsDialog(false)} maxWidth="lg" fullWidth>
