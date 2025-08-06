@@ -1,14 +1,8 @@
+import React from 'react';
 import { Card, CardContent, Typography, Box, Avatar, useTheme } from '@mui/material';
 import { alpha } from '@mui/material/styles';
 
-interface StatCardProps {
-  title: string;
-  value: string | number;
-  Icon: React.ComponentType<any>;
-  color?: string;
-}
-
-const StatCard: React.FC<StatCardProps> = ({ title, value, Icon, color = 'primary' }) => {
+const StatCard = ({ title, value, Icon, color = 'primary' }) => {
   const theme = useTheme();
   const mainColor =  theme.palette.grey[500];
   const backgroundColor = alpha(mainColor, 0.1);

@@ -3,6 +3,7 @@ import {
   Box,
   Typography,
   Card,
+  CardContent,
   Avatar,
   Chip,
   Stack,
@@ -10,9 +11,9 @@ import {
   useTheme,
   useMediaQuery,
   TextField,
+  alpha,
 } from '@mui/material';
-import { Row, Col, Button as BootstrapButton } from 'react-bootstrap';
-import Container from '@mui/material/Container';
+import { Container, Row, Col, Button as BootstrapButton } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import SignInModal from '../components/auth/SignInModal';
 import { useAuth } from '../contexts/AuthContext';
@@ -21,6 +22,7 @@ import { useAuth } from '../contexts/AuthContext';
 const LandingHeader: React.FC<{ onSignInClick: () => void }> = ({ onSignInClick }) => {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const { currentUser, signOut } = useAuth();
   const navigate = useNavigate();
 
@@ -240,12 +242,15 @@ const LandingHeader: React.FC<{ onSignInClick: () => void }> = ({ onSignInClick 
     </>
   );
 };
+const LoadingAnimation: React.FC = () => null; // Not used in this version, but kept as placeholder
+
 import {
   Cloud,
   Storage,
   Timeline,
   Security,
   SpaceDashboard,
+  CodeOutlined,
   GitHub,
   Visibility,
   Speed,
@@ -260,6 +265,7 @@ import dashImg from "../assets/dash.png"
 
 const LandingPage: React.FC = () => {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const navigate = useNavigate();
   const [signInModalOpen, setSignInModalOpen] = useState(false);
   const { currentUser } = useAuth();
@@ -280,7 +286,50 @@ const LandingPage: React.FC = () => {
   const cardBorderColor = 'rgba(94, 106, 210, 0.5)'; // A subtle blue for the border
   const cardBgColor = '#1a1a1a'; // Dark blackish background
 
-
+  const features = [
+    {
+      icon: <Cloud sx={{ fontSize: 40, color: '#ffffff' }} />,
+      title: 'Cloud Native Orchestration',
+      description: 'Seamlessly manage and orchestrate applications across multiple cloud environments with advanced deployment strategies.',
+      color: '#ffffff',
+      gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', // Feature-specific gradient for icon background
+    },
+    {
+      icon: <Storage sx={{ fontSize: 40, color: '#ffffff' }} />,
+      title: 'Multi-Cluster Management',
+      description: 'Centralized control over multiple Kubernetes clusters with real-time monitoring and automated scaling.',
+      color: '#ffffff',
+      gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+    },
+    {
+      icon: <Timeline sx={{ fontSize: 40, color: '#ffffff' }} />,
+      title: 'Deployment Analytics',
+      description: 'Advanced analytics and metrics tracking for deployment performance, resource utilization, and optimization.',
+      color: '#ffffff',
+      gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+    },
+    {
+      icon: <Security sx={{ fontSize: 40, color: '#ffffff' }} />,
+      title: 'Security & Compliance',
+      description: 'Built-in security scanning, vulnerability detection, and compliance monitoring for your applications.',
+      color: '#ffffff',
+      gradient: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
+    },
+    {
+      icon: <GitHub sx={{ fontSize: 40, color: '#ffffff' }} />,
+      title: 'GitOps Integration',
+      description: 'Streamlined GitOps workflows with automated deployments, rollbacks, and version control integration.',
+      color: '#ffffff',
+      gradient: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
+    },
+    {
+      icon: <Visibility sx={{ fontSize: 40, color: '#ffffff' }} />,
+      title: 'Real-time Monitoring',
+      description: 'Comprehensive logging, monitoring, and alerting systems for complete visibility into your applications.',
+      color: '#ffffff',
+      gradient: 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)',
+    },
+  ];
 
   const teamMembers = [
     {

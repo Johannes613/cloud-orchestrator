@@ -8,11 +8,11 @@ import {
     Button,
     Avatar,
     IconButton,
+    Grid,
     Stack,
     Alert,
     CircularProgress
 } from '@mui/material';
-
 import { Camera, Save } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { firebaseService } from '../../services/firebaseService';
@@ -43,12 +43,12 @@ const AccountSettings = () => {
                     // Get user profile from Firebase
                     const userProfile = await firebaseService.getUserProfile(currentUser.uid);
                     setFormData({
-                        firstName: (userProfile as any)?.firstName || currentUser.displayName?.split(' ')[0] || '',
-                        lastName: (userProfile as any)?.lastName || currentUser.displayName?.split(' ').slice(1).join(' ') || '',
+                        firstName: userProfile?.firstName || currentUser.displayName?.split(' ')[0] || '',
+                        lastName: userProfile?.lastName || currentUser.displayName?.split(' ').slice(1).join(' ') || '',
                         email: currentUser.email || '',
-                        phone: (userProfile as any)?.phone || '',
-                        company: (userProfile as any)?.company || '',
-                        position: (userProfile as any)?.position || ''
+                        phone: userProfile?.phone || '',
+                        company: userProfile?.company || '',
+                        position: userProfile?.position || ''
                     });
                 } catch (error) {
                     // If no profile exists, use basic user info
@@ -150,8 +150,8 @@ const AccountSettings = () => {
                 </Box>
             </Stack>
 
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3 }}>
-                <Box sx={{ flex: '1 1 300px', minWidth: 0 }}>
+            <Grid container spacing={3}>
+                <Grid item xs={12} md={6}>
                     <TextField
                         fullWidth
                         label="First Name"
@@ -159,8 +159,8 @@ const AccountSettings = () => {
                         onChange={(e) => handleInputChange('firstName', e.target.value)}
                         variant="outlined"
                     />
-                </Box>
-                <Box sx={{ flex: '1 1 300px', minWidth: 0 }}>
+                </Grid>
+                <Grid item xs={12} md={6}>
                     <TextField
                         fullWidth
                         label="Last Name"
@@ -168,8 +168,8 @@ const AccountSettings = () => {
                         onChange={(e) => handleInputChange('lastName', e.target.value)}
                         variant="outlined"
                     />
-                </Box>
-                <Box sx={{ flex: '1 1 300px', minWidth: 0 }}>
+                </Grid>
+                <Grid item xs={12} md={6}>
                     <TextField
                         fullWidth
                         label="Email"
@@ -179,8 +179,8 @@ const AccountSettings = () => {
                         variant="outlined"
                         disabled // Assuming email is not editable
                     />
-                </Box>
-                <Box sx={{ flex: '1 1 300px', minWidth: 0 }}>
+                </Grid>
+                <Grid item xs={12} md={6}>
                     <TextField
                         fullWidth
                         label="Phone"
@@ -188,8 +188,8 @@ const AccountSettings = () => {
                         onChange={(e) => handleInputChange('phone', e.target.value)}
                         variant="outlined"
                     />
-                </Box>
-                <Box sx={{ flex: '1 1 300px', minWidth: 0 }}>
+                </Grid>
+                <Grid item xs={12} md={6}>
                     <TextField
                         fullWidth
                         label="Company"
@@ -197,8 +197,8 @@ const AccountSettings = () => {
                         onChange={(e) => handleInputChange('company', e.target.value)}
                         variant="outlined"
                     />
-                </Box>
-                <Box sx={{ flex: '1 1 300px', minWidth: 0 }}>
+                </Grid>
+                <Grid item xs={12} md={6}>
                     <TextField
                         fullWidth
                         label="Position"
@@ -206,8 +206,8 @@ const AccountSettings = () => {
                         onChange={(e) => handleInputChange('position', e.target.value)}
                         variant="outlined"
                     />
-                </Box>
-            </Box>
+                </Grid>
+            </Grid>
 
             <Box mt={4} textAlign="right">
                 <Button 
