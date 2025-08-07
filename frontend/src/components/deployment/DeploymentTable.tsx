@@ -7,8 +7,6 @@ import {
     TableContainer,
     TableHead,
     TableRow,
-    Paper,
-    Link,
     IconButton,
     Tooltip,
     Chip,
@@ -29,45 +27,24 @@ import {
     Settings,
     GitBranch,
     Clock,
-    User,
-    ExternalLink
+    User
 } from 'lucide-react';
 import StatusBadge from './StatusBadge.tsx';
 import { useState } from 'react';
-
-interface Application {
-    id: string;
-    name: string;
-    repo_url: string;
-    owner: string;
-    created_at: string;
-}
-
-interface DeploymentData {
-    id: string;
-    application_id: string;
-    version: string;
-    status: 'Pending' | 'Deploying' | 'Success' | 'Failed';
-    commit_hash: string;
-    environment: 'dev' | 'staging' | 'production';
-    deployed_at: string;
-    logs_url: string;
-    // Additional fields for UI
-    application?: Application;
-    duration?: number;
-}
+import type { Deployment } from '../../services/firebaseService';
+// import type { Application } from '../../types/application';
 
 interface DeploymentTableProps {
-    data: DeploymentData[];
-    onRollback?: (deployment: DeploymentData) => void;
-    onViewDetails?: (deployment: DeploymentData) => void;
+    data: Deployment[];
+    onRollback?: (deployment: Deployment) => void;
+    onViewDetails?: (deployment: Deployment) => void;
 }
 
 const DeploymentTable: React.FC<DeploymentTableProps> = ({ data, onRollback, onViewDetails }) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const [selectedDeployment, setSelectedDeployment] = useState<DeploymentData | null>(null);
+    const [selectedDeployment, setSelectedDeployment] = useState<Deployment | null>(null);
 
-    const handleMenuOpen = (event: React.MouseEvent<HTMLElement>, deployment: DeploymentData) => {
+    const handleMenuOpen = (event: React.MouseEvent<HTMLElement>, deployment: Deployment) => {
         setAnchorEl(event.currentTarget);
         setSelectedDeployment(deployment);
     };
@@ -89,7 +66,7 @@ const DeploymentTable: React.FC<DeploymentTableProps> = ({ data, onRollback, onV
                 break;
             case 'logs':
                 // Handle logs action
-                window.open(selectedDeployment.logs_url, '_blank');
+                // window.open(selectedDeployment.logs_url, '_blank');
                 break;
             case 'settings':
                 // Handle settings action
@@ -177,7 +154,7 @@ const DeploymentTable: React.FC<DeploymentTableProps> = ({ data, onRollback, onV
                                 <Box display="flex" alignItems="center" gap={2}>
                                     <Box>
                                         <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                                            {row.application?.name || 'Unknown App'}
+                                            {row.applicationName || 'Unknown App'}
                                         </Typography>
                                         <Typography variant="caption" color="text.secondary">
                                             {row.version}
@@ -187,7 +164,7 @@ const DeploymentTable: React.FC<DeploymentTableProps> = ({ data, onRollback, onV
                             </TableCell>
                             <TableCell>
                                 <Typography variant="body2">
-                                    {formatDate(row.deployed_at)}
+                                    {formatDate(row.startTime)}
                                 </Typography>
                             </TableCell>
                             <TableCell>
@@ -200,10 +177,10 @@ const DeploymentTable: React.FC<DeploymentTableProps> = ({ data, onRollback, onV
                                             bgcolor: 'primary.main'
                                         }}
                                     >
-                                        {getAuthorInitials(row.application?.owner || 'Unknown')}
+                                        {getAuthorInitials('Unknown')}
                                     </Avatar>
                                     <Typography variant="body2">
-                                        {row.application?.owner || 'Unknown'}
+                                        Unknown
                                     </Typography>
                                 </Box>
                             </TableCell>
@@ -222,9 +199,9 @@ const DeploymentTable: React.FC<DeploymentTableProps> = ({ data, onRollback, onV
                                 <StatusBadge status={row.status} />
                             </TableCell>
                             <TableCell>
-                                {row.duration ? (
+                                {false ? (
                                     <Typography variant="body2" color="text.secondary">
-                                        {Math.floor(row.duration / 60)}m {row.duration % 60}s
+                                        Duration not available
                                     </Typography>
                                 ) : (
                                     <Typography variant="body2" color="text.secondary">
@@ -252,7 +229,7 @@ const DeploymentTable: React.FC<DeploymentTableProps> = ({ data, onRollback, onV
                                             <Eye size={16} />
                                         </IconButton>
                                     </Tooltip>
-                                    {row.status === 'Success' && (
+                                    {row.status === 'completed' && (
                                         <Tooltip title="Rollback">
                                             <IconButton 
                                                 size="small"
@@ -315,7 +292,7 @@ const DeploymentTable: React.FC<DeploymentTableProps> = ({ data, onRollback, onV
                     </ListItemIcon>
                     <ListItemText>View Logs</ListItemText>
                 </MenuItem>
-                {selectedDeployment?.status === 'Success' && (
+                {selectedDeployment?.status === 'completed' && (
                     <>
                         <Divider />
                         <MenuItem onClick={() => handleAction('rollback')}>

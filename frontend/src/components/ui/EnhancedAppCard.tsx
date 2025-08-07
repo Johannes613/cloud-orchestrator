@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Paper, Box, Typography, Avatar, Chip, IconButton, Menu, MenuItem, Tooltip, LinearProgress } from '@mui/material';
-import { MoreVertical, Cpu, MemoryStick, Activity, Clock, Users } from 'lucide-react';
+import { MoreVertical, Clock, Users } from 'lucide-react';
 import type { Application } from '../../types/application';
 
 interface EnhancedAppCardProps {

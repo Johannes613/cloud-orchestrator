@@ -16,13 +16,12 @@ import {
     useTheme,
     CircularProgress
 } from '@mui/material';
-import { 
+import {
     Plus, 
     RefreshCw, 
     GitBranch, 
     GitCommit, 
     Activity,
-    Settings,
     History
 } from 'lucide-react';
 
@@ -343,7 +342,7 @@ const GitOpsPage: React.FC = () => {
             <Paper sx={{ mb: 3, borderRadius: 3 }}>
                 <Tabs 
                     value={activeTab} 
-                    onChange={(e, newValue) => setActiveTab(newValue)}
+                    onChange={(_e, newValue) => setActiveTab(newValue)}
                     sx={{
                         '& .MuiTab-root': {
                             color: theme.palette.text.secondary,

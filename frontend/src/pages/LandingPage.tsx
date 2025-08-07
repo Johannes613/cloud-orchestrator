@@ -3,26 +3,34 @@ import {
   Box,
   Typography,
   Card,
-  CardContent,
   Avatar,
   Chip,
   Stack,
   Paper,
-  useTheme,
-  useMediaQuery,
   TextField,
-  alpha,
 } from '@mui/material';
-import { Container, Row, Col, Button as BootstrapButton } from 'react-bootstrap';
+import { Row, Col, Button as BootstrapButton } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import SignInModal from '../components/auth/SignInModal';
 import { useAuth } from '../contexts/AuthContext';
+import {
+  Cloud,
+  Timeline,
+  SpaceDashboard,
+  Speed,
+  CheckCircleOutline,
+  ArrowForwardOutlined,
+  PlayArrow,
+  EmailOutlined,
+  PersonOutline,
+} from '@mui/icons-material';
+import heroImg from "../assets/hero.jpg";
+import dashImg from "../assets/dash.png";
 
-// Placeholder for LandingHeader and LoadingAnimation if they are external
+
+// --- Header Component ---
 const LandingHeader: React.FC<{ onSignInClick: () => void }> = ({ onSignInClick }) => {
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const { currentUser, signOut } = useAuth();
   const navigate = useNavigate();
 
@@ -72,83 +80,83 @@ const LandingHeader: React.FC<{ onSignInClick: () => void }> = ({ onSignInClick 
           Orchestrator
         </Typography>
         
-                 {/* Desktop Navigation */}
-         <Stack 
-           direction="row" 
-           spacing={2} 
-           sx={{ 
-             display: { xs: 'none', lg: 'flex' },
-             alignItems: 'center'
-           }}
-         >
-           {navItems.map((item) => (
-             <BootstrapButton 
-               key={item.text}
-               variant="outline-light" 
-               size="sm"
-               onClick={item.action}
-               style={{
-                 fontSize: '14px',
-                 fontWeight: 500,
-                 padding: '8px 16px',
-                 borderRadius: '6px',
-                 transition: 'all 0.2s ease',
-               }}
-             >
-               {item.text}
-             </BootstrapButton>
-           ))}
-                       <BootstrapButton 
-              variant={currentUser ? "outline-light" : "light"}
+        {/* Desktop Navigation */}
+        <Stack 
+          direction="row" 
+          spacing={2} 
+          sx={{ 
+            display: { xs: 'none', lg: 'flex' },
+            alignItems: 'center'
+          }}
+        >
+          {navItems.map((item) => (
+            <BootstrapButton 
+              key={item.text}
+              variant="outline-light" 
               size="sm"
-              onClick={currentUser ? handleLogout : handleSignInClick}
+              onClick={item.action}
               style={{
                 fontSize: '14px',
                 fontWeight: 500,
                 padding: '8px 16px',
                 borderRadius: '6px',
                 transition: 'all 0.2s ease',
-                backgroundColor: currentUser ? 'transparent' : '#ffffff',
-                color: currentUser ? '#ffffff' : '#000000',
-                borderColor: currentUser ? 'rgba(255,255,255,0.3)' : '#ffffff',
               }}
             >
-              {currentUser ? 'Logout' : 'Sign In'}
+              {item.text}
             </BootstrapButton>
-           <Link to="/app" style={{ textDecoration: 'none' }}>
-             <BootstrapButton 
-               variant="light" 
-               size="sm"
-               style={{
-                 fontSize: '14px',
-                 fontWeight: 500,
-                 padding: '8px 16px',
-                 borderRadius: '6px',
-                 transition: 'all 0.2s ease',
-               }}
-             >
-               Dashboard
-             </BootstrapButton>
-           </Link>
-         </Stack>
+          ))}
+          <BootstrapButton 
+            variant={currentUser ? "outline-light" : "light"}
+            size="sm"
+            onClick={currentUser ? handleLogout : handleSignInClick}
+            style={{
+              fontSize: '14px',
+              fontWeight: 500,
+              padding: '8px 16px',
+              borderRadius: '6px',
+              transition: 'all 0.2s ease',
+              backgroundColor: currentUser ? 'transparent' : '#ffffff',
+              color: currentUser ? '#ffffff' : '#000000',
+              borderColor: currentUser ? 'rgba(255,255,255,0.3)' : '#ffffff',
+            }}
+          >
+            {currentUser ? 'Logout' : 'Sign In'}
+          </BootstrapButton>
+          <Link to="/app" style={{ textDecoration: 'none' }}>
+            <BootstrapButton 
+              variant="light" 
+              size="sm"
+              style={{
+                fontSize: '14px',
+                fontWeight: 500,
+                padding: '8px 16px',
+                borderRadius: '6px',
+                transition: 'all 0.2s ease',
+              }}
+            >
+              Dashboard
+            </BootstrapButton>
+          </Link>
+        </Stack>
 
-         {/* Mobile Menu Button */}
-         <BootstrapButton
-           variant="outline-light"
-           size="sm"
-           onClick={handleDrawerToggle}
-           style={{
-             fontSize: '14px',
-             fontWeight: 500,
-             padding: '8px 12px',
-             borderRadius: '6px',
-             transition: 'all 0.2s ease',
-             display: 'block',
-           }}
-           className="d-lg-none"
-         >
-           ☰
-         </BootstrapButton>
+        {/* Mobile Menu Button */}
+        <BootstrapButton
+          variant="outline-light"
+          size="sm"
+          onClick={handleDrawerToggle}
+          style={{
+            fontSize: '14px',
+            fontWeight: 500,
+            padding: '8px 12px',
+            borderRadius: '6px',
+            transition: 'all 0.2s ease',
+            display: 'block',
+          }}
+          className="d-lg-none"
+        >
+          ☰
+        </BootstrapButton>
       </Box>
 
       {/* Mobile Navigation Drawer */}
@@ -242,30 +250,9 @@ const LandingHeader: React.FC<{ onSignInClick: () => void }> = ({ onSignInClick 
     </>
   );
 };
-const LoadingAnimation: React.FC = () => null; // Not used in this version, but kept as placeholder
 
-import {
-  Cloud,
-  Storage,
-  Timeline,
-  Security,
-  SpaceDashboard,
-  CodeOutlined,
-  GitHub,
-  Visibility,
-  Speed,
-  CheckCircleOutline,
-  ArrowForwardOutlined,
-  PlayArrow,
-  EmailOutlined,
-  PersonOutline,
-} from '@mui/icons-material';
-import heroImg from "../assets/hero.jpg"
-import dashImg from "../assets/dash.png"
 
 const LandingPage: React.FC = () => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const navigate = useNavigate();
   const [signInModalOpen, setSignInModalOpen] = useState(false);
   const { currentUser } = useAuth();
@@ -285,51 +272,6 @@ const LandingPage: React.FC = () => {
   // Consistent styles for cards
   const cardBorderColor = 'rgba(94, 106, 210, 0.5)'; // A subtle blue for the border
   const cardBgColor = '#1a1a1a'; // Dark blackish background
-
-  const features = [
-    {
-      icon: <Cloud sx={{ fontSize: 40, color: '#ffffff' }} />,
-      title: 'Cloud Native Orchestration',
-      description: 'Seamlessly manage and orchestrate applications across multiple cloud environments with advanced deployment strategies.',
-      color: '#ffffff',
-      gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', // Feature-specific gradient for icon background
-    },
-    {
-      icon: <Storage sx={{ fontSize: 40, color: '#ffffff' }} />,
-      title: 'Multi-Cluster Management',
-      description: 'Centralized control over multiple Kubernetes clusters with real-time monitoring and automated scaling.',
-      color: '#ffffff',
-      gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-    },
-    {
-      icon: <Timeline sx={{ fontSize: 40, color: '#ffffff' }} />,
-      title: 'Deployment Analytics',
-      description: 'Advanced analytics and metrics tracking for deployment performance, resource utilization, and optimization.',
-      color: '#ffffff',
-      gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-    },
-    {
-      icon: <Security sx={{ fontSize: 40, color: '#ffffff' }} />,
-      title: 'Security & Compliance',
-      description: 'Built-in security scanning, vulnerability detection, and compliance monitoring for your applications.',
-      color: '#ffffff',
-      gradient: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
-    },
-    {
-      icon: <GitHub sx={{ fontSize: 40, color: '#ffffff' }} />,
-      title: 'GitOps Integration',
-      description: 'Streamlined GitOps workflows with automated deployments, rollbacks, and version control integration.',
-      color: '#ffffff',
-      gradient: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
-    },
-    {
-      icon: <Visibility sx={{ fontSize: 40, color: '#ffffff' }} />,
-      title: 'Real-time Monitoring',
-      description: 'Comprehensive logging, monitoring, and alerting systems for complete visibility into your applications.',
-      color: '#ffffff',
-      gradient: 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)',
-    },
-  ];
 
   const teamMembers = [
     {
@@ -392,112 +334,112 @@ const LandingPage: React.FC = () => {
     <Box sx={{ bgcolor: '#000000', color: '#ffffff', minHeight: '100vh' }}>
       <LandingHeader onSignInClick={handleSignInClick} />
 
-             {/* Hero Section */}
-       <Box
-         sx={{
-           bgcolor: '#000000',
-           color: '#ffffff',
-           py: { xs: 6, sm: 8, md: 12 },
-           minHeight: '100vh',
-           display: 'flex',
-           alignItems: 'center',
-           position: 'relative',
-           overflow: 'hidden',
-           backgroundSize: 'cover',
-           backgroundPosition: 'center',
-           '&::before': {
-             content: '""',
-             position: 'absolute',
-             top: 0,
-             left: 0,
-             right: 0,
-             bottom: 0,
-             backgroundColor: 'rgba(0, 0, 0, 0.6)',
-             zIndex: 1,
-           },
-         }}
-       >
-         <Container maxWidth="lg" style={{ position: 'relative', zIndex: 2 }}>
-           <Row className="justify-content-center text-center">
-             <Col xs={12} md={10} lg={8}>
-               <Typography
-                 variant="h1"
-                 sx={{
-                   fontWeight: 800,
-                   fontSize: { xs: '1.8rem', sm: '2.2rem', md: '3rem', lg: '3.5rem' },
-                   mb: { xs: 2, md: 3 },
-                   color: '#ffffff',
-                   lineHeight: 1.1,
-                 }}
-               >
-                 Cloud Native App
-                 <br />
-                 <Box component="span" sx={{ background: 'linear-gradient(45deg, #ffffff, #cccccc)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-                   Orchestrator
-                 </Box>
-               </Typography>
-               <Typography
-                 variant="h6"
-                 sx={{
-                   mb: { xs: 4, md: 6 },
-                   opacity: 0.7,
-                   fontSize: { xs: '0.9rem', sm: '1rem' },
-                   lineHeight: 1.6,
-                   px: { xs: 2, sm: 0 },
-                 }}
-               >
-                 Advanced platform for managing, deploying, and monitoring cloud-native applications
-                 across multiple environments with enterprise-grade security and GitOps workflows.
-               </Typography>
-               <Stack
-                 direction={{ xs: 'column', sm: 'row' }}
-                 spacing={{ xs: 2, sm: 2 }}
-                 justifyContent="center"
-                 alignItems="center"
-                 sx={{ gap: { xs: 2, sm: 2 } }}
-               >
-                                 <BootstrapButton
-                   onClick={handleDashboardClick}
-                   variant="light"
-                   size="sm"
-                   className="d-flex align-items-center"
-                   style={{
-                     fontSize: '14px',
-                     fontWeight: 500,
-                     padding: '12px 24px',
-                     borderRadius: '6px',
-                     boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                     transition: 'all 0.2s ease',
-                   }}
-                 >
-                   {currentUser ? 'Go to Dashboard' : 'Launch Dashboard'} <ArrowForwardOutlined sx={{ ml: 1, fontSize: '1.1rem' }} />
-                 </BootstrapButton>
-                 <BootstrapButton
-                   onClick={() => document.getElementById('demo-section')?.scrollIntoView({ behavior: 'smooth' })}
-                   variant="outline-light"
-                   size="sm"
-                   className="d-flex align-items-center"
-                   style={{
-                     fontSize: '14px',
-                     fontWeight: 500,
-                     padding: '12px 24px',
-                     borderRadius: '6px',
-                     transition: 'all 0.2s ease',
-                   }}
-                 >
-                   <PlayArrow sx={{ mr: 1, fontSize: '1.1rem' }} /> Watch Demo
-                 </BootstrapButton>
+      {/* Hero Section */}
+      <Box
+        sx={{
+          bgcolor: '#000000',
+          color: '#ffffff',
+          py: { xs: 6, sm: 8, md: 12 },
+          minHeight: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          position: 'relative',
+          overflow: 'hidden',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.6)',
+            zIndex: 1,
+          },
+        }}
+      >
+        <div style={{ position: 'relative', zIndex: 2, maxWidth: '1200px', margin: '0 auto', padding: '0 16px' }}>
+          <Row className="justify-content-center text-center">
+            <Col xs={12} md={10} lg={8}>
+              <Typography
+                variant="h1"
+                sx={{
+                  fontWeight: 800,
+                  fontSize: { xs: '1.8rem', sm: '2.2rem', md: '3rem', lg: '3.5rem' },
+                  mb: { xs: 2, md: 3 },
+                  color: '#ffffff',
+                  lineHeight: 1.1,
+                }}
+              >
+                Cloud Native App
+                <br />
+                <Box component="span" sx={{ background: 'linear-gradient(45deg, #ffffff, #cccccc)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                  Orchestrator
+                </Box>
+              </Typography>
+              <Typography
+                variant="h6"
+                sx={{
+                  mb: { xs: 4, md: 6 },
+                  opacity: 0.7,
+                  fontSize: { xs: '0.9rem', sm: '1rem' },
+                  lineHeight: 1.6,
+                  px: { xs: 2, sm: 0 },
+                }}
+              >
+                Advanced platform for managing, deploying, and monitoring cloud-native applications
+                across multiple environments with enterprise-grade security and GitOps workflows.
+              </Typography>
+              <Stack
+                direction={{ xs: 'column', sm: 'row' }}
+                spacing={{ xs: 2, sm: 2 }}
+                justifyContent="center"
+                alignItems="center"
+                sx={{ gap: { xs: 2, sm: 2 } }}
+              >
+                <BootstrapButton
+                  onClick={handleDashboardClick}
+                  variant="light"
+                  size="sm"
+                  className="d-flex align-items-center"
+                  style={{
+                    fontSize: '14px',
+                    fontWeight: 500,
+                    padding: '12px 24px',
+                    borderRadius: '6px',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                    transition: 'all 0.2s ease',
+                  }}
+                >
+                  {currentUser ? 'Go to Dashboard' : 'Launch Dashboard'} <ArrowForwardOutlined sx={{ ml: 1, fontSize: '1.1rem' }} />
+                </BootstrapButton>
+                <BootstrapButton
+                  onClick={() => document.getElementById('demo-section')?.scrollIntoView({ behavior: 'smooth' })}
+                  variant="outline-light"
+                  size="sm"
+                  className="d-flex align-items-center"
+                  style={{
+                    fontSize: '14px',
+                    fontWeight: 500,
+                    padding: '12px 24px',
+                    borderRadius: '6px',
+                    transition: 'all 0.2s ease',
+                  }}
+                >
+                  <PlayArrow sx={{ mr: 1, fontSize: '1.1rem' }} /> Watch Demo
+                </BootstrapButton>
               </Stack>
             </Col>
           </Row>
-        </Container>
+        </div>
       </Box>
 
-             {/* Stats Section */}
-       <Container maxWidth="lg" className="py-5">
-         <Row className="justify-content-center g-4">
-           {stats.map((stat, index) => (
-             <Col xs={6} sm={4} md={3} key={index}>
+      {/* Stats Section */}
+      <div className="py-5" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 16px' }}>
+        <Row className="justify-content-center g-4">
+          {stats.map((stat, index) => (
+            <Col xs={6} sm={4} md={3} key={index}>
               <Box
                 sx={{
                   background: cardBorderColor, // Solid blue border color
@@ -538,10 +480,10 @@ const LandingPage: React.FC = () => {
             </Col>
           ))}
         </Row>
-      </Container>
+      </div>
 
-             {/* Powerful Features Section (Redesigned) */}
-       <Container maxWidth="lg" className="py-5" id="features-section">
+      {/* Powerful Features Section (Redesigned) */}
+      <div className="py-5" id="features-section" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 16px' }}>
         <Box sx={{ textAlign: 'center', mb: 6 }}>
           <Typography variant="h4" sx={{ fontWeight: 900, mb: 2, color: '#ffffff' }}>
             Powerful Features
@@ -550,8 +492,8 @@ const LandingPage: React.FC = () => {
             Everything you need to orchestrate your cloud-native applications
           </Typography>
         </Box>
-                 <Row className="justify-content-center align-items-center g-5">
-           <Col xs={12} lg={6}>
+        <Row className="justify-content-center align-items-center g-5">
+          <Col xs={12} lg={6}>
             <Box
               sx={{
                 background: cardBorderColor, // Blue border
@@ -599,7 +541,7 @@ const LandingPage: React.FC = () => {
                 <Stack spacing={1}>
                   {mainFeature.bulletPoints.map((point, pointIndex) => (
                     <Box key={pointIndex} sx={{ display: 'flex', alignItems: 'flex-start', gap: 1 }}>
-                      <CheckCircleOutline sx={{ color: theme.palette.primary.main, fontSize: 20, mt: 0.2 }} />
+                      <CheckCircleOutline sx={{ color: '#5E6AD2', fontSize: 20, mt: 0.2 }} />
                       <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.7)', fontWeight: 500 }}>
                         {point}
                       </Typography>
@@ -642,11 +584,11 @@ const LandingPage: React.FC = () => {
             </Box>
           </Col>
         </Row>
-      </Container>
+      </div>
 
-      {/* Innovation Section (kept similar to previous but with new card styles) */}
+      {/* Innovation Section */}
       <Box sx={{ py: 8, bgcolor: 'rgba(255,255,255,0.02)' }}>
-        <Container maxWidth="lg">
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 16px' }}>
           <Row className="align-items-center g-5">
             <Col xs={12} md={6}>
               <Typography variant="h4" sx={{ fontWeight: 900, mb: 3, color: '#ffffff' }}>
@@ -684,15 +626,15 @@ const LandingPage: React.FC = () => {
                   width: '100%',
                   maxWidth: 600,
                   bgcolor: 'rgba(255,255,255,0.05)',
-                  borderRadius: 3, // Increased border radius for consistency
-                  border: `1px solid ${cardBorderColor}`, // Consistent border
-                  boxShadow: '0 0 15px rgba(94, 106, 210, 0.3)', // Subtle glow
+                  borderRadius: 3,
+                  border: `1px solid ${cardBorderColor}`,
+                  boxShadow: '0 0 15px rgba(94, 106, 210, 0.3)',
                   position: 'relative',
                   overflow: 'hidden',
                   transition: 'all 0.3s ease',
                   '&:hover': {
                     transform: 'translateY(-4px)',
-                    boxShadow: '0 0 25px rgba(94, 106, 210, 0.5)', // Enhanced glow on hover
+                    boxShadow: '0 0 25px rgba(94, 106, 210, 0.5)',
                   },
                 }}
               >
@@ -709,12 +651,12 @@ const LandingPage: React.FC = () => {
               </Box>
             </Col>
           </Row>
-        </Container>
+        </div>
       </Box>
 
-             {/* Demo Section */}
-       <Box id="demo-section" sx={{ py: 8, bgcolor: '#000000' }}>
-        <Container maxWidth="lg">
+      {/* Demo Section */}
+      <Box id="demo-section" sx={{ py: 8, bgcolor: '#000000' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 16px' }}>
           <Box sx={{ textAlign: 'center', mb: 6 }}>
             <Typography variant="h4" sx={{ fontWeight: 900, mb: 2, color: '#ffffff' }}>
               Watch a Demo
@@ -740,7 +682,6 @@ const LandingPage: React.FC = () => {
                 <iframe
                   width="100%"
                   height="100%"
-
                   src="https://www.youtube.com/embed/fp9_ubiKqFU?si=cOt2qAtgVplc7iyX" // Replace with actual demo video URL
                   title="YouTube video player"
                   frameBorder="0"
@@ -752,11 +693,11 @@ const LandingPage: React.FC = () => {
               </Box>
             </Col>
           </Row>
-        </Container>
+        </div>
       </Box>
 
-             {/* Team Section */}
-       <Container maxWidth="lg" className="py-5" id="team-section">
+      {/* Team Section */}
+      <div className="py-5" id="team-section" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 16px' }}>
         <Box sx={{ textAlign: 'center', mb: 6 }}>
           <Typography variant="h4" sx={{ fontWeight: 900, mb: 2, color: '#ffffff' }}>
             Meet Our Team
@@ -770,14 +711,14 @@ const LandingPage: React.FC = () => {
             <Col xs={12} sm={6} md={4} key={index}>
               <Box
                 sx={{
-                  background: cardBorderColor, // Consistent gradient for border
-                  p: '1px', // Border thickness
+                  background: cardBorderColor,
+                  p: '1px',
                   borderRadius: 3,
                   transition: 'all 0.3s ease',
-                  boxShadow: '0 0 0px rgba(94, 106, 210, 0.0)', // Initial subtle shadow
+                  boxShadow: '0 0 0px rgba(94, 106, 210, 0.0)',
                   '&:hover': {
                     transform: 'translateY(-4px)',
-                    boxShadow: '0 0 15px rgba(94, 106, 210, 0.5)', // Blue glow on hover
+                    boxShadow: '0 0 15px rgba(94, 106, 210, 0.5)',
                   },
                 }}
               >
@@ -785,7 +726,7 @@ const LandingPage: React.FC = () => {
                   sx={{
                     textAlign: 'center',
                     p: 4,
-                    bgcolor: cardBgColor, // Consistent blackish background
+                    bgcolor: cardBgColor,
                     borderRadius: 'inherit',
                     transition: 'all 0.3s ease',
                     backdropFilter: 'blur(10px)',
@@ -830,11 +771,11 @@ const LandingPage: React.FC = () => {
             </Col>
           ))}
         </Row>
-      </Container>
+      </div>
 
       {/* Contact Us Section */}
       <Box sx={{ py: 8, bgcolor: 'rgba(255,255,255,0.02)' }}>
-        <Container maxWidth="md">
+        <div style={{ maxWidth: '800px', margin: '0 auto', padding: '0 16px' }}>
           <Box sx={{ textAlign: 'center', mb: 6 }}>
             <Typography variant="h4" sx={{ fontWeight: 900, mb: 2, color: '#ffffff' }}>
               Contact Us
@@ -847,8 +788,8 @@ const LandingPage: React.FC = () => {
             elevation={3}
             sx={{
               p: { xs: 3, md: 5 },
-              bgcolor: cardBgColor, // Consistent blackish background
-              border: `1px solid ${cardBorderColor}`, // Consistent border
+              bgcolor: cardBgColor,
+              border: `1px solid ${cardBorderColor}`,
               borderRadius: 3,
               backdropFilter: 'blur(10px)',
             }}
@@ -863,7 +804,8 @@ const LandingPage: React.FC = () => {
                     <PersonOutline sx={{ color: 'rgba(255,255,255,0.7)', mr: 1 }} />
                   ),
                 }}
-                sx={{
+                // FIX APPLIED HERE
+                sx={(theme) => ({
                   '& .MuiOutlinedInput-root': {
                     '& fieldset': { borderColor: 'rgba(255,255,255,0.3)' },
                     '&:hover fieldset': { borderColor: 'rgba(255,255,255,0.5)' },
@@ -871,7 +813,7 @@ const LandingPage: React.FC = () => {
                     color: '#ffffff',
                   },
                   '& .MuiInputLabel-root': { color: 'rgba(255,255,255,0.7)' },
-                }}
+                })}
               />
               <TextField
                 fullWidth
@@ -883,7 +825,8 @@ const LandingPage: React.FC = () => {
                     <EmailOutlined sx={{ color: 'rgba(255,255,255,0.7)', mr: 1 }} />
                   ),
                 }}
-                sx={{
+                // FIX APPLIED HERE
+                sx={(theme) => ({
                   '& .MuiOutlinedInput-root': {
                     '& fieldset': { borderColor: 'rgba(255,255,255,0.3)' },
                     '&:hover fieldset': { borderColor: 'rgba(255,255,255,0.5)' },
@@ -891,7 +834,7 @@ const LandingPage: React.FC = () => {
                     color: '#ffffff',
                   },
                   '& .MuiInputLabel-root': { color: 'rgba(255,255,255,0.7)' },
-                }}
+                })}
               />
               <TextField
                 fullWidth
@@ -899,7 +842,8 @@ const LandingPage: React.FC = () => {
                 multiline
                 rows={4}
                 variant="outlined"
-                sx={{
+                // FIX APPLIED HERE
+                sx={(theme) => ({
                   '& .MuiOutlinedInput-root': {
                     '& fieldset': { borderColor: 'rgba(255,255,255,0.3)' },
                     '&:hover fieldset': { borderColor: 'rgba(255,255,255,0.5)' },
@@ -907,27 +851,27 @@ const LandingPage: React.FC = () => {
                     color: '#ffffff',
                   },
                   '& .MuiInputLabel-root': { color: 'rgba(255,255,255,0.7)' },
-                }}
+                })}
               />
-                             <BootstrapButton
-                 variant="light"
-                 size="lg"
-                 className="w-100"
-                 style={{
-                   fontSize: '14px',
-                   fontWeight: 500,
-                   padding: '12px 24px',
-                   borderRadius: '6px',
-                   boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                   transition: 'all 0.2s ease',
-                   marginTop: '24px',
-                 }}
-               >
-                 Send Message
-               </BootstrapButton>
+              <BootstrapButton
+                variant="light"
+                size="lg"
+                className="w-100"
+                style={{
+                  fontSize: '14px',
+                  fontWeight: 500,
+                  padding: '12px 24px',
+                  borderRadius: '6px',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                  transition: 'all 0.2s ease',
+                  marginTop: '24px',
+                }}
+              >
+                Send Message
+              </BootstrapButton>
             </Stack>
           </Paper>
-        </Container>
+        </div>
       </Box>
 
       {/* CTA Section */}
@@ -938,7 +882,7 @@ const LandingPage: React.FC = () => {
           py: 12,
         }}
       >
-        <Container maxWidth="lg">
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 16px' }}>
           <Box sx={{ textAlign: 'center' }}>
             <Typography variant="h4" sx={{ fontWeight: 900, mb: 4, color: '#ffffff' }}>
               Get Started Today
@@ -953,40 +897,40 @@ const LandingPage: React.FC = () => {
               justifyContent="center"
               alignItems="center"
             >
-                             <BootstrapButton
-                 onClick={handleDashboardClick}
-                 variant="light"
-                 size="lg"
-                 className="d-flex align-items-center"
-                 style={{
-                   fontSize: '14px',
-                   fontWeight: 500,
-                   padding: '12px 24px',
-                   borderRadius: '6px',
-                   boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                   transition: 'all 0.2s ease',
-                 }}
-               >
-                 {currentUser ? 'Go to Dashboard' : 'Launch Dashboard'} <ArrowForwardOutlined sx={{ ml: 1, fontSize: '1.1rem' }} />
-               </BootstrapButton>
-               <BootstrapButton
-                 onClick={() => document.getElementById('demo-section')?.scrollIntoView({ behavior: 'smooth' })}
-                 variant="outline-light"
-                 size="lg"
-                 className="d-flex align-items-center"
-                 style={{
-                   fontSize: '14px',
-                   fontWeight: 500,
-                   padding: '12px 24px',
-                   borderRadius: '6px',
-                   transition: 'all 0.2s ease',
-                 }}
-               >
-                 <PlayArrow sx={{ mr: 1, fontSize: '1.1rem' }} /> Watch Demo
-               </BootstrapButton>
+              <BootstrapButton
+                onClick={handleDashboardClick}
+                variant="light"
+                size="lg"
+                className="d-flex align-items-center"
+                style={{
+                  fontSize: '14px',
+                  fontWeight: 500,
+                  padding: '12px 24px',
+                  borderRadius: '6px',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                  transition: 'all 0.2s ease',
+                }}
+              >
+                {currentUser ? 'Go to Dashboard' : 'Launch Dashboard'} <ArrowForwardOutlined sx={{ ml: 1, fontSize: '1.1rem' }} />
+              </BootstrapButton>
+              <BootstrapButton
+                onClick={() => document.getElementById('demo-section')?.scrollIntoView({ behavior: 'smooth' })}
+                variant="outline-light"
+                size="lg"
+                className="d-flex align-items-center"
+                style={{
+                  fontSize: '14px',
+                  fontWeight: 500,
+                  padding: '12px 24px',
+                  borderRadius: '6px',
+                  transition: 'all 0.2s ease',
+                }}
+              >
+                <PlayArrow sx={{ mr: 1, fontSize: '1.1rem' }} /> Watch Demo
+              </BootstrapButton>
             </Stack>
           </Box>
-        </Container>
+        </div>
       </Box>
 
       {/* Footer */}
@@ -995,11 +939,11 @@ const LandingPage: React.FC = () => {
         py: 6,
         borderTop: '1px solid rgba(255,255,255,0.1)',
       }}>
-        <Container maxWidth="lg">
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 16px' }}>
           <Typography variant="body2" align="center" sx={{ fontWeight: 500, color: 'rgba(255,255,255,0.7)' }}>
             © 2025 Cloud Native App Orchestrator. Built for modern cloud-native applications.
           </Typography>
-        </Container>
+        </div>
       </Box>
 
       {/* Sign In Modal */}

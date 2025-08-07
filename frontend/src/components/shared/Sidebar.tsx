@@ -22,7 +22,6 @@ import {
     MenuItem,
     styled,
     alpha,
-    Chip,
 } from '@mui/material';
 import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import { ColorModeContext } from '../../utils/theme';
@@ -33,7 +32,6 @@ import {
     LayoutDashboard,
     Rocket,
     CloudUpload,
-    Package,
     GitFork,
     ScrollText,
     Settings,
@@ -45,9 +43,7 @@ import {
     PanelLeftClose,
     PanelLeftOpen,
     Home,
-    Database,
     Server,
-    Activity,
 } from 'lucide-react';
 
 import LightModeIcon from '@mui/icons-material/LightMode';

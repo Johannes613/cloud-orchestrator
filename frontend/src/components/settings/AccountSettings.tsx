@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {
-    Container,
     Typography,
     Box,
     Paper,
@@ -43,12 +42,12 @@ const AccountSettings = () => {
                     // Get user profile from Firebase
                     const userProfile = await firebaseService.getUserProfile(currentUser.uid);
                     setFormData({
-                        firstName: userProfile?.firstName || currentUser.displayName?.split(' ')[0] || '',
-                        lastName: userProfile?.lastName || currentUser.displayName?.split(' ').slice(1).join(' ') || '',
+                        firstName: (userProfile as any)?.firstName || currentUser.displayName?.split(' ')[0] || '',
+                        lastName: (userProfile as any)?.lastName || currentUser.displayName?.split(' ').slice(1).join(' ') || '',
                         email: currentUser.email || '',
-                        phone: userProfile?.phone || '',
-                        company: userProfile?.company || '',
-                        position: userProfile?.position || ''
+                        phone: (userProfile as any)?.phone || '',
+                        company: (userProfile as any)?.company || '',
+                        position: (userProfile as any)?.position || ''
                     });
                 } catch (error) {
                     // If no profile exists, use basic user info

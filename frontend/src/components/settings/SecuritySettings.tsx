@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
     Typography,
     Box,
@@ -8,7 +8,6 @@ import {
     Switch,
     FormControlLabel,
     Divider,
-    Alert,
     Grid,
     Stack
 } from '@mui/material';

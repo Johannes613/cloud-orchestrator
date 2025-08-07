@@ -8,8 +8,6 @@ import {
     TableContainer,
     TableHead,
     TableRow,
-    Paper,
-    Link,
     IconButton,
     Tooltip,
     Chip,
@@ -31,42 +29,22 @@ import {
     MoreVertical, 
     GitBranch, 
     GitCommit, 
-    Settings, 
     Eye, 
     Edit, 
     Trash2, 
     RefreshCw,
-    Play,
-    Pause,
-    ExternalLink,
     AlertCircle
 } from 'lucide-react';
 import StatusBadge from '../deployment/StatusBadge';
-
-interface RepositoryData {
-    id: string;
-    name: string;
-    url: string;
-    branch: string;
-    autoDeploy: boolean;
-    status: 'Active' | 'Inactive' | 'Error' | 'Syncing';
-    lastDeployed: string;
-    environment: string;
-    namespace: string;
-    path: string;
-    syncInterval: number;
-    lastSync: string;
-    commitCount: number;
-    deploymentCount: number;
-}
+import type { Repository } from '../../types/gitops';
 
 interface RepositoryTableProps {
-    data: RepositoryData[];
-    onEdit?: (repo: RepositoryData) => void;
+    data: Repository[];
+    onEdit?: (repo: Repository) => void;
     onDelete?: (repoId: string) => void;
     onToggleAutoDeploy?: (repoId: string, enabled: boolean) => void;
     onSync?: (repoId: string) => void;
-    onViewHistory?: (repo: RepositoryData) => void;
+    onViewHistory?: (repo: Repository) => void;
 }
 
 const RepositoryTable: React.FC<RepositoryTableProps> = ({ 
@@ -78,10 +56,10 @@ const RepositoryTable: React.FC<RepositoryTableProps> = ({
     onViewHistory 
 }) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const [selectedRepo, setSelectedRepo] = useState<RepositoryData | null>(null);
+    const [selectedRepo, setSelectedRepo] = useState<Repository | null>(null);
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
-    const handleMenuClick = (event: React.MouseEvent<HTMLElement>, repo: RepositoryData) => {
+    const handleMenuClick = (event: React.MouseEvent<HTMLElement>, repo: Repository) => {
         setAnchorEl(event.currentTarget);
         setSelectedRepo(repo);
     };
@@ -110,19 +88,19 @@ const RepositoryTable: React.FC<RepositoryTableProps> = ({
         setDeleteDialogOpen(false);
     };
 
-    const handleToggleAutoDeploy = (repo: RepositoryData) => {
+    const handleToggleAutoDeploy = (repo: Repository) => {
         if (onToggleAutoDeploy) {
             onToggleAutoDeploy(repo.id, !repo.autoDeploy);
         }
     };
 
-    const handleSync = (repo: RepositoryData) => {
+    const handleSync = (repo: Repository) => {
         if (onSync) {
             onSync(repo.id);
         }
     };
 
-    const handleViewHistory = (repo: RepositoryData) => {
+    const handleViewHistory = (repo: Repository) => {
         if (onViewHistory) {
             onViewHistory(repo);
         }
@@ -137,20 +115,7 @@ const RepositoryTable: React.FC<RepositoryTableProps> = ({
         });
     };
 
-    const getStatusColor = (status: string) => {
-        switch (status) {
-            case 'Active':
-                return 'success';
-            case 'Inactive':
-                return 'default';
-            case 'Error':
-                return 'error';
-            case 'Syncing':
-                return 'info';
-            default:
-                return 'default';
-        }
-    };
+
 
     const getEnvironmentColor = (environment: string) => {
         switch (environment) {
@@ -167,7 +132,7 @@ const RepositoryTable: React.FC<RepositoryTableProps> = ({
 
     return (
         <>
-            <Paper elevation={1} sx={{ borderRadius: 2, overflow: 'hidden' }}>
+            <Box sx={{ borderRadius: 2, overflow: 'hidden', border: '1px solid', borderColor: 'divider' }}>
                 <TableContainer>
                     <Table>
                         <TableHead>
@@ -218,7 +183,7 @@ const RepositoryTable: React.FC<RepositoryTableProps> = ({
                                         />
                                     </TableCell>
                                     <TableCell>
-                                        <StatusBadge status={repo.status === 'Active' ? 'Success' : repo.status === 'Error' ? 'Failed' : 'Pending'} />
+                                        <StatusBadge status={repo.status === 'Active' ? 'completed' : repo.status === 'Error' ? 'failed' : 'pending'} />
                                     </TableCell>
                                     <TableCell>
                                         <Switch
@@ -289,7 +254,7 @@ const RepositoryTable: React.FC<RepositoryTableProps> = ({
                         </TableBody>
                     </Table>
                 </TableContainer>
-            </Paper>
+            </Box>
 
             {/* Actions Menu */}
             <Menu
@@ -317,7 +282,7 @@ const RepositoryTable: React.FC<RepositoryTableProps> = ({
                 </MenuItem>
                 <MenuItem onClick={() => selectedRepo && window.open(selectedRepo.url, '_blank')}>
                     <ListItemIcon>
-                        <ExternalLink size={16} />
+                        <GitBranch size={16} />
                     </ListItemIcon>
                     <ListItemText>Open in Git</ListItemText>
                 </MenuItem>

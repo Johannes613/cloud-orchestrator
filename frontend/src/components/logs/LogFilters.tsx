@@ -9,11 +9,9 @@ import {
     Button,
     Chip,
     Stack,
-    Typography,
-    IconButton,
-    Tooltip
+    Typography
 } from '@mui/material';
-import { Search, Filter, X, Calendar, Clock } from 'lucide-react';
+import { Search, Filter, X } from 'lucide-react';
 import SimpleDatePicker from './SimpleDatePicker';
 
 interface LogFiltersProps {

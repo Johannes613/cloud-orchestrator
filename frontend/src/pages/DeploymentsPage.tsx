@@ -6,11 +6,9 @@ import {
     Paper,
     IconButton,
     Button,
-    Chip,
     LinearProgress,
     Card,
     CardContent,
-    Grid,
     Fab,
     Tooltip,
     Dialog,
@@ -30,23 +28,19 @@ import {
     Download,
     RefreshCw,
     Plus,
-    TrendingUp,
     Clock,
     CheckCircle,
     XCircle,
-    AlertCircle,
-    Play,
-    Pause,
-    RotateCcw,
-    Eye,
-    Settings
+
+    Play
 } from 'lucide-react';
 import { Container, Row, Col } from 'react-bootstrap';
 import DeploymentTable from '../components/deployment/DeploymentTable';
 import DeploymentMetrics from '../components/deployment/DeploymentMetrics';
 import DeploymentTimeline from '../components/deployment/DeploymentTimeline';
 import { firebaseService } from '../services/firebaseService';
-import type { Deployment, Application } from '../types/deployment';
+import type { Deployment } from '../services/firebaseService';
+import type { Application } from '../types/application';
 import { useAuth } from '../contexts/AuthContext';
 import { mockDeployments, mockApplications } from '../utils/mockData';
 import { showSignInPrompt } from '../utils/toast';
@@ -59,7 +53,8 @@ const DeploymentsPage: React.FC = () => {
     const [isRefreshing, setIsRefreshing] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [showNewDeploymentDialog, setShowNewDeploymentDialog] = useState(false);
-    const [selectedDeployment, setSelectedDeployment] = useState<Deployment | null>(null);
+    // const [selectedDeployment, setSelectedDeployment] = useState<Deployment | null>(null);
+
     const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' as 'success' | 'error' | 'warning' | 'info' });
 
     // Form state for new deployment
@@ -133,7 +128,7 @@ const DeploymentsPage: React.FC = () => {
 
     const handleCreateDeployment = async (deploymentData: any) => {
         try {
-            const newDeployment = await firebaseService.createDeployment(deploymentData);
+            const newDeployment = await firebaseService.createDeployment(deploymentData, currentUser!.uid);
             setDeployments(prev => [newDeployment, ...prev]);
             setShowNewDeploymentDialog(false);
             setSnackbar({ open: true, message: 'Deployment initiated successfully!', severity: 'success' });
@@ -183,10 +178,10 @@ const DeploymentsPage: React.FC = () => {
 
     const getStatusStats = () => {
         const stats = {
-            success: deployments.filter(d => d.status === 'Success').length,
-            failed: deployments.filter(d => d.status === 'Failed').length,
-            deploying: deployments.filter(d => d.status === 'Deploying').length,
-            pending: deployments.filter(d => d.status === 'Pending').length
+            success: deployments.filter(d => d.status === 'completed').length,
+            failed: deployments.filter(d => d.status === 'failed').length,
+            deploying: deployments.filter(d => d.status === 'running').length,
+            pending: deployments.filter(d => d.status === 'pending').length
         };
         return stats;
     };
@@ -393,8 +388,10 @@ const DeploymentsPage: React.FC = () => {
                             </Box>
                             <DeploymentTable
                                 data={deployments}
-                                onRollback={handleRollback}
-                                onViewDetails={(deployment) => setSelectedDeployment(deployment)}
+                                onRollback={(deployment) => handleRollback(deployment)}
+                                onViewDetails={(_deployment) => {
+                                    // setSelectedDeployment(deployment)
+                                }}
                             />
                         </Paper>
                     </Col>

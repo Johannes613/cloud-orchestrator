@@ -14,7 +14,6 @@ import {
     Alert,
 } from '@mui/material';
 import { 
-    Add as AddIcon, 
     FilterList as FilterIcon,
     Refresh as RefreshIcon 
 } from '@mui/icons-material';
@@ -24,61 +23,7 @@ import type { Cluster } from '../services/firebaseService';
 import { useAuth } from '../contexts/AuthContext';
 import { mockClusters } from '../utils/mockData';
 
-// Mock data for active clusters
-const activeClusters = [
-    {
-        id: 'prod-cluster',
-        name: 'Production Cluster',
-        status: 'Running',
-        nodes: 15,
-        pods: 120,
-        cpuUsage: '75%',
-        memoryUsage: '60%',
-        image: 'https://placehold.co/400x200/000000/FFFFFF?text=Production+Cluster',
-        region: 'us-east-1',
-        version: '1.28.0',
-    },
-    {
-        id: 'staging-cluster',
-        name: 'Staging Cluster',
-        status: 'Running',
-        nodes: 8,
-        pods: 60,
-        cpuUsage: '50%',
-        memoryUsage: '40%',
-        image: 'https://placehold.co/400x200/333333/FFFFFF?text=Staging+Cluster',
-        region: 'us-west-2',
-        version: '1.28.0',
-    },
-    {
-        id: 'dev-cluster',
-        name: 'Development Cluster',
-        status: 'Running',
-        nodes: 5,
-        pods: 30,
-        cpuUsage: '30%',
-        memoryUsage: '25%',
-        image: 'https://placehold.co/400x200/666666/FFFFFF?text=Development+Cluster',
-        region: 'eu-west-1',
-        version: '1.27.0',
-    },
-];
 
-// Mock data for inactive clusters
-const inactiveClusters = [
-    {
-        id: 'archive-cluster',
-        name: 'Archived Cluster',
-        status: 'Inactive',
-        nodes: 0,
-        pods: 0,
-        cpuUsage: '0%',
-        memoryUsage: '0%',
-        image: 'https://placehold.co/400x200/999999/FFFFFF?text=Archived+Cluster',
-        region: 'us-east-1',
-        version: '1.26.0',
-    }
-];
 
 const ClustersPage = () => {
     const { currentUser } = useAuth();
@@ -110,7 +55,7 @@ const ClustersPage = () => {
         loadClusters();
     }, [currentUser]);
 
-    const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+    const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
         setTabValue(newValue);
     };
 

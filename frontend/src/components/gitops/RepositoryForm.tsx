@@ -17,7 +17,7 @@ import {
     Chip,
     Alert
 } from '@mui/material';
-import { GitBranch, GitCommit, Settings, AlertCircle } from 'lucide-react';
+import { GitBranch, GitCommit, AlertCircle } from 'lucide-react';
 
 interface RepositoryFormData {
     name: string;

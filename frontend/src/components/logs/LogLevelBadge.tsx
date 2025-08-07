@@ -7,12 +7,7 @@ interface LogLevelBadgeProps {
 }
 
 const LogLevelBadge: React.FC<LogLevelBadgeProps> = ({ level }) => {
-    const colorMap = {
-        'INFO': 'info',
-        'WARN': 'warning',
-        'ERROR': 'error',
-        'DEBUG': 'default',
-    };
+
 
     const getCustomStyle = (level: string) => {
         switch (level) {

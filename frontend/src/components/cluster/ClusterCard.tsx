@@ -12,8 +12,6 @@ import {
     Avatar,
 } from '@mui/material';
 import {
-    PlayArrow as RunningIcon,
-    Stop as StoppedIcon,
     Settings as SettingsIcon,
     Visibility as ViewIcon,
     Memory as MemoryIcon,
@@ -26,7 +24,7 @@ interface ClusterCardProps {
 }
 
 const ClusterCard: React.FC<ClusterCardProps> = ({ cluster }) => {
-    const isActive = cluster.status === 'active';
+
     const cpuUsagePercentage = cluster.cpu.total > 0 ? (cluster.cpu.used / cluster.cpu.total) * 100 : 0;
     const memoryUsagePercentage = cluster.memory.total > 0 ? (cluster.memory.used / cluster.memory.total) * 100 : 0;
 

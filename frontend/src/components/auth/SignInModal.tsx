@@ -9,7 +9,6 @@ import {
   IconButton,
   Alert,
   CircularProgress,
-  useTheme,
 } from '@mui/material';
 import { Google as GoogleIcon, Close as CloseIcon } from '@mui/icons-material';
 import { 
@@ -32,7 +31,7 @@ const SignInModal: React.FC<SignInModalProps> = ({ open, onClose }) => {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const theme = useTheme();
+
   const navigate = useNavigate();
 
   const handleEmailSignIn = async (e: React.FormEvent) => {

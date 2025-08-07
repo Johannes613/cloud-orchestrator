@@ -8,11 +8,9 @@ import {
     Typography,
     Box,
     Paper,
-    Grid,
-    Chip,
-    Divider
+    Grid
 } from '@mui/material';
-import { X, Copy, ExternalLink } from 'lucide-react';
+import { X, Copy } from 'lucide-react';
 import LogLevelBadge from './LogLevelBadge';
 
 interface LogData {

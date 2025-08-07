@@ -13,34 +13,13 @@ import {
 import { 
     Clock, 
     GitBranch, 
-    User, 
-    ExternalLink,
     Eye,
     RotateCcw
 } from 'lucide-react';
 import StatusBadge from './StatusBadge';
 
-interface Application {
-    id: string;
-    name: string;
-    repo_url: string;
-    owner: string;
-    created_at: string;
-}
-
-interface Deployment {
-    id: string;
-    application_id: string;
-    version: string;
-    status: 'Pending' | 'Deploying' | 'Success' | 'Failed';
-    commit_hash: string;
-    environment: 'dev' | 'staging' | 'production';
-    deployed_at: string;
-    logs_url: string;
-    // Additional fields for UI
-    application?: Application;
-    duration?: number;
-}
+import type { Deployment } from '../../services/firebaseService';
+// import type { Application } from '../../types/application';
 
 interface DeploymentTimelineProps {
     deployments: Deployment[];
@@ -86,7 +65,7 @@ const DeploymentTimeline: React.FC<DeploymentTimelineProps> = ({
     };
 
     const sortedDeployments = [...deployments].sort(
-        (a, b) => new Date(b.deployed_at).getTime() - new Date(a.deployed_at).getTime()
+        (a, b) => new Date(b.startTime).getTime() - new Date(a.startTime).getTime()
     ).slice(0, 5); // Show only last 5 deployments
 
     return (
@@ -115,9 +94,9 @@ const DeploymentTimeline: React.FC<DeploymentTimelineProps> = ({
                                         width: 12,
                                         height: 12,
                                         borderRadius: '50%',
-                                        backgroundColor: deployment.status === 'Success' ? '#4caf50' : 
-                                                       deployment.status === 'Failed' ? '#f44336' :
-                                                       deployment.status === 'Deploying' ? '#2196f3' : '#ff9800',
+                                                                backgroundColor: deployment.status === 'completed' ? '#4caf50' :
+                        deployment.status === 'failed' ? '#f44336' :
+                        deployment.status === 'running' ? '#2196f3' : '#ff9800',
                                         border: '2px solid white',
                                         boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
                                         mt: 1,
@@ -131,7 +110,7 @@ const DeploymentTimeline: React.FC<DeploymentTimelineProps> = ({
                                     <Box display="flex" justifyContent="space-between" alignItems="flex-start" mb={1}>
                                         <Box>
                                             <Typography variant="body2" sx={{ fontWeight: 600, mb: 0.5 }}>
-                                                {deployment.application?.name || 'Unknown App'}
+                                                {deployment.applicationName || 'Unknown App'}
                                             </Typography>
                                             <Box display="flex" alignItems="center" gap={1} mb={1}>
                                                 <Avatar 
@@ -142,10 +121,10 @@ const DeploymentTimeline: React.FC<DeploymentTimelineProps> = ({
                                                         bgcolor: 'rgba(255,255,255,0.2)'
                                                     }}
                                                 >
-                                                    {getAuthorInitials(deployment.application?.owner || 'Unknown')}
+                                                    {getAuthorInitials('Unknown')}
                                                 </Avatar>
                                                 <Typography variant="caption" sx={{ opacity: 0.8 }}>
-                                                    {deployment.application?.owner || 'Unknown'}
+                                                    Unknown
                                                 </Typography>
                                             </Box>
                                         </Box>
@@ -165,7 +144,7 @@ const DeploymentTimeline: React.FC<DeploymentTimelineProps> = ({
                                                     <Eye size={14} />
                                                 </IconButton>
                                             </Tooltip>
-                                            {deployment.status === 'Success' && (
+                                            {deployment.status === 'completed' && (
                                                 <Tooltip title="Rollback">
                                                     <IconButton 
                                                         size="small"
@@ -203,20 +182,20 @@ const DeploymentTimeline: React.FC<DeploymentTimelineProps> = ({
                                     <Box display="flex" alignItems="center" gap={1} mb={1}>
                                         <GitBranch size={12} />
                                         <Typography variant="caption" sx={{ opacity: 0.8, fontFamily: 'monospace' }}>
-                                            {deployment.commit_hash}
+                                            {deployment.version}
                                         </Typography>
                                     </Box>
 
                                     {/* Duration */}
-                                    {deployment.duration && (
+                                    {false && (
                                         <Typography variant="caption" sx={{ opacity: 0.7 }}>
-                                            Duration: {Math.floor(deployment.duration / 60)}m {deployment.duration % 60}s
+                                            Duration: Not available
                                         </Typography>
                                     )}
 
                                     {/* Time */}
                                     <Typography variant="caption" sx={{ opacity: 0.6, display: 'block', mt: 0.5 }}>
-                                        {formatDate(deployment.deployed_at)}
+                                        {formatDate(deployment.startTime)}
                                     </Typography>
                                 </Box>
                             </Box>

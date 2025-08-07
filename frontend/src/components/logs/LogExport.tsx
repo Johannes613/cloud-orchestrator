@@ -17,7 +17,7 @@ import {
     Select,
     Chip
 } from '@mui/material';
-import { Download, FileText, FileJson, Calendar, Filter } from 'lucide-react';
+import { Download, FileText, FileJson, Filter } from 'lucide-react';
 
 interface LogData {
     timestamp: string;

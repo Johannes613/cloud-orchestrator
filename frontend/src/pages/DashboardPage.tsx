@@ -29,7 +29,6 @@ import {
   Cell,
 } from 'recharts';
 import {
-  AttachMoney,
   People,
   Speed,
   Cloud,
@@ -57,14 +56,15 @@ const DashboardPage = () => {
         averageCpuUsage: 0,
         averageMemoryUsage: 0,
     });
-    const [loading, setLoading] = useState(true);
+    // const [loading, setLoading] = useState(false);
+
 
     useEffect(() => {
         const loadDashboardStats = async () => {
             if (!currentUser) {
                 // Show mock data for non-logged-in users
                 setDashboardStats(mockDashboardStats);
-                setLoading(false);
+                // setLoading(false);
                 return;
             }
             try {
@@ -73,7 +73,7 @@ const DashboardPage = () => {
             } catch (error) {
                 console.error('Error loading dashboard stats:', error);
             } finally {
-                setLoading(false);
+                // setLoading(false);
             }
         };
 
@@ -141,7 +141,7 @@ const DashboardPage = () => {
         { name: "Cache Server", status: "online", uptime: "99.9%", responseTime: 15 },
     ];
 
-    const getStatusIcon = (status) => {
+    const getStatusIcon = (status: string) => {
         switch (status) {
             case 'success': return <CheckCircle sx={{ color: 'success.main' }} />;
             case 'warning': return <Warning sx={{ color: 'warning.main' }} />;
@@ -150,7 +150,7 @@ const DashboardPage = () => {
         }
     };
 
-    const getStatusColor = (status) => {
+    const getStatusColor = (status: string) => {
         switch (status) {
             case 'online': return 'success.main';
             case 'warning': return 'warning.main';
@@ -338,7 +338,7 @@ const DashboardPage = () => {
                             <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 3 }}>System Alerts</Typography>
                             <Box>
                                 {alerts.map((alert) => (
-                                    <Alert key={alert.id} severity={alert.severity} icon={getStatusIcon(alert.status)} sx={{ mb: 2, alignItems: 'center' }}>
+                                    <Alert key={alert.id} severity={alert.severity as any} icon={getStatusIcon(alert.status)} sx={{ mb: 2, alignItems: 'center' }}>
                                         <AlertTitle sx={{mb: 0, fontWeight: 'bold'}}>{alert.message}</AlertTitle>
                                         {alert.time}
                                     </Alert>

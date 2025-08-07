@@ -9,36 +9,15 @@ import {
     Chip
 } from '@mui/material';
 import { 
-    TrendingUp, 
     Clock, 
     CheckCircle, 
     XCircle,
-    BarChart3,
-    Activity
+    BarChart3
 } from 'lucide-react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 
-interface Application {
-    id: string;
-    name: string;
-    repo_url: string;
-    owner: string;
-    created_at: string;
-}
-
-interface Deployment {
-    id: string;
-    application_id: string;
-    version: string;
-    status: 'Pending' | 'Deploying' | 'Success' | 'Failed';
-    commit_hash: string;
-    environment: 'dev' | 'staging' | 'production';
-    deployed_at: string;
-    logs_url: string;
-    // Additional fields for UI
-    application?: Application;
-    duration?: number;
-}
+import type { Deployment } from '../../services/firebaseService';
+// import type { Application } from '../../types/application';
 
 interface DeploymentMetricsProps {
     deployments: Deployment[];
@@ -47,16 +26,13 @@ interface DeploymentMetricsProps {
 const DeploymentMetrics: React.FC<DeploymentMetricsProps> = ({ deployments }) => {
     const getMetrics = () => {
         const total = deployments.length;
-        const success = deployments.filter(d => d.status === 'Success').length;
-        const failed = deployments.filter(d => d.status === 'Failed').length;
-        const deploying = deployments.filter(d => d.status === 'Deploying').length;
-        const pending = deployments.filter(d => d.status === 'Pending').length;
+        const success = deployments.filter(d => d.status === 'completed').length;
+        const failed = deployments.filter(d => d.status === 'failed').length;
+        const deploying = deployments.filter(d => d.status === 'running').length;
+        const pending = deployments.filter(d => d.status === 'pending').length;
         
         const successRate = total > 0 ? (success / total) * 100 : 0;
-        const avgDuration = deployments
-            .filter(d => d.duration)
-            .reduce((acc, d) => acc + (d.duration || 0), 0) / 
-            deployments.filter(d => d.duration).length || 0;
+                const avgDuration = 0; // Duration not available in current deployment type
 
         return {
             total,

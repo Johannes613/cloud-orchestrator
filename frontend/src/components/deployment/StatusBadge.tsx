@@ -1,10 +1,10 @@
 // File: src/components/deployment/StatusBadge.tsx
 import React from 'react';
-import { Chip, Box, Typography } from '@mui/material';
-import { CheckCircle, XCircle, Clock, Play, AlertCircle } from 'lucide-react';
+import { Box, Typography } from '@mui/material';
+import { CheckCircle, XCircle, Clock, Play } from 'lucide-react';
 
 interface StatusBadgeProps {
-    status: 'Pending' | 'Deploying' | 'Success' | 'Failed';
+    status: 'pending' | 'running' | 'completed' | 'failed' | 'rolled_back';
     showIcon?: boolean;
     size?: 'small' | 'medium' | 'large';
 }
@@ -21,29 +21,35 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({
             icon: React.ReactNode;
             label: string;
         }> = {
-            'Success': {
+            'completed': {
                 color: '#2e7d32',
                 bgColor: '#e8f5e8',
                 icon: <CheckCircle size={14} />,
-                label: 'Success'
+                label: 'Completed'
             },
-            'Failed': {
+            'failed': {
                 color: '#d32f2f',
                 bgColor: '#ffebee',
                 icon: <XCircle size={14} />,
                 label: 'Failed'
             },
-            'Pending': {
+            'pending': {
                 color: '#ed6c02',
                 bgColor: '#fff4e5',
                 icon: <Clock size={14} />,
                 label: 'Pending'
             },
-            'Deploying': {
+            'running': {
                 color: '#1976d2',
                 bgColor: '#e3f2fd',
                 icon: <Play size={14} />,
-                label: 'Deploying'
+                label: 'Running'
+            },
+            'rolled_back': {
+                color: '#d32f2f',
+                bgColor: '#ffebee',
+                icon: <XCircle size={14} />,
+                label: 'Rolled Back'
             }
         };
         return configs[status] || configs['Pending'];
@@ -112,8 +118,8 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({
                 {config.label}
             </Typography>
             
-            {/* Animated dot for Deploying status */}
-            {status === 'Deploying' && (
+            {/* Animated dot for Running status */}
+            {status === 'running' && (
                 <Box
                     sx={{
                         width: 6,

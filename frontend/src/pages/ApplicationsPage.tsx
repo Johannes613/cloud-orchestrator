@@ -1,11 +1,11 @@
 import { useState, useMemo, useEffect } from 'react';
 import {
     Container, Typography, Box, Paper, InputBase, Button, ButtonGroup,
-    Tabs, Tab, Grid, Card, Dialog, DialogTitle, DialogContent, DialogActions,
-    TextField, FormControl, InputLabel, Select, MenuItem, Alert, CircularProgress
+    Grid, Dialog, DialogTitle, DialogContent, DialogActions,
+    Alert, CircularProgress
 } from '@mui/material';
 import {
-    Search as SearchIcon, PlusCircle, Filter, Grid3X3, List,
+    Search as SearchIcon, PlusCircle, Grid3X3, List,
     Download, Upload
 } from 'lucide-react';
 
@@ -27,7 +27,7 @@ const ApplicationsPage = () => {
     const [applications, setApplications] = useState<Application[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [tabIndex, setTabIndex] = useState(0);
+
     const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
     const [searchTerm, setSearchTerm] = useState('');
     const [filters, setFilters] = useState<ApplicationFilter>({});

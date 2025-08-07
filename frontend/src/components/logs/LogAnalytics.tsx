@@ -8,9 +8,6 @@ import {
     CartesianGrid,
     Tooltip,
     ResponsiveContainer,
-    PieChart,
-    Pie,
-    Cell,
 } from 'recharts';
 
 interface LogAnalyticsProps {
@@ -18,15 +15,9 @@ interface LogAnalyticsProps {
 }
 
 const LogAnalytics: React.FC<LogAnalyticsProps> = ({ logs }) => {
-    const levelDistribution = logs.reduce((acc, log) => {
-        acc[log.level] = (acc[log.level] || 0) + 1;
-        return acc;
-    }, {} as Record<string, number>);
 
-    const pieData = Object.entries(levelDistribution).map(([level, count]) => ({
-        name: level,
-        value: count,
-    }));
+
+
 
     const hourlyData = Array.from({ length: 24 }, (_, i) => {
         const hour = new Date();
@@ -47,7 +38,7 @@ const LogAnalytics: React.FC<LogAnalyticsProps> = ({ logs }) => {
         return { hour: hourStr, count };
     });
 
-    const COLORS = ['black', '#FF6B6B', '#4ECDC4', '#45B7D1'];
+
 
     return (
         <div className="container mt-4">

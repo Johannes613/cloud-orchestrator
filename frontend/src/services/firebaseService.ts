@@ -9,11 +9,8 @@ import {
   setDoc,
   query, 
   where, 
-  orderBy, 
-  limit,
   serverTimestamp,
-  onSnapshot,
-  Timestamp
+  onSnapshot
 } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import type { Application, CreateApplicationData, UpdateApplicationData } from '../types/application';
@@ -21,9 +18,7 @@ import type { Repository, CreateRepositoryData, UpdateRepositoryData, Deployment
 
 // Initialize Firestore collections
 const APPLICATIONS_COLLECTION = 'applications';
-const METRICS_COLLECTION = 'metrics';
-const LOGS_COLLECTION = 'logs';
-const VULNERABILITIES_COLLECTION = 'vulnerabilities';
+
 const DEPLOYMENTS_COLLECTION = 'deployments';
 const CLUSTERS_COLLECTION = 'clusters';
 const REPOSITORIES_COLLECTION = 'repositories';

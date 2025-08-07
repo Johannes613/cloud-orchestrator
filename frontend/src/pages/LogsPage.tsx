@@ -1,24 +1,20 @@
 // File: src/pages/LogsPage.tsx
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { 
-    Container, 
     Typography, 
     Box, 
     Paper, 
     Tabs, 
     Tab, 
-    Grid,
     Chip,
-    Alert
+    Container
 } from '@mui/material';
 import { 
     BarChart3, 
     Activity, 
     FileText, 
-    Settings,
     AlertCircle,
-    Info,
-    Clock
+    Info
 } from 'lucide-react';
 
 // Import components
@@ -233,7 +229,7 @@ const LogsPage: React.FC = () => {
             <Paper sx={{ mb: 3, borderRadius: 3 }}>
                 <Tabs 
                     value={activeTab} 
-                    onChange={(e, newValue) => setActiveTab(newValue)}
+                    onChange={(_e, newValue) => setActiveTab(newValue)}
                     sx={{
                         '& .MuiTab-root': {
                             color: '#666',
