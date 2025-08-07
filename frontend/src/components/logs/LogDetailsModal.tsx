@@ -101,7 +101,7 @@ const LogDetailsModal: React.FC<LogDetailsModalProps> = ({ open, onClose, log })
                         </Paper>
                     </Grid>
 
-                    <Grid item xs={12} md={6}>
+                    <Grid item xs={12} md={6} component="div">
                         <Paper sx={{ p: 3 }}>
                             <Typography variant="h6" gutterBottom sx={{ color: 'black', fontWeight: 'bold' }}>
                                 Basic Information
@@ -135,7 +135,7 @@ const LogDetailsModal: React.FC<LogDetailsModalProps> = ({ open, onClose, log })
                         </Paper>
                     </Grid>
 
-                    <Grid item xs={12} md={6}>
+                    <Grid item xs={12} md={6} component="div">
                         <Paper sx={{ p: 3 }}>
                             <Typography variant="h6" gutterBottom sx={{ color: 'black', fontWeight: 'bold' }}>
                                 Context Information
@@ -187,7 +187,7 @@ const LogDetailsModal: React.FC<LogDetailsModalProps> = ({ open, onClose, log })
                     </Grid>
 
                     {log.metadata && Object.keys(log.metadata).length > 0 && (
-                        <Grid item xs={12}>
+                        <Grid item xs={12} component="div">
                             <Paper sx={{ p: 3 }}>
                                 <Typography variant="h6" gutterBottom sx={{ color: 'black', fontWeight: 'bold' }}>
                                     Metadata

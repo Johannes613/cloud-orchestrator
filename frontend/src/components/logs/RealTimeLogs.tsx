@@ -55,15 +55,18 @@ const RealTimeLogs: React.FC<RealTimeLogsProps> = ({ onNewLog }) => {
             'Backup process initiated'
         ];
 
-        return {
+        const newLog: LogData = {
             timestamp: new Date().toISOString(),
-            level: levels[Math.floor(Math.random() * levels.length)],
-            source: sources[Math.floor(Math.random() * sources.length)],
-            message: messages[Math.floor(Math.random() * messages.length)],
-            traceId: Math.random().toString(36).substring(7),
-            userId: Math.random().toString(36).substring(7),
-            sessionId: Math.random().toString(36).substring(7)
+            level: levels[Math.floor(Math.random() * levels.length)] || 'INFO',
+            source: sources[Math.floor(Math.random() * sources.length)] || 'unknown',
+            message: messages[Math.floor(Math.random() * messages.length)] || 'No message',
+            metadata: {
+                pod: `pod-${Math.floor(Math.random() * 100)}`,
+                container: `container-${Math.floor(Math.random() * 10)}`,
+                namespace: 'default'
+            }
         };
+        return newLog;
     };
 
     const startStreaming = () => {

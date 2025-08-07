@@ -49,9 +49,8 @@ const GitOpsPage: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
 
     // Form states
-    const [formOpen, setFormOpen] = useState(false);
-    const [formMode, setFormMode] = useState<'add' | 'edit'>('add');
-    const [editingRepo, setEditingRepo] = useState<Repository | null>(null);
+    const [showRepositoryForm, setShowRepositoryForm] = useState(false);
+    const [selectedRepository, setSelectedRepository] = useState<Repository | null>(null);
 
     // History states
     const [selectedRepoForHistory, setSelectedRepoForHistory] = useState<Repository | null>(null);
@@ -142,11 +141,11 @@ const GitOpsPage: React.FC = () => {
             showSignInPrompt();
             return;
         }
-        if (editingRepo) {
+        if (selectedRepository) {
             try {
-                const updatedRepo = await firebaseService.updateRepository(editingRepo.id, data);
+                const updatedRepo = await firebaseService.updateRepository(selectedRepository.id, data);
                 setRepositories(prev => prev.map(repo => 
-                    repo.id === editingRepo.id ? updatedRepo : repo
+                    repo.id === selectedRepository.id ? updatedRepo : repo
                 ));
                 showNotification('Repository updated successfully', 'success');
             } catch (err) {
@@ -214,9 +213,8 @@ const GitOpsPage: React.FC = () => {
     };
 
     const handleEdit = (repo: Repository) => {
-        setEditingRepo(repo);
-        setFormMode('edit');
-        setFormOpen(true);
+        setSelectedRepository(repo);
+        setShowRepositoryForm(true);
     };
 
     const handleAddNew = () => {
@@ -224,19 +222,18 @@ const GitOpsPage: React.FC = () => {
             showSignInPrompt();
             return;
         }
-        setEditingRepo(null);
-        setFormMode('add');
-        setFormOpen(true);
+        setSelectedRepository(null);
+        setShowRepositoryForm(true);
     };
 
-    const handleFormSubmit = async (data: any) => {
-        if (formMode === 'add') {
-            await handleAddRepository(data);
-        } else {
+    const handleRepositorySubmit = async (data: any) => {
+        if (selectedRepository) {
             await handleEditRepository(data);
+        } else {
+            await handleAddRepository(data);
         }
-        setFormOpen(false);
-        setEditingRepo(null);
+        setShowRepositoryForm(false);
+        setSelectedRepository(null);
     };
 
     const handleRefresh = async () => {
@@ -409,14 +406,20 @@ const GitOpsPage: React.FC = () => {
 
             {/* Repository Form Dialog */}
             <RepositoryForm
-                open={formOpen}
-                onClose={() => {
-                    setFormOpen(false);
-                    setEditingRepo(null);
-                }}
-                onSubmit={handleFormSubmit}
-                initialData={editingRepo || undefined}
-                mode={formMode}
+                open={showRepositoryForm}
+                onClose={() => setShowRepositoryForm(false)}
+                onSubmit={handleRepositorySubmit}
+                initialData={selectedRepository ? {
+                    name: selectedRepository.name,
+                    url: selectedRepository.url,
+                    branch: selectedRepository.branch,
+                    autoDeploy: selectedRepository.autoDeploy,
+                    environment: selectedRepository.environment,
+                    namespace: selectedRepository.namespace,
+                    path: selectedRepository.path,
+                    syncInterval: selectedRepository.syncInterval
+                } : undefined}
+                mode={selectedRepository ? 'edit' : 'add'}
             />
 
             {/* Deployment History Dialog */}

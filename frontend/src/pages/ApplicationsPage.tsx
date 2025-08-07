@@ -220,7 +220,7 @@ const ApplicationsPage = () => {
             ) : viewMode === 'grid' ? (
                 <Grid container spacing={3}>
                     {filteredApplications.map(app => (
-                        <Grid item xs={12} sm={6} md={4} key={app.id}>
+                        <Grid item xs={12} sm={6} md={4} lg={3} key={app.id} component="div">
                             <EnhancedAppCard application={app} onAction={handleApplicationAction} />
                         </Grid>
                     ))}
@@ -228,7 +228,9 @@ const ApplicationsPage = () => {
             ) : (
                 <Box>
                     {filteredApplications.map(app => (
-                        <EnhancedAppCard key={app.id} application={app} onAction={handleApplicationAction} />
+                        <Grid item xs={12} sm={6} md={4} key={app.id} component="div">
+                            <EnhancedAppCard key={app.id} application={app} onAction={handleApplicationAction} />
+                        </Grid>
                     ))}
                 </Box>
             )}

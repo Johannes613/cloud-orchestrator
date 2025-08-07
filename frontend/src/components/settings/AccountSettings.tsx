@@ -150,7 +150,7 @@ const AccountSettings = () => {
             </Stack>
 
             <Grid container spacing={3}>
-                <Grid item xs={12} md={6}>
+                <Grid item xs={12} md={6} component="div">
                     <TextField
                         fullWidth
                         label="First Name"
@@ -159,7 +159,7 @@ const AccountSettings = () => {
                         variant="outlined"
                     />
                 </Grid>
-                <Grid item xs={12} md={6}>
+                <Grid item xs={12} md={6} component="div">
                     <TextField
                         fullWidth
                         label="Last Name"
@@ -168,7 +168,7 @@ const AccountSettings = () => {
                         variant="outlined"
                     />
                 </Grid>
-                <Grid item xs={12} md={6}>
+                <Grid item xs={12} md={6} component="div">
                     <TextField
                         fullWidth
                         label="Email"
@@ -179,7 +179,7 @@ const AccountSettings = () => {
                         disabled // Assuming email is not editable
                     />
                 </Grid>
-                <Grid item xs={12} md={6}>
+                <Grid item xs={12} md={6} component="div">
                     <TextField
                         fullWidth
                         label="Phone"
@@ -188,7 +188,7 @@ const AccountSettings = () => {
                         variant="outlined"
                     />
                 </Grid>
-                <Grid item xs={12} md={6}>
+                <Grid item xs={12} md={6} component="div">
                     <TextField
                         fullWidth
                         label="Company"
@@ -197,7 +197,7 @@ const AccountSettings = () => {
                         variant="outlined"
                     />
                 </Grid>
-                <Grid item xs={12} md={6}>
+                <Grid item xs={12} md={6} component="div">
                     <TextField
                         fullWidth
                         label="Position"

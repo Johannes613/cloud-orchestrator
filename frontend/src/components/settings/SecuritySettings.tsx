@@ -77,7 +77,7 @@ const SecuritySettings = () => {
                         <Typography variant="h6" sx={{ fontWeight: 'medium' }}>Password Settings</Typography>
                     </Stack>
                     <Grid container spacing={2}>
-                        <Grid item xs={12} md={6}>
+                        <Grid item xs={12} md={6} component="div">
                             <TextField
                                 fullWidth
                                 label="Session Timeout (minutes)"
@@ -87,7 +87,7 @@ const SecuritySettings = () => {
                                 variant="outlined"
                             />
                         </Grid>
-                        <Grid item xs={12} md={6}>
+                        <Grid item xs={12} md={6} component="div">
                             <TextField
                                 fullWidth
                                 label="Password Expiry (days)"
@@ -97,7 +97,7 @@ const SecuritySettings = () => {
                                 variant="outlined"
                             />
                         </Grid>
-                        <Grid item xs={12} md={6}>
+                        <Grid item xs={12} md={6} component="div">
                             <TextField
                                 fullWidth
                                 label="Failed Login Attempts"
@@ -118,7 +118,7 @@ const SecuritySettings = () => {
                         <Typography variant="h6" sx={{ fontWeight: 'medium' }}>Change Password</Typography>
                     </Stack>
                     <Grid container spacing={2}>
-                        <Grid item xs={12}>
+                        <Grid item xs={12} component="div">
                             <TextField
                                 fullWidth
                                 label="Current Password"
@@ -128,7 +128,7 @@ const SecuritySettings = () => {
                                 variant="outlined"
                             />
                         </Grid>
-                        <Grid item xs={12} md={6}>
+                        <Grid item xs={12} md={6} component="div">
                             <TextField
                                 fullWidth
                                 label="New Password"
@@ -138,7 +138,7 @@ const SecuritySettings = () => {
                                 variant="outlined"
                             />
                         </Grid>
-                        <Grid item xs={12} md={6}>
+                        <Grid item xs={12} md={6} component="div">
                             <TextField
                                 fullWidth
                                 label="Confirm New Password"

@@ -34,7 +34,7 @@ interface RepositoryFormProps {
     open: boolean;
     onClose: () => void;
     onSubmit: (data: RepositoryFormData) => void;
-    initialData?: RepositoryFormData;
+    initialData?: RepositoryFormData | undefined;
     mode: 'add' | 'edit';
 }
 
