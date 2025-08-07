@@ -34,7 +34,9 @@ RUN addgroup -g 1001 -S nodejs && \
 RUN chown -R nextjs:nodejs /var/cache/nginx && \
     chown -R nextjs:nodejs /var/log/nginx && \
     chown -R nextjs:nodejs /etc/nginx/conf.d && \
-    chown -R nextjs:nodejs /usr/share/nginx/html
+    chown -R nextjs:nodejs /usr/share/nginx/html && \
+    mkdir -p /run && \
+    chown -R nextjs:nodejs /run
 
 # Switch to non-root user
 USER nextjs
