@@ -218,19 +218,19 @@ const ApplicationsPage = () => {
                     <Typography>No applications found</Typography>
                 </Paper>
             ) : viewMode === 'grid' ? (
-                <Grid container spacing={3}>
+                <Grid container spacing={3} sx={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: 3 }}>
                     {filteredApplications.map(app => (
-                        <Grid item xs={12} sm={6} md={4} lg={3} key={app.id} component="div">
+                        <div style={{ gridColumn: 'span 3' }} key={app.id}>
                             <EnhancedAppCard application={app} onAction={handleApplicationAction} />
-                        </Grid>
+                        </div>
                     ))}
                 </Grid>
             ) : (
-                <Box>
+                <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: 3 }}>
                     {filteredApplications.map(app => (
-                        <Grid item xs={12} sm={6} md={4} key={app.id} component="div">
+                        <div style={{ gridColumn: 'span 4' }} key={app.id}>
                             <EnhancedAppCard key={app.id} application={app} onAction={handleApplicationAction} />
-                        </Grid>
+                        </div>
                     ))}
                 </Box>
             )}

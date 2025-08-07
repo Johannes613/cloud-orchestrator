@@ -76,8 +76,8 @@ const SecuritySettings = () => {
                         <Lock size={20} color="#1976d2" />
                         <Typography variant="h6" sx={{ fontWeight: 'medium' }}>Password Settings</Typography>
                     </Stack>
-                    <Grid container spacing={2}>
-                        <Grid item xs={12} md={6} component="div">
+                    <Grid container spacing={2} sx={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: 2 }}>
+                        <div style={{ gridColumn: 'span 6' }}>
                             <TextField
                                 fullWidth
                                 label="Session Timeout (minutes)"
@@ -86,8 +86,8 @@ const SecuritySettings = () => {
                                 onChange={(e) => handleInputChange('sessionTimeout', e.target.value)}
                                 variant="outlined"
                             />
-                        </Grid>
-                        <Grid item xs={12} md={6} component="div">
+                        </div>
+                        <div style={{ gridColumn: 'span 6' }}>
                             <TextField
                                 fullWidth
                                 label="Password Expiry (days)"
@@ -96,8 +96,8 @@ const SecuritySettings = () => {
                                 onChange={(e) => handleInputChange('passwordExpiry', e.target.value)}
                                 variant="outlined"
                             />
-                        </Grid>
-                        <Grid item xs={12} md={6} component="div">
+                        </div>
+                        <div style={{ gridColumn: 'span 6' }}>
                             <TextField
                                 fullWidth
                                 label="Failed Login Attempts"
@@ -106,7 +106,7 @@ const SecuritySettings = () => {
                                 onChange={(e) => handleInputChange('failedLoginAttempts', e.target.value)}
                                 variant="outlined"
                             />
-                        </Grid>
+                        </div>
                     </Grid>
                 </Box>
 
@@ -117,8 +117,8 @@ const SecuritySettings = () => {
                         <Key size={20} color="#1976d2" />
                         <Typography variant="h6" sx={{ fontWeight: 'medium' }}>Change Password</Typography>
                     </Stack>
-                    <Grid container spacing={2}>
-                        <Grid item xs={12} component="div">
+                    <Grid container spacing={2} sx={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: 2 }}>
+                        <div style={{ gridColumn: 'span 12' }}>
                             <TextField
                                 fullWidth
                                 label="Current Password"
@@ -127,8 +127,8 @@ const SecuritySettings = () => {
                                 onChange={(e) => handleInputChange('currentPassword', e.target.value)}
                                 variant="outlined"
                             />
-                        </Grid>
-                        <Grid item xs={12} md={6} component="div">
+                        </div>
+                        <div style={{ gridColumn: 'span 6' }}>
                             <TextField
                                 fullWidth
                                 label="New Password"
@@ -137,8 +137,8 @@ const SecuritySettings = () => {
                                 onChange={(e) => handleInputChange('newPassword', e.target.value)}
                                 variant="outlined"
                             />
-                        </Grid>
-                        <Grid item xs={12} md={6} component="div">
+                        </div>
+                        <div style={{ gridColumn: 'span 6' }}>
                             <TextField
                                 fullWidth
                                 label="Confirm New Password"
@@ -149,7 +149,7 @@ const SecuritySettings = () => {
                                 error={!!settings.newPassword && !passwordsMatch}
                                 helperText={!!settings.newPassword && !passwordsMatch ? 'Passwords do not match' : ''}
                             />
-                        </Grid>
+                        </div>
                     </Grid>
                 </Box>
             </Stack>

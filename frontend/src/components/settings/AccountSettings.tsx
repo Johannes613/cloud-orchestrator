@@ -149,8 +149,8 @@ const AccountSettings = () => {
                 </Box>
             </Stack>
 
-            <Grid container spacing={3}>
-                <Grid item xs={12} md={6} component="div">
+            <Grid container spacing={3} sx={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: 3 }}>
+                <div style={{ gridColumn: 'span 6' }}>
                     <TextField
                         fullWidth
                         label="First Name"
@@ -158,8 +158,8 @@ const AccountSettings = () => {
                         onChange={(e) => handleInputChange('firstName', e.target.value)}
                         variant="outlined"
                     />
-                </Grid>
-                <Grid item xs={12} md={6} component="div">
+                </div>
+                <div style={{ gridColumn: 'span 6' }}>
                     <TextField
                         fullWidth
                         label="Last Name"
@@ -167,8 +167,8 @@ const AccountSettings = () => {
                         onChange={(e) => handleInputChange('lastName', e.target.value)}
                         variant="outlined"
                     />
-                </Grid>
-                <Grid item xs={12} md={6} component="div">
+                </div>
+                <div style={{ gridColumn: 'span 6' }}>
                     <TextField
                         fullWidth
                         label="Email"
@@ -178,8 +178,8 @@ const AccountSettings = () => {
                         variant="outlined"
                         disabled // Assuming email is not editable
                     />
-                </Grid>
-                <Grid item xs={12} md={6} component="div">
+                </div>
+                <div style={{ gridColumn: 'span 6' }}>
                     <TextField
                         fullWidth
                         label="Phone"
@@ -187,8 +187,8 @@ const AccountSettings = () => {
                         onChange={(e) => handleInputChange('phone', e.target.value)}
                         variant="outlined"
                     />
-                </Grid>
-                <Grid item xs={12} md={6} component="div">
+                </div>
+                <div style={{ gridColumn: 'span 6' }}>
                     <TextField
                         fullWidth
                         label="Company"
@@ -196,8 +196,8 @@ const AccountSettings = () => {
                         onChange={(e) => handleInputChange('company', e.target.value)}
                         variant="outlined"
                     />
-                </Grid>
-                <Grid item xs={12} md={6} component="div">
+                </div>
+                <div style={{ gridColumn: 'span 6' }}>
                     <TextField
                         fullWidth
                         label="Position"
@@ -205,7 +205,7 @@ const AccountSettings = () => {
                         onChange={(e) => handleInputChange('position', e.target.value)}
                         variant="outlined"
                     />
-                </Grid>
+                </div>
             </Grid>
 
             <Box mt={4} textAlign="right">

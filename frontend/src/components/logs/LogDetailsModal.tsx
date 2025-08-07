@@ -7,8 +7,7 @@ import {
     Button,
     Typography,
     Box,
-    Paper,
-    Grid
+    Paper
 } from '@mui/material';
 import { X, Copy } from 'lucide-react';
 import LogLevelBadge from './LogLevelBadge';
@@ -82,137 +81,135 @@ const LogDetailsModal: React.FC<LogDetailsModalProps> = ({ open, onClose, log })
                 </Button>
             </DialogTitle>
 
-            <DialogContent sx={{ pt: 2 }}>
-                <Grid container spacing={3}>
-                    <Grid item xs={12}>
-                        <Paper sx={{ p: 3, backgroundColor: '#f8f9fa' }}>
+            <DialogContent sx={{ pt: 2, display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: 3 }}>
+                <div style={{ gridColumn: 'span 12' }}>
+                    <Paper sx={{ p: 3, backgroundColor: '#f8f9fa' }}>
+                        <Typography variant="h6" gutterBottom sx={{ color: 'black', fontWeight: 'bold' }}>
+                            Message
+                        </Typography>
+                        <Typography variant="body1" sx={{ 
+                            fontFamily: 'monospace', 
+                            backgroundColor: '#fff',
+                            p: 2,
+                            borderRadius: 1,
+                            border: '1px solid #e0e0e0'
+                        }}>
+                            {log.message}
+                        </Typography>
+                    </Paper>
+                </div>
+
+                <div style={{ gridColumn: 'span 6' }}>
+                    <Paper sx={{ p: 3 }}>
+                        <Typography variant="h6" gutterBottom sx={{ color: 'black', fontWeight: 'bold' }}>
+                            Basic Information
+                        </Typography>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                            <Box>
+                                <Typography variant="caption" color="text.secondary">
+                                    Timestamp
+                                </Typography>
+                                <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>
+                                    {formatTimestamp(log.timestamp)}
+                                </Typography>
+                            </Box>
+                            
+                            <Box>
+                                <Typography variant="caption" color="text.secondary">
+                                    Source
+                                </Typography>
+                                <Typography variant="body2">
+                                    {log.source}
+                                </Typography>
+                            </Box>
+
+                            <Box>
+                                <Typography variant="caption" color="text.secondary">
+                                    Level
+                                </Typography>
+                                <LogLevelBadge level={log.level} />
+                            </Box>
+                        </Box>
+                    </Paper>
+                </div>
+
+                <div style={{ gridColumn: 'span 6' }}>
+                    <Paper sx={{ p: 3 }}>
+                        <Typography variant="h6" gutterBottom sx={{ color: 'black', fontWeight: 'bold' }}>
+                            Context Information
+                        </Typography>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                            {log.traceId && (
+                                <Box>
+                                    <Typography variant="caption" color="text.secondary">
+                                        Trace ID
+                                    </Typography>
+                                    <Box display="flex" alignItems="center" gap={1}>
+                                        <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>
+                                            {log.traceId}
+                                        </Typography>
+                                        <Button
+                                            size="small"
+                                            onClick={() => copyToClipboard(log.traceId!)}
+                                            sx={{ minWidth: 'auto', p: 0.5 }}
+                                        >
+                                            <Copy size={14} />
+                                        </Button>
+                                    </Box>
+                                </Box>
+                            )}
+
+                            {log.userId && (
+                                <Box>
+                                    <Typography variant="caption" color="text.secondary">
+                                        User ID
+                                    </Typography>
+                                    <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>
+                                        {log.userId}
+                                    </Typography>
+                                </Box>
+                            )}
+
+                            {log.sessionId && (
+                                <Box>
+                                    <Typography variant="caption" color="text.secondary">
+                                        Session ID
+                                    </Typography>
+                                    <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>
+                                        {log.sessionId}
+                                    </Typography>
+                                </Box>
+                            )}
+                        </Box>
+                    </Paper>
+                </div>
+
+                {log.metadata && Object.keys(log.metadata).length > 0 && (
+                    <div style={{ gridColumn: 'span 12' }}>
+                        <Paper sx={{ p: 3 }}>
                             <Typography variant="h6" gutterBottom sx={{ color: 'black', fontWeight: 'bold' }}>
-                                Message
+                                Metadata
                             </Typography>
-                            <Typography variant="body1" sx={{ 
-                                fontFamily: 'monospace', 
+                            <Box sx={{ 
                                 backgroundColor: '#fff',
                                 p: 2,
                                 borderRadius: 1,
-                                border: '1px solid #e0e0e0'
+                                border: '1px solid #e0e0e0',
+                                maxHeight: 200,
+                                overflow: 'auto'
                             }}>
-                                {log.message}
-                            </Typography>
-                        </Paper>
-                    </Grid>
-
-                    <Grid item xs={12} md={6} component="div">
-                        <Paper sx={{ p: 3 }}>
-                            <Typography variant="h6" gutterBottom sx={{ color: 'black', fontWeight: 'bold' }}>
-                                Basic Information
-                            </Typography>
-                            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                                <Box>
-                                    <Typography variant="caption" color="text.secondary">
-                                        Timestamp
-                                    </Typography>
-                                    <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>
-                                        {formatTimestamp(log.timestamp)}
-                                    </Typography>
-                                </Box>
-                                
-                                <Box>
-                                    <Typography variant="caption" color="text.secondary">
-                                        Source
-                                    </Typography>
-                                    <Typography variant="body2">
-                                        {log.source}
-                                    </Typography>
-                                </Box>
-
-                                <Box>
-                                    <Typography variant="caption" color="text.secondary">
-                                        Level
-                                    </Typography>
-                                    <LogLevelBadge level={log.level} />
-                                </Box>
-                            </Box>
-                        </Paper>
-                    </Grid>
-
-                    <Grid item xs={12} md={6} component="div">
-                        <Paper sx={{ p: 3 }}>
-                            <Typography variant="h6" gutterBottom sx={{ color: 'black', fontWeight: 'bold' }}>
-                                Context Information
-                            </Typography>
-                            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                                {log.traceId && (
-                                    <Box>
-                                        <Typography variant="caption" color="text.secondary">
-                                            Trace ID
-                                        </Typography>
-                                        <Box display="flex" alignItems="center" gap={1}>
-                                            <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>
-                                                {log.traceId}
-                                            </Typography>
-                                            <Button
-                                                size="small"
-                                                onClick={() => copyToClipboard(log.traceId!)}
-                                                sx={{ minWidth: 'auto', p: 0.5 }}
-                                            >
-                                                <Copy size={14} />
-                                            </Button>
-                                        </Box>
-                                    </Box>
-                                )}
-
-                                {log.userId && (
-                                    <Box>
-                                        <Typography variant="caption" color="text.secondary">
-                                            User ID
-                                        </Typography>
-                                        <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>
-                                            {log.userId}
-                                        </Typography>
-                                    </Box>
-                                )}
-
-                                {log.sessionId && (
-                                    <Box>
-                                        <Typography variant="caption" color="text.secondary">
-                                            Session ID
-                                        </Typography>
-                                        <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>
-                                            {log.sessionId}
-                                        </Typography>
-                                    </Box>
-                                )}
-                            </Box>
-                        </Paper>
-                    </Grid>
-
-                    {log.metadata && Object.keys(log.metadata).length > 0 && (
-                        <Grid item xs={12} component="div">
-                            <Paper sx={{ p: 3 }}>
-                                <Typography variant="h6" gutterBottom sx={{ color: 'black', fontWeight: 'bold' }}>
-                                    Metadata
-                                </Typography>
-                                <Box sx={{ 
-                                    backgroundColor: '#fff',
-                                    p: 2,
-                                    borderRadius: 1,
-                                    border: '1px solid #e0e0e0',
-                                    maxHeight: 200,
-                                    overflow: 'auto'
+                                <pre style={{ 
+                                    margin: 0, 
+                                    fontFamily: 'monospace',
+                                    fontSize: '0.875rem',
+                                    color: '#333'
                                 }}>
-                                    <pre style={{ 
-                                        margin: 0, 
-                                        fontFamily: 'monospace',
-                                        fontSize: '0.875rem',
-                                        color: '#333'
-                                    }}>
-                                        {JSON.stringify(log.metadata, null, 2)}
-                                    </pre>
-                                </Box>
-                            </Paper>
-                        </Grid>
-                    )}
-                </Grid>
+                                    {JSON.stringify(log.metadata, null, 2)}
+                                </pre>
+                            </Box>
+                        </Paper>
+                    </div>
+                )}
             </DialogContent>
 
             <DialogActions sx={{ p: 3, pt: 1 }}>

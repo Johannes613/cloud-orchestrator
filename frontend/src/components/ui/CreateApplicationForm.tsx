@@ -123,8 +123,8 @@ const CreateApplicationForm: React.FC<CreateApplicationFormProps> = ({
         <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
             <DialogTitle>Create New Application</DialogTitle>
             <DialogContent>
-                <Grid container spacing={2} sx={{ mt: 1 }}>
-                    <Grid item xs={12} md={6} component="div">
+                <Grid container spacing={2} sx={{ mt: 1, display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: 2 }}>
+                    <div style={{ gridColumn: 'span 6' }}>
                         <TextField
                             fullWidth
                             label="Application Name"
@@ -132,32 +132,32 @@ const CreateApplicationForm: React.FC<CreateApplicationFormProps> = ({
                             onChange={(e) => handleInputChange('name', e.target.value)}
                             required
                         />
-                    </Grid>
-                    <Grid item xs={12} md={6} component="div">
+                    </div>
+                    <div style={{ gridColumn: 'span 6' }}>
                         <TextField
                             fullWidth
                             label="Namespace"
                             value={formData.namespace}
                             onChange={(e) => handleInputChange('namespace', e.target.value)}
                         />
-                    </Grid>
-                    <Grid item xs={12} md={6} component="div">
+                    </div>
+                    <div style={{ gridColumn: 'span 6' }}>
                         <TextField
                             fullWidth
                             label="Image"
                             value={formData.image}
                             onChange={(e) => handleInputChange('image', e.target.value)}
                         />
-                    </Grid>
-                    <Grid item xs={12} md={6} component="div">
+                    </div>
+                    <div style={{ gridColumn: 'span 6' }}>
                         <TextField
                             fullWidth
                             label="Version"
                             value={formData.version}
                             onChange={(e) => handleInputChange('version', e.target.value)}
                         />
-                    </Grid>
-                    <Grid item xs={12} md={6} component="div">
+                    </div>
+                    <div style={{ gridColumn: 'span 6' }}>
                         <FormControl fullWidth>
                             <InputLabel>Environment</InputLabel>
                             <Select
@@ -170,8 +170,8 @@ const CreateApplicationForm: React.FC<CreateApplicationFormProps> = ({
                                 <MenuItem value="production">Production</MenuItem>
                             </Select>
                         </FormControl>
-                    </Grid>
-                    <Grid item xs={12} md={6} component="div">
+                    </div>
+                    <div style={{ gridColumn: 'span 6' }}>
                         <TextField
                             fullWidth
                             label="Replicas"
@@ -180,8 +180,8 @@ const CreateApplicationForm: React.FC<CreateApplicationFormProps> = ({
                             onChange={(e) => handleInputChange('replicas', parseInt(e.target.value) || 1)}
                             inputProps={{ min: 1, max: 10 }}
                         />
-                    </Grid>
-                    <Grid item xs={12} md={6} component="div">
+                    </div>
+                    <div style={{ gridColumn: 'span 6' }}>
                         <TextField
                             fullWidth
                             label="Owner"
@@ -189,16 +189,16 @@ const CreateApplicationForm: React.FC<CreateApplicationFormProps> = ({
                             onChange={(e) => handleInputChange('owner', e.target.value)}
                             placeholder="admin@company.com"
                         />
-                    </Grid>
-                    <Grid item xs={12} md={6} component="div">
+                    </div>
+                    <div style={{ gridColumn: 'span 6' }}>
                         <TextField
                             fullWidth
                             label="Team"
                             value={formData.team}
                             onChange={(e) => handleInputChange('team', e.target.value)}
                         />
-                    </Grid>
-                    <Grid item xs={12} component="div">
+                    </div>
+                    <div style={{ gridColumn: 'span 12' }}>
                         <TextField
                             fullWidth
                             label="Description"
@@ -207,8 +207,8 @@ const CreateApplicationForm: React.FC<CreateApplicationFormProps> = ({
                             value={formData.description}
                             onChange={(e) => handleInputChange('description', e.target.value)}
                         />
-                    </Grid>
-                    <Grid item xs={12} component="div">
+                    </div>
+                    <div style={{ gridColumn: 'span 12' }}>
                         <Box>
                             <TextField
                                 fullWidth
@@ -230,7 +230,7 @@ const CreateApplicationForm: React.FC<CreateApplicationFormProps> = ({
                                 ))}
                             </Box>
                         </Box>
-                    </Grid>
+                    </div>
                 </Grid>
                 {error && (
                     <Alert severity="error" sx={{ mt: 2 }}>
