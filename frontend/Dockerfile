@@ -1,6 +1,6 @@
 # Multi-stage build for React Vite frontend
 # Stage 1: Build stage
-FROM node:20-alpine AS builder
+FROM node:18-alpine AS builder
 
 # Set working directory
 WORKDIR /app
@@ -8,8 +8,8 @@ WORKDIR /app
 # Copy package files for better layer caching
 COPY package*.json ./
 
-# Install dependencies
-RUN npm install --omit=dev && npm cache clean --force
+# Install dependencies (including dev dependencies for build)
+RUN npm install --legacy-peer-deps && npm cache clean --force
 
 # Copy source code
 COPY . .
