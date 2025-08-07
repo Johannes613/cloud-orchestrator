@@ -35,7 +35,7 @@
   <hr/>
 
   <h2>Live Preview</h2>
-  <p><em>Frontend: <a href="https://cloudnative-orchestrator.vercel.app" target="_blank">cloudnative-orchestrator.vercel.app</a></em></p>
+  <p><em>Frontend: <a href="https://cloud-orchestrator.vercel.app/" target="_blank">cloudnative-orchestrator.vercel.app</a></em></p>
 
 
   <h3>Demo</h3>
