@@ -164,13 +164,13 @@ const ApplicationsPage = () => {
             )}
 
             {/* Status Overview */}
-            <Grid container spacing={3} mb={5}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: 3, marginBottom: '40px' }}>
                 {Object.entries(statusCounts).map(([status, count]) => (
-                    <Grid item xs={12} sm={6} md={4} lg={2} key={status}>
+                    <div style={{ gridColumn: 'span 2' }} key={status}>
                         <StatusCard status={status} count={count} />
-                    </Grid>
+                    </div>
                 ))}
-            </Grid>
+            </div>
 
             {/* Filters */}
             <ApplicationFilters
