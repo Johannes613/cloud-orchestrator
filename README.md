@@ -37,6 +37,7 @@
   <h2>Live Preview</h2>
   <p><em>Frontend: <a href="https://cloudnative-orchestrator.vercel.app" target="_blank">cloudnative-orchestrator.vercel.app</a></em></p>
 
+
   <h3>Demo</h3>
   <img src="https://github.com/user-attachments/assets/preview.gif" alt="Demo GIF" style="max-width: 100%; height: auto;" />
   <img src="https://github.com/user-attachments/assets/screenshot.png" alt="Screenshot" width="100%" />
