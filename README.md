@@ -39,9 +39,7 @@
 
 
   <h3>Demo</h3>
-  <img src="https://github.com/user-attachments/assets/preview.gif" alt="Demo GIF" style="max-width: 100%; height: auto;" />
-  <img src="https://github.com/user-attachments/assets/screenshot.png" alt="Screenshot" width="100%" />
-
+  <img src="https://github.com/user-attachments/assets/f60e6434-aa68-4670-a654-9340c9c79b66" alt="Demo GIF" style="max-width: 100%; height: auto;" />
   <hr/>
 
   <h2>The Problem</h2>
